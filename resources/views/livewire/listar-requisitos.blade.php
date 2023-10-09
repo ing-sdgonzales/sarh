@@ -1,0 +1,161 @@
+<div>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Presentar requisitos') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12 bg-gray-200">
+        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
+            <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-2">
+                <div class="sm:col-span-6">
+                    <div>
+                        <div class="mb-4">
+                            <p>Porcentaje de requisitos presentados: {{ $total_requisitos_cargados }} de
+                                {{ $total_requisitos }}</p>
+                            <div class="w-full h-5 bg-gray-200 rounded">
+                                <div class="h-full bg-blue-500 rounded text-center align-middle text-white text-sm"
+                                    style="width: {{ $porcentaje_requisitos_presentados }}%">
+                                    {{ $porcentaje_requisitos_presentados }}%</div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Porcentaje de requisitos aprobados: {{ $total_requisitos_aprobados }} de
+                                {{ $total_requisitos }}</p>
+                            <div class="w-full h-5 bg-gray-200 rounded">
+                                <div class="h-full bg-green-500 rounded text-center align-middle text-white text-sm"
+                                    @if ($porcentaje_requisitos_aprobados == 0) style="width: 2%""
+                                @else
+                                style="width: {{ $porcentaje_requisitos_aprobados }}%" @endif>
+                                    {{ $porcentaje_requisitos_aprobados }}%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sm:col-span-2">
+                    <div class="mt-2">
+                        <select wire:model='puesto' id="puesto" name="puesto" wire:change='getRequisitosByPuesto'
+                            required
+                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option value="">Seleccionar aplicación...</option>
+                            @foreach ($puestos as $puesto)
+                                <option value="{{ $puesto->id }}">
+                                    {{ $puesto->puesto }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="sm:col-span-4">
+                    <div class="mt-2 w-full text-right">
+                        <button type="button" wire:click="guardar()"
+                            class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                            {{ __('Save') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+                <table class="min-w-full bg-white rounded-lg overflow-hidden text-center">
+                    <thead class="bg-gray-100 text-center">
+                        <tr>
+                            <th class="w-1/12 py-2 px-4">No.</th>
+                            <th class="w-1/6 py-2 px-4">Requisito</th>
+                            <th class="w-1/4 py-2 px-4">Especificación</th>
+                            <th class="w-1/12 py-2 px-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($requisitos as $req)
+                            <tr>
+                                <td class="py-2 px-4">{{ $loop->iteration }}.</td>
+                                <td class="py-2 px-4">{{ $req->requisito }}</td>
+                                <td class="py-2 px-4">{{ $req->especificacion }}</td>
+                                <td class="py-2 px-4">
+                                    <div>
+                                        @if ($req->fecha_carga && $req->fecha_revision == null)
+                                            <span
+                                                class="inline-block whitespace-nowrap rounded-[0.27rem] bg-yellow-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-yellow-800">Pendiente
+                                                de revision</span>
+                                        @elseif ($req->fecha_carga && $req->fecha_revision && $req->valido == 1)
+                                            <div class="flex w-full justify-center">
+                                                <div class="bg-green-300 rounded-full">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="green"
+                                                        class="w-8 h-8">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        @elseif(Str::startsWith($req->requisito, 'Formulario'))
+                                            @if ($req->renglon == '029')
+                                                <div class="flex w-full justify-center">
+                                                    <a type="button"
+                                                        href="{{ route('presentar_formulario029', ['id_candidato' => 1]) }}"><span
+                                                            class="inline-block whitespace-nowrap rounded-[0.27rem] bg-blue-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-white">Formulario</span></a>
+                                                </div>
+                                            @else
+                                                <div class="flex w-full justify-center">
+                                                    <a type="button"
+                                                        href="{{ route('presentar_formulario', ['id_candidato' => 1]) }}"><span
+                                                            class="inline-block whitespace-nowrap rounded-[0.27rem] bg-blue-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-white">Formulario</span></a>
+                                                </div>
+                                            @endif
+                                        @elseif($req->revisado == 1 && $req->valido == 0)
+                                            <input wire:model='requisito.{{ $req->id }}' accept=".pdf"
+                                                class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-xs font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                                                id="requisito_{{ $req->id }}" type="file" />
+                                        @else
+                                            <input wire:model='requisito.{{ $req->id }}' accept=".pdf"
+                                                class="relative m-0 block w-full min-w-0 flex-auto cursor-pointer rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-xs font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:cursor-pointer file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                                                id="requisito_{{ $req->id }}" type="file" />
+                                        @endif
+
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-2">
+                {{ $requisitos->links('pagination::tailwind') }}
+            </div>
+        </div>
+    </div>
+
+    @push('js')
+        @if (session()->has('message'))
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Operación completada con éxito!',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+            </script>
+        @endif
+        {{-- Error en crear nuevo registro --}}
+        @if (session()->has('error'))
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Ups!',
+                    html: `<?php echo session('error'); ?>`
+                })
+            </script>
+        @endif
+
+        {{-- Validación de campos --}}
+        @if ($errors->any())
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Ups!',
+                    html: `<small class="text-danger"><?php echo implode('<br>', $errors->all()); ?></small>`
+                })
+            </script>
+        @endif
+    @endpush
+</div>
