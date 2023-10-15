@@ -8,7 +8,8 @@ use Livewire\Component;
 
 class Formulario extends Component
 {
-    public $imagen, $hijos = [''], $idiomas = [''], $programas = [['nombre' => '', 'valoracion' => '']];
+    public $imagen, $hijos = [''], $idiomas = [''], 
+    $programas = [['nombre' => '', 'valoracion' => '']], $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
     public $historiales_laborales = [
         [
             'empresa' => '',

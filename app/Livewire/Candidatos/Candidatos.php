@@ -111,7 +111,7 @@ class Candidatos extends Component
                 'fecha_aplicacion' => 'required|date',
                 'dependencia' => 'required|integer|min:1',
                 'puesto' => 'required|integer|min:1',
-                'observacion' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'
+                'observacion' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.:;¡¿,!?]+$/u'
             ]);
         } else {
             $validated = $this->validate([
@@ -138,7 +138,7 @@ class Candidatos extends Component
                 'fecha_aplicacion' => 'required|date',
                 'dependencia' => 'required|integer|min:1',
                 'puesto' => 'required|integer|min:1',
-                'observacion' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'
+                'observacion' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.:;¡¿,!?]+$/u'
             ]);
         }
 
@@ -365,6 +365,11 @@ class Candidatos extends Component
                 ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia)
                 ->where('puestos_nominales.estado', '=', 1)
                 ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('requisitos_puestos')
+                        ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
+                })
                 ->get();
         } else {
             $this->puestos = [];
@@ -386,6 +391,11 @@ class Candidatos extends Component
                 ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia)
                 ->where('puestos_nominales.estado', '=', 1)
                 ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('requisitos_puestos')
+                        ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
+                })
                 ->get();
         } else {
             $this->puestos = [];

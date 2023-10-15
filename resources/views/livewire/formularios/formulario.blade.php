@@ -2282,7 +2282,8 @@
 
                                     <div class="sm:col-span-3">
                                         <label for="tipo_vivienda"
-                                            class="block text-sm font-medium leading-6 text-gray-900">tipo_vivienda</label>
+                                            class="block text-sm font-medium leading-6 text-gray-900">Tipo de
+                                            vivienda</label>
                                         <div class="mt-2">
                                             <select wire:model='tipo_vivienda' id="tipo_vivienda"
                                                 name="tipo_vivienda" required
@@ -2306,11 +2307,13 @@
 
                                     <div class="sm:col-span-3">
                                         <label for="pago_vivienda"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Profesión
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Cuánto paga
+                                            mensualmente por concepto de vivienda?
                                         </label>
                                         <div class="mt-2">
-                                            <input wire:model='pago_vivienda' type="text" name="pago_vivienda"
-                                                id="pago_vivienda" required
+                                            <input wire:model='pago_vivienda' type="number" name="pago_vivienda"
+                                                id="pago_vivienda" required step="0.01" min="0"
+                                                pattern="^\d+(\.\d{1,2})?$" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -2322,8 +2325,261 @@
                                         </div>
                                     </div>
 
+                                    <div class="sm:col-span-3">
+                                        <label for="cantidad_personas_dependientes"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Cuántas
+                                            personas dependen económicamente de usted?
+                                        </label>
+                                        <div class="mt-2">
+                                            <input wire:model='cantidad_personas_dependientes' type="number"
+                                                name="cantidad_personas_dependientes"
+                                                id="cantidad_personas_dependientes" required step="1"
+                                                min="0"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('cantidad_personas_dependientes')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-6">
+                                        @foreach ($personas_dependientes as $index => $persona_dependiente)
+                                            <div class="sm:col-span-5 flex items-center">
+                                                <div class="mt-2 mr-3 flex-grow" style="width: 516px;">
+                                                    <label for="nombre_{{ $index }}"
+                                                        class="block text-sm font-medium leading-6 text-gray-900">Nombre</label>
+                                                    <input
+                                                        wire:model='persona_dependiente.{{ $index }}.nombre'
+                                                        type="text" id="nombre_{{ $index }}"
+                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                </div>
+                                                <div class="mt-2 ml-3 mr-2 flex-grow">
+                                                    <label for="parentesco_{{ $index }}"
+                                                        class="block text-sm font-medium leading-6 text-gray-900">Parentesco</label>
+                                                    <input
+                                                        wire:model='persona_dependiente.{{ $index }}.parentesco'
+                                                        type="text" id="parentesco_{{ $index }}"
+                                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                </div>
+                                                @if ($index === 0)
+                                                    <div class="mt-8 ml-2">
+                                                        <button class="btn text-black btn-info btn-sm"
+                                                            wire:click.prevent="add_lang()"><svg
+                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                viewBox="0 0 24 24" stroke-width="1.5"
+                                                                stroke="green" class="w-6 h-6">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M12 4.5v15m7.5-7.5h-15" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                @else
+                                                    <div class="mt-8 ml-2">
+                                                        <button class="btn btn-danger btn-sm"
+                                                            wire:click.prevent="remove_lang({{ $index }})"><svg
+                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                viewBox="0 0 24 24" stroke-width="1.5"
+                                                                stroke="red" class="w-6 h-6">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M19.5 12h-15" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="ingresos_adicionales"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Recibe ingresos
+                                            adicionales a su salario?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='ingresos_adicionales' id="ingresos_adicionales"
+                                                name="ingresos_adicionales" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($departamentos ?? [] as $departamento)
+                                                    <option value="{{ $departamento->id }}">
+                                                        {{ $departamento->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('ingresos_adicionales')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="fuente_ingresos_adicionales"
+                                            class="block text-sm font-medium leading-6 text-gray-900">En caso
+                                            afirmativo ¿De dónde proviene su ingreso?
+                                        </label>
+                                        <div class="mt-2">
+                                            <input wire:model='fuente_ingresos_adicionales' type="text"
+                                                name="fuente_ingresos_adicionales" id="fuente_ingresos_adicionales"
+                                                required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('fuente_ingresos_adicionales')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="personas_aportan_ingresos"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Quiénes aportan
+                                            ingreso a su hogar?
+                                        </label>
+                                        <div class="mt-2">
+                                            <input wire:model='personas_aportan_ingresos' type="text"
+                                                name="personas_aportan_ingresos" id="personas_aportan_ingresos"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('personas_aportan_ingresos')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="monto_ingreso_total"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Monto aproximado
+                                            de ingreso total
+                                        </label>
+                                        <div class="mt-2">
+                                            <input wire:model='monto_ingreso_total' type="number"
+                                                name="monto_ingreso_total" id="monto_ingreso_total" step="0.01"
+                                                min="0" pattern="^\d+(\.\d{1,2})?$"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('monto_ingreso_total')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-1">
+                                        <label for="posee_deudas"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Tiene
+                                            deudas?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='posee_deudas' id="posee_deudas"
+                                                name="posee_deudas" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($departamentos ?? [] as $departamento)
+                                                    <option value="{{ $departamento->id }}">
+                                                        {{ $departamento->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('posee_deudas')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="tipo_deuda"
+                                            class="block text-sm font-medium leading-6 text-gray-900">En caso
+                                            afirmativo, indique el tipo de deudas que tiene:
+                                        </label>
+                                        <div class="mt-2">
+                                            <select wire:model='tipo_deuda' id="tipo_deuda" name="tipo_deuda"
+                                                required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($departamentos ?? [] as $departamento)
+                                                    <option value="{{ $departamento->id }}">
+                                                        {{ $departamento->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('tipo_deuda')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-2">
+                                        <label for="monto_deuda"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Monto</label>
+                                        <div class="mt-2">
+                                            <input wire:model='monto_deuda' type="number"
+                                                name="monto_deuda" id="monto_deuda" step="0.01"
+                                                min="0" pattern="^\d+(\.\d{1,2})?$"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('monto_deuda')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div class="border-b border-gray-900/10 pb-6">
+                                <h2 class="text-base font-semibold leading-7 text-gray-900">Otros datos
+                                </h2>
+                                <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+                                    <div class="sm:col-span-3">
+                                        <label for="trabajo_conred"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Ha laborado anteriormente para esta institución?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='trabajo_conred' id="trabajo_conred"
+                                                name="trabajo_conred" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($departamentos ?? [] as $departamento)
+                                                    <option value="{{ $departamento->id }}">
+                                                        {{ $departamento->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('trabajo_conred')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div
                                 class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
                                 <button type="button"

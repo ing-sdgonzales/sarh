@@ -192,6 +192,12 @@ class Puestos extends Component
         /* agregar variable estado */
         $this->fuentes_financiamientos = $puesto->fuentes_financiamientos_id;
         $this->dependencias_nominales = $puesto->dependencias_nominales_id;
+        $this->getSubproductosByDependencia();
+        $subproducto = DB::table('dependencias_subproductos')
+            ->select('subproductos_id')
+            ->where('dependencias_nominales_id', '=', $this->dependencias_nominales)
+            ->first();
+        $this->subproducto = $subproducto->subproductos_id;
         $municipio_control = DB::table('municipios')
             ->join('departamentos', 'municipios.departamentos_id', '=', 'departamentos.id')
             ->join('regiones', 'departamentos.regiones_id', '=', 'regiones.id')

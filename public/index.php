@@ -16,6 +16,10 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
+if (!file_exists(__DIR__.'/../storage/app/public')) {
+    symlink(__DIR__.'/../storage/app/public', __DIR__.'/storage');
+}
+
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;
 }
