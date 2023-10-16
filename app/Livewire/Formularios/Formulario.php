@@ -2,14 +2,19 @@
 
 namespace App\Livewire\Formularios;
 
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 
 use Livewire\Component;
 
 class Formulario extends Component
 {
-    public $imagen, $hijos = [''], $idiomas = [''], 
-    $programas = [['nombre' => '', 'valoracion' => '']], $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
+    public $imagen, 
+    $hijos = [''],
+    $idiomas = [['idioma' => '', 'habla' => '', 'lee' => '', 'escribe' => '']], 
+    $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
+    $programas = [['nombre' => '', 'valoracion' => '']], 
+    $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
     public $historiales_laborales = [
         [
             'empresa' => '',
@@ -30,7 +35,12 @@ class Formulario extends Component
     #[Layout('layouts.app2')]
     public function render()
     {
-        return view('livewire.formularios.formulario');
+        $etnias =  DB::table('etnias')->select('id', 'etnia')->get();
+        $grupos_sanguineos = DB::table('grupos_sanguineos')->select('id', 'grupo')->get();
+        return view('livewire.formularios.formulario', [
+            'etnias' => $etnias,
+            'grupos_sanguineos' => $grupos_sanguineos
+        ]);
     }
 
     public function add_son()

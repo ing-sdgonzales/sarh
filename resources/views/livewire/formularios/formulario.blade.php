@@ -63,7 +63,10 @@
                                 </div>
                             </div>
                             <div class="border-b border-gray-900/10 pb-6">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Datos generales</h2>
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 font-semibold leading-7 text-gray-900">1. Datos generales
+                                    </h1>
+                                </div>
                                 <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                     <div class="sm:col-span-3">
                                         <label for="nombres"
@@ -104,7 +107,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Puesto</label>
                                         <div class="mt-2">
                                             <input wire:model='puesto' type="text" name="puesto" id="puesto"
-                                                readonly
+                                                required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -138,8 +141,11 @@
                             </div>
 
                             <div class="border-b border-gray-900/10 pb-6">
-                                <h2 class="mt-8 text-base font-semibold leading-7 text-gray-900">Datos del solicitante
-                                </h2>
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 mt-8 font-semibold leading-7 text-gray-900">2. Datos del
+                                        solicitante
+                                    </h1>
+                                </div>
                                 <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                                     <div class="sm:col-span-2">
@@ -480,27 +486,30 @@
                             </div>
 
                             <div class="border-b border-gray-900/10 pb-6">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Datos familiares</h2>
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 mt-8 font-semibold leading-7 text-gray-900">3. Datos
+                                        familiares
+                                </div>
                                 <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                     <div class="sm:col-span-2">
-                                        <label for="registro_academico"
+                                        <label for="familiar_conred"
                                             class="block text-sm font-medium leading-6 text-gray-900">¿Tiene algún
                                             familiar laborando en CONRED?</label>
                                         <div class="mt-2">
-                                            <select wire:model='registro_academico' id="registro_academico"
-                                                name="registro_académico" required
+                                            <select wire:model='familiar_conred' id="familiar_conred"
+                                                name="familiar_conred" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($registros_academicos ?? [] as $registro_academico)
-                                                    <option value="{{ $registro_academico->id }}">
-                                                        {{ $registro_academico->titulo }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div>
                                             <span class="text-red-600 text-sm">
-                                                @error('registro_academico')
+                                                @error('familiar_conred')
                                                     {{ $message }}
                                                 @enderror
                                             </span>
@@ -544,24 +553,24 @@
                                     </div>
 
                                     <div class="sm:col-span-2">
-                                        <label for="registro_academico"
+                                        <label for="conocido_conred"
                                             class="block text-sm font-medium leading-6 text-gray-900">¿Conoce a alguien
                                             que labora en la institución?</label>
                                         <div class="mt-2">
-                                            <select wire:model='registro_academico' id="registro_academico"
-                                                name="registro_académico" required
+                                            <select wire:model='conocido_conred' id="conocido_conred"
+                                                name="conocido_conred" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($registros_academicos ?? [] as $registro_academico)
-                                                    <option value="{{ $registro_academico->id }}">
-                                                        {{ $registro_academico->titulo }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div>
                                             <span class="text-red-600 text-sm">
-                                                @error('registro_academico')
+                                                @error('conocido_conred')
                                                     {{ $message }}
                                                 @enderror
                                             </span>
@@ -817,7 +826,11 @@
                             </div>
 
                             <div class="border-b border-gray-900/10 pb-6">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Información académica</h2>
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 mt-8 font-semibold leading-7 text-gray-900">4. Información
+                                        académica
+                                    </h1>
+                                </div>
                                 <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                     <div class="sm:col-span-2 text-center">
                                         <label for="primaria"
@@ -848,7 +861,7 @@
                                         </label>
                                         <div class="mt-2">
                                             <input wire:model='titulo_primaria' type="text" name="titulo_primaria"
-                                                id="titulo_primaria"
+                                                id="titulo_primaria" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1077,12 +1090,12 @@
                                             actualmente?</label>
                                         <div class="mt-2">
                                             <select wire:model='estudia_actualmente' id="estudia_actualmente"
-                                                name="registro_académico" required
+                                                name="estudia_actualmente" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($registros_academicos ?? [] as $estudia_actualmente)
-                                                    <option value="{{ $estudia_actualmente->id }}">
-                                                        {{ $estudia_actualmente->titulo }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -1157,19 +1170,19 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Grupo étnico al
                                             que pertenece</label>
                                         <div class="mt-2">
-                                            <select wire:model='etnia' id="etnia" name="registro_académico"
+                                            <select wire:model='etnia' id="etnia" name="etnia"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($registros_academicos ?? [] as $etnia)
+                                                @foreach ($etnias ?? [] as $etnia)
                                                     <option value="{{ $etnia->id }}">
-                                                        {{ $etnia->titulo }}
+                                                        {{ $etnia->etnia }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div>
                                             <span class="text-red-600 text-sm">
-                                                @error('estudia_actualmente')
+                                                @error('etnia')
                                                     {{ $message }}
                                                 @enderror
                                             </span>
@@ -1321,7 +1334,11 @@
                                 </div>
                             </div>
                             <div class="border-b border-gray-900/10 pb-6">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Historial laboral</h2>
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 mt-8 font-semibold leading-7 text-gray-900">5. Historial
+                                        laboral
+                                    </h1>
+                                </div>
                                 <p class="mt-3 text-sm leading-6 text-gray-600">Detalle la información de los últimos
                                     tres empleos que ha tenido, iniciando por el más reciente ó actual, al más antiguo
                                     de ellos.</p>
@@ -1496,9 +1513,9 @@
                                                 id="verificar_informacion_0" name="verificar_informacion_0" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($registros_academicos ?? [] as $verificar_informacion)
-                                                    <option value="{{ $verificar_informacion->id }}">
-                                                        {{ $verificar_informacion->titulo }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -1702,9 +1719,9 @@
                                                 id="verificar_informacion_1" name="verificar_informacion_1" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($registros_academicos ?? [] as $verificar_informacion)
-                                                    <option value="{{ $verificar_informacion->id }}">
-                                                        {{ $verificar_informacion->titulo }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -1909,9 +1926,9 @@
                                                 id="verificar_informacion_2" name="verificar_informacion_2" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($registros_academicos ?? [] as $verificar_informacion)
-                                                    <option value="{{ $verificar_informacion->id }}">
-                                                        {{ $verificar_informacion->titulo }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -1949,7 +1966,10 @@
                             </div>
 
                             <div class="border-b border-gray-900/10 pb-6">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Referencias</h2>
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 mt-8 font-semibold leading-7 text-gray-900">6. Referencias
+                                    </h1>
+                                </div>
                                 <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                                     <div class="sm:col-span-6">
@@ -2276,7 +2296,11 @@
                                 </div>
                             </div>
                             <div class="border-b border-gray-900/10 pb-6">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Aspectos socioeconómicos
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 mt-8 font-semibold leading-7 text-gray-900">7. Aspectos
+                                        socioeconómicos
+                                    </h1>
+                                </div>
                                 </h2>
                                 <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
@@ -2403,9 +2427,9 @@
                                                 name="ingresos_adicionales" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($departamentos ?? [] as $departamento)
-                                                    <option value="{{ $departamento->id }}">
-                                                        {{ $departamento->nombre }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -2487,9 +2511,9 @@
                                                 name="posee_deudas" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($departamentos ?? [] as $departamento)
-                                                    <option value="{{ $departamento->id }}">
-                                                        {{ $departamento->nombre }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -2533,9 +2557,9 @@
                                         <label for="monto_deuda"
                                             class="block text-sm font-medium leading-6 text-gray-900">Monto</label>
                                         <div class="mt-2">
-                                            <input wire:model='monto_deuda' type="number"
-                                                name="monto_deuda" id="monto_deuda" step="0.01"
-                                                min="0" pattern="^\d+(\.\d{1,2})?$"
+                                            <input wire:model='monto_deuda' type="number" name="monto_deuda"
+                                                id="monto_deuda" step="0.01" min="0"
+                                                pattern="^\d+(\.\d{1,2})?$"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -2550,21 +2574,24 @@
                             </div>
 
                             <div class="border-b border-gray-900/10 pb-6">
-                                <h2 class="text-base font-semibold leading-7 text-gray-900">Otros datos
-                                </h2>
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 mt-8 font-semibold leading-7 text-gray-900">8. Otros datos
+                                    </h1>
+                                </div>
                                 <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                                     <div class="sm:col-span-3">
                                         <label for="trabajo_conred"
-                                            class="block text-sm font-medium leading-6 text-gray-900">¿Ha laborado anteriormente para esta institución?</label>
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Ha laborado
+                                            anteriormente para esta institución?</label>
                                         <div class="mt-2">
                                             <select wire:model='trabajo_conred' id="trabajo_conred"
                                                 name="trabajo_conred" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($departamentos ?? [] as $departamento)
-                                                    <option value="{{ $departamento->id }}">
-                                                        {{ $departamento->nombre }}
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -2577,6 +2604,333 @@
                                             </span>
                                         </div>
                                     </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="trabajo_estado"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Ha laborado con
+                                            anterioridad en instituciones del Estado?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='trabajo_estado' id="trabajo_estado"
+                                                name="trabajo_estado" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('trabajo_estado')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="jubilado_estado"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Es usted
+                                            jubilado del Estado?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='jubilado_estado' id="jubilado_estado"
+                                                name="jubilado_estado" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('jubilado_estado')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="institucion_jubilacion"
+                                            class="block text-sm font-medium leading-6 text-gray-900">En caso
+                                            afirmativo, ¿de qué institución?</label>
+                                        <div class="mt-2">
+                                            <input wire:model='institucion_jubilacion' type="text"
+                                                name="institucion_jubilacion" id="institucion_jubilacion"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('institucion_jubilacion')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-b border-gray-900/10 pb-6">
+                                <div class="rounded-lg bg-primary-100 text-xl">
+                                    <h1 class="p-2 mt-8 font-semibold leading-7 text-gray-900">9. Historia clínica
+                                    </h1>
+                                </div>
+                                <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+
+                                    <div class="sm:col-span-3">
+                                        <label for="padecimiento_salud"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Sufre algún
+                                            padecimiento de salud?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='padecimiento_salud' id="padecimiento_salud"
+                                                name="padecimiento_salud" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('padecimiento_salud')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="tipo_enfermedad"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Qué tipo de
+                                            enfermedad padece?</label>
+                                        <div class="mt-2">
+                                            <input wire:model='tipo_enfermedad' type="text"
+                                                name="tipo_enfermedad" id="tipo_enfermedad"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('tipo_enfermedad')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="intervencion_quirurgica"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Se ha sometido
+                                            a algún tipo de intervención quirúrgirca?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='intervencion_quirurgica'
+                                                id="intervencion_quirurgica" name="intervencion_quirurgica" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('intervencion_quirurgica')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="tipo_intervencion"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Cuál?</label>
+                                        <div class="mt-2">
+                                            <input wire:model='tipo_intervencion' type="text"
+                                                name="tipo_intervencion" id="tipo_intervencion"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('tipo_intervencion')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="sufrido_accidente"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Ha sufrido
+                                            algún accidente?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='sufrido_accidente' id="sufrido_accidente"
+                                                name="sufrido_accidente" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('sufrido_accidente')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="tipo_accidente"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Cúal?</label>
+                                        <div class="mt-2">
+                                            <input wire:model='tipo_accidente' type="text"
+                                                name="tipo_accidente" id="tipo_accidente"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('tipo_accidente')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-2">
+                                        <label for="alergia_medicamento"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Es alérgico a
+                                            algún tipo de medicamento?</label>
+                                        <div class="mt-2">
+                                            <select wire:model='alergia_medicamento' id="alergia_medicamento"
+                                                name="alergia_medicamento" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($si_no ?? [] as $sn)
+                                                    <option value="{{ $sn['val'] }}">
+                                                        {{ $sn['res'] }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('alergia_medicamento')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="tipo_medicamento"
+                                            class="block text-sm font-medium leading-6 text-gray-900">¿Cúal?</label>
+                                        <div class="mt-2">
+                                            <input wire:model='tipo_medicamento' type="text"
+                                                name="tipo_medicamento" id="tipo_medicamento"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('tipo_medicamento')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-1">
+                                        <label for="tipo_sangre"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Tipo de
+                                            sangre</label>
+                                        <div class="mt-2">
+                                            <select wire:model='tipo_sangre' id="tipo_sangre" name="tipo_sangre"
+                                                required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($grupos_sanguineos ?? [] as $gs)
+                                                    <option value="{{ $gs->id }}">
+                                                        {{ $gs->grupo }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('tipo_sangre')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="nombre_contacto_emergencia"
+                                            class="block text-sm font-medium leading-6 text-gray-900">En caso de
+                                            emergencia notificar a</label>
+                                        <div class="mt-2">
+                                            <input wire:model='nombre_contacto_emergencia' type="text"
+                                                name="nombre_contacto_emergencia" id="nombre_contacto_emergencia"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('nombre_contacto_emergencia')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="telefono_contacto_emergencia"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
+                                        <div class="mt-2">
+                                            <input wire:model='telefono_contacto_emergencia' type="text"
+                                                name="telefono_contacto_emergencia"
+                                                id="telefono_contacto_emergencia"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('telefono_contacto_emergencia')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-6">
+                                        <label for="direccion_contacto_emergencia"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Dirección para
+                                            notificarle</label>
+                                        <div class="mt-2">
+                                            <input wire:model='direccion_contacto_emergencia' type="text"
+                                                name="direccion_contacto_emergencia"
+                                                id="direccion_contacto_emergencia"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('direccion_contacto_emergencia')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
