@@ -302,8 +302,8 @@
                                             emisión</label>
                                         <div class="mt-2">
                                             <select wire:model='departamento_emision'
-                                                wire:change='getMunicipiosByDepartamento' id="departamento_emision"
-                                                name="departamento_emision" required
+                                                wire:change='getMunicipiosByDepartamentoEmision'
+                                                id="departamento_emision" name="departamento_emision" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($departamentos ?? [] as $departamento)
@@ -331,7 +331,7 @@
                                                 name="municipio_emision" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($municipios ?? [] as $municipio)
+                                                @foreach ($municipios_emision ?? [] as $municipio)
                                                     <option value="{{ $municipio->id }}">{{ $municipio->nombre }}
                                                     </option>
                                                 @endforeach
@@ -346,10 +346,42 @@
                                         </div>
                                     </div>
 
+                                    <div class="sm:col-span-3">
+                                        <label for="igss"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Número de afiliación IGSS</label>
+                                        <div class="mt-2">
+                                            <input wire:model='igss' type="text" name="igss" id="igss"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('igss')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="nit"
+                                            class="block text-sm font-medium leading-6 text-gray-900">NIT</label>
+                                        <div class="mt-2">
+                                            <input wire:model='nit' type="text" name="nit" id="nit"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('nit')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
                                     <div class="sm:col-span-2">
                                         <label for="licencia"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Licencia
-                                            no.</label>
+                                            class="block text-sm font-medium leading-6 text-gray-900">Número de
+                                            licencia</label>
                                         <div class="mt-2">
                                             <input wire:model='licencia' type="text" name="licencia"
                                                 id="licencia"
@@ -373,8 +405,9 @@
                                                 name="tipo_licencia"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($municipios ?? [] as $municipio)
-                                                    <option value="{{ $municipio->id }}">{{ $municipio->nombre }}
+                                                @foreach ($tipos_licencias ?? [] as $tipo_licencia)
+                                                    <option value="{{ $tipo_licencia->id }}">
+                                                        {{ $tipo_licencia->tipo_licencia }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -397,8 +430,9 @@
                                                 name="tipo_vehiculo"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($municipios ?? [] as $municipio)
-                                                    <option value="{{ $municipio->id }}">{{ $municipio->nombre }}
+                                                @foreach ($tipos_vehiculos ?? [] as $tipo_vehiculo)
+                                                    <option value="{{ $tipo_vehiculo->id }}">
+                                                        {{ $tipo_vehiculo->tipo_vehiculo }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -2313,9 +2347,9 @@
                                                 name="tipo_vivienda" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($departamentos ?? [] as $departamento)
-                                                    <option value="{{ $departamento->id }}">
-                                                        {{ $departamento->nombre }}
+                                                @foreach ($tipos_viviendas ?? [] as $tipo_vivienda)
+                                                    <option value="{{ $tipo_vivienda->id }}">
+                                                        {{ $tipo_vivienda->tipo_vivienda }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -2537,9 +2571,9 @@
                                                 required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
-                                                @foreach ($departamentos ?? [] as $departamento)
-                                                    <option value="{{ $departamento->id }}">
-                                                        {{ $departamento->nombre }}
+                                                @foreach ($tipos_deudas ?? [] as $tipo_deuda)
+                                                    <option value="{{ $tipo_deuda->id }}">
+                                                        {{ $tipo_deuda->tipo_deuda }}
                                                     </option>
                                                 @endforeach
                                             </select>

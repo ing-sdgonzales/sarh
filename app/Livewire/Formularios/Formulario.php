@@ -9,12 +9,12 @@ use Livewire\Component;
 
 class Formulario extends Component
 {
-    public $imagen, 
-    $hijos = [''],
-    $idiomas = [['idioma' => '', 'habla' => '', 'lee' => '', 'escribe' => '']], 
-    $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
-    $programas = [['nombre' => '', 'valoracion' => '']], 
-    $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
+    public $imagen, $departamentos, $municipios, $municipios_emision,
+        $hijos = [''],
+        $idiomas = [['idioma' => '', 'habla' => '', 'lee' => '', 'escribe' => '']],
+        $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
+        $programas = [['nombre' => '', 'valoracion' => '']],
+        $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
     public $historiales_laborales = [
         [
             'empresa' => '',
@@ -32,15 +32,58 @@ class Formulario extends Component
     ];
     public $referencias_laborales = [['nombre' => '', 'empresa' => '', 'teléfono' => '']];
     public $referencias_personales = [['nombre' => '', 'lugar_trabajo' => '', 'teléfono' => '']];
+    /* variables de consulta */
+    public $id, $nombres, $apellidos, $pretension_salarial, $departamento, $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion,
+    $dpi, $departamento_emision, $municipio_emision, $licencia, $tipo_licencia;
     #[Layout('layouts.app2')]
     public function render()
     {
         $etnias =  DB::table('etnias')->select('id', 'etnia')->get();
         $grupos_sanguineos = DB::table('grupos_sanguineos')->select('id', 'grupo')->get();
+        $this->departamentos = DB::table('departamentos')->select('id', 'nombre')->get();
+        $nacionalidades = DB::table('nacionalidades')->select('id', 'nacionalidad')->get();
+        $estados_civiles = DB::table('estados_civiles')->select('id', 'estado_civil')->get();
+        $tipos_licencias = DB::table('tipos_licencias')->select('id', 'tipo_licencia')->get();
+        $tipos_vehiculos = DB::table('tipos_vehiculos')->select('id', 'tipo_vehiculo')->get();
+        $tipos_deudas = DB::table('tipos_deudas')->select('id', 'tipo_deuda')->get();
+        $tipos_viviendas = DB::table('tipos_viviendas')->select('id', 'tipo_vivienda')->get();
         return view('livewire.formularios.formulario', [
             'etnias' => $etnias,
-            'grupos_sanguineos' => $grupos_sanguineos
+            'grupos_sanguineos' => $grupos_sanguineos,
+            'nacionalidades' => $nacionalidades,
+            'estados_civiles' => $estados_civiles,
+            'tipos_licencias' => $tipos_licencias,
+            'tipos_vehiculos' => $tipos_vehiculos,
+            'tipos_deudas' => $tipos_deudas,
+            'tipos_viviendas' => $tipos_viviendas
         ]);
+    }
+
+
+    public function getMunicipiosByDepartamento()
+    {
+        $this->municipio = '';
+        if ($this->departamento) {
+            $this->municipios = DB::table('municipios')
+                ->select('id', 'nombre', 'departamentos_id')
+                ->where('departamentos_id', '=', $this->departamento)
+                ->get();
+        } else {
+            $this->municipios = [];
+        }
+    }
+
+    public function getMunicipiosByDepartamentoEmision()
+    {
+        $this->municipio_emision = '';
+        if ($this->departamento_emision) {
+            $this->municipios_emision = DB::table('municipios')
+                ->select('id', 'nombre', 'departamentos_id')
+                ->where('departamentos_id', '=', $this->departamento_emision)
+                ->get();
+        } else {
+            $this->municipios = [];
+        }
     }
 
     public function add_son()
