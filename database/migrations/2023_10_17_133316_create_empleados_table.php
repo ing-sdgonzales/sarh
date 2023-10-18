@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('dpi', 25)->unique();
             $table->string('nit', 25)->unique();
             $table->string('igss', 25)->unique();
+            $table->text('imagen');
             $table->string('nombres', 50);
             $table->string('apellidos', 50);
             $table->string('email')->unique();
@@ -28,13 +29,13 @@ return new class extends Migration
             $table->date('fecha_retiro')->nullable();
             $table->unsignedTinyInteger('estado')->default(0);
             $table->unsignedTinyInteger('estado_familiar')->nullable();
-            $table->decimal('pretension_salarial', 9, 2);
+            $table->unsignedDecimal('pretension_salarial', 9, 2);
             $table->mediumText('observaciones')->nullable();
             $table->unsignedTinyInteger('estudia_actualmente');
             $table->text('estudio_actual')->nullable();
             $table->unsignedTinyInteger('cantidad_personas_dependientes');
             $table->unsignedTinyInteger('ingresos_adicionales');
-            $table->decimal('monto_ingreso_total', 9, 2);
+            $table->unsignedDecimal('monto_ingreso_total', 9, 2);
             $table->unsignedTinyInteger('posee_deudas');
             $table->unsignedTinyInteger('trabajo_conred');
             $table->unsignedTinyInteger('trabajo_estado');
@@ -42,7 +43,7 @@ return new class extends Migration
             $table->text('institucion_jubilacion')->nullable();
             $table->string('personas_aportan_ingresos', 100)->nullable();
             $table->string('fuente_ingresos_adicionales', 50)->nullable();
-            $table->decimal('pago_vivienda', 9, 2);
+            $table->unsignedDecimal('pago_vivienda', 9, 2);
 
             /* fks */
             $table->unsignedTinyInteger('generos_id')->nullable();
@@ -53,7 +54,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('tipos_licencias_id')->nullable();
             $table->unsignedTinyInteger('tipos_vehiculos_id')->nullable();
             $table->unsignedTinyInteger('nacionalidades_id');
-            $table->unsignedTinyInteger('tipos_deudas_id')->nullable();
             $table->unsignedTinyInteger('tipos_viviendas_id');
 
             /* references */
@@ -65,7 +65,6 @@ return new class extends Migration
             $table->foreign('tipos_licencias_id')->references('id')->on('tipos_licencias')->onUpdate('cascade');
             $table->foreign('tipos_vehiculos_id')->references('id')->on('tipos_vehiculos')->onUpdate('cascade');
             $table->foreign('nacionalidades_id')->references('id')->on('nacionalidades')->onUpdate('cascade');
-            $table->foreign('tipos_deudas_id')->references('id')->on('tipos_deudas')->onUpdate('cascade');
             $table->foreign('tipos_viviendas_id')->references('id')->on('tipos_viviendas')->onUpdate('cascade');
 
             $table->timestamps();

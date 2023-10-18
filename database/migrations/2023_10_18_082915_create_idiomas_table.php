@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bonos_puestos', function (Blueprint $table) {
+        Schema::create('idiomas', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->bigIncrements('id');
-            $table->unsignedDecimal('bono_calculado')->nullable();
+            $table->string('idioma', 50);
+            $table->unsignedInteger('lee')->min(0)->max(100);
+            $table->unsignedTinyInteger('habla')->min(0)->max(100);
+            $table->unsignedTinyInteger('escribe')->min(0)->max(100);
 
             /* fks */
-            $table->unsignedTinyInteger('bonificaciones_id');
-            $table->unsignedInteger('puestos_nominales_id');
+            $table->unsignedInteger('empleados_id');
 
             /* references */
-            $table->foreign('bonificaciones_id')->references('id')->on('bonificaciones')->onUpdate('cascade');
-            $table->foreign('puestos_nominales_id')->references('id')->on('puestos_nominales')->onUpdate('cascade');
+            $table->foreign('empleados_id')->references('id')->on('empleados')->onUpdate('cascade');
             
             $table->timestamps();
         });
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bonos_puestos');
+        Schema::dropIfExists('idiomas');
     }
 };

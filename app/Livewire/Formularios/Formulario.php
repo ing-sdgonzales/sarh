@@ -4,12 +4,15 @@ namespace App\Livewire\Formularios;
 
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
+use Livewire\WithFileUploads;
 
 use Livewire\Component;
 
 class Formulario extends Component
 {
-    public $imagen, $departamentos, $municipios, $municipios_emision,
+    use WithFileUploads;
+
+    public $departamentos, $municipios, $municipios_emision,
         $hijos = [''],
         $idiomas = [['idioma' => '', 'habla' => '', 'lee' => '', 'escribe' => '']],
         $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
@@ -33,8 +36,9 @@ class Formulario extends Component
     public $referencias_laborales = [['nombre' => '', 'empresa' => '', 'teléfono' => '']];
     public $referencias_personales = [['nombre' => '', 'lugar_trabajo' => '', 'teléfono' => '']];
     /* variables de consulta */
-    public $id, $nombres, $apellidos, $pretension_salarial, $departamento, $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion,
-    $dpi, $departamento_emision, $municipio_emision, $licencia, $tipo_licencia;
+    public $id_candidato, $dpi, $nit, $igss, $imagen, $nombres, $apellidos, $puesto, $pretension_salarial, $departamento, $municipio, $fecha_nacimiento,
+        $nacionalidad, $estado_civil, $direccion, $departamento_emision, $municipio_emision, $licencia, $tipo_licencia;
+    
     #[Layout('layouts.app2')]
     public function render()
     {
@@ -59,6 +63,21 @@ class Formulario extends Component
         ]);
     }
 
+    public function mount($id_candidato)
+    {
+        $this->id_candidato = $id_candidato;
+        $this->cargarPuesto($id_candidato);
+    }
+
+    public function cargarPuesto($id_candidato){
+        $puesto = DB::table('catalogo_puestos')
+            ->join('puestos_nominales', 'catalogo_puestos.id', '=', 'puestos_nominales.catalogo_puestos_id')
+            ->join('aplicaciones_candidatos', 'puestos_nominales.id', '=', 'aplicaciones_candidatos.puestos_nominales_id')
+            ->select('puestos_nominales.id as id_puesto', 'catalogo_puestos.puesto as puesto')
+            ->where('aplicaciones_candidatos.candidatos_id', '=', $id_candidato)
+            ->first();
+        $this->puesto = $puesto->puesto;
+    }
 
     public function getMunicipiosByDepartamento()
     {

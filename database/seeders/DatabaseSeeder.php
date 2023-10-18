@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TipoVehiculoSeeder::class);
         $this->call(TipoDeudaSeeder::class);
         $this->call(TipoViviendaSeeder::class);
+        $this->call(EtapaAplicacionSeeder::class);
         /* $this->call(BonoRenglonSeeder::class); */
         /* $this->call(CatalogoPuestoSeeder::class); */
 

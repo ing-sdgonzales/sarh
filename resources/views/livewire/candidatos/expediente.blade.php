@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gray-200 h-screen">
+    <div class="py-12 bg-gray-200">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-2">
                 <div class="sm:col-span-6 mx-auto">
@@ -18,22 +18,36 @@
                         <div class="mb-4">
                             <p>Porcentaje de requisitos presentados: {{ $total_requisitos_cargados }} de
                                 {{ $total_requisitos }}</p>
-                            <div class="w-full h-5 bg-gray-200 rounded">
-                                <div class="h-full bg-blue-500 rounded text-center align-middle text-white text-sm"
-                                    style="width: {{ $porcentaje_requisitos_presentados }}%">
-                                    {{ $porcentaje_requisitos_presentados }}%</div>
-                            </div>
+                            @if ($porcentaje_requisitos_presentados == 0)
+                                <div class="w-full h-5 bg-gray-200 rounded">
+                                    <div class="h-full bg-blue-500 rounded text-center align-middle text-sm"
+                                        style="width: {{ $porcentaje_requisitos_presentados }}%">
+                                        {{ $porcentaje_requisitos_presentados }}%</div>
+                                </div>
+                            @else
+                                <div class="w-full h-5 bg-gray-200 rounded">
+                                    <div class="h-full bg-blue-500 rounded text-center align-middle text-white text-sm"
+                                        style="width: {{ $porcentaje_requisitos_presentados }}%">
+                                        {{ $porcentaje_requisitos_presentados }}%</div>
+                                </div>
+                            @endif
                         </div>
                         <div>
                             <p>Porcentaje de requisitos aprobados: {{ $total_requisitos_aprobados }} de
                                 {{ $total_requisitos }}</p>
-                            <div class="w-full h-5 bg-gray-200 rounded">
-                                <div class="h-full bg-green-500 rounded text-center align-middle text-white text-sm"
-                                    @if ($porcentaje_requisitos_aprobados == 0) style="width: 2%""
-                                @else
-                                style="width: {{ $porcentaje_requisitos_aprobados }}%" @endif>
-                                    {{ $porcentaje_requisitos_aprobados }}%</div>
-                            </div>
+                            @if ($porcentaje_requisitos_aprobados == 0)
+                                <div class="w-full h-5 bg-gray-200 rounded">
+                                    <div class="h-full bg-green-500 rounded text-center align-middle text-sm"
+                                        style="width: {{ $porcentaje_requisitos_aprobados }}%">
+                                        {{ $porcentaje_requisitos_aprobados }}%</div>
+                                </div>
+                            @else
+                                <div class="w-full h-5 bg-gray-200 rounded">
+                                    <div class="h-full bg-green-500 rounded text-center align-middle text-white text-sm"
+                                        style="width: {{ $porcentaje_requisitos_aprobados }}%">
+                                        {{ $porcentaje_requisitos_aprobados }}%</div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -10,5 +10,5 @@ class AplicacionCandidato extends Model
     use HasFactory;
 
     protected $table = 'aplicaciones_candidatos';
-    protected $fillable = ['observacion', 'fecha_aplicacion', 'candidatos_id', 'puestos_nominales_id'];
+    protected $fillable = ['observacion', 'fecha_aplicacion', 'candidatos_id', 'puestos_nominales_id', 'etapas_aplicaciones_id'];
 }

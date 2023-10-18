@@ -17,7 +17,8 @@ class RequisitoSeeder extends Seeder
             ['req' => 'DPI', 'spec' => '1 hoja ambos lados'],
             ['req' => 'RTU', 'spec' => 'Actualizado 2024'],
             ['req' => 'Constancia de antecedentes penales', 'spec' => 'vigentes'],
-            ['req' => 'Constancia de antecedentes policiales', 'spec' => 'vigentes']
+            ['req' => 'Constancia de antecedentes policiales', 'spec' => 'vigentes'],
+            ['req' => 'Formulario de solicitud de contratación', 'spec' => 'Formulario de contratación y recontratación de personal SE-CONRED 011, 021, 022, 031']
         ];
 
         foreach ($requisitosData as $requisito) {

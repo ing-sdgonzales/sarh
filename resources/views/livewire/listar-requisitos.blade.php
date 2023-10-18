@@ -43,7 +43,6 @@
                                         {{ $porcentaje_requisitos_aprobados }}%</div>
                                 </div>
                             @endif
-
                         </div>
                     </div>
                 </div>

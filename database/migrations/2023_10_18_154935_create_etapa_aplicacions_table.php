@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bonificaciones', function (Blueprint $table) {
+        Schema::create('etapas_aplicaciones', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->tinyIncrements('id');
-            $table->string('bono');
-            $table->unsignedDecimal('cantidad', 9, 2);
-
+            $table->string('etapa', 50);
+            
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bonificaciones');
+        Schema::dropIfExists('etapas_aplicaciones');
     }
 };

@@ -13,7 +13,7 @@ class TipoVehiculoSeeder extends Seeder
      */
     public function run(): void
     {
-        $tipos_vehiculos = ['Camioneta', 'Hatchback', 'Motocicleta', 'Pick-up', 'Sedan'];
+        $tipos_vehiculos = ['Camioneta', 'Hatchback', 'Motocicleta', 'Pick-up', 'Sedán'];
 
         foreach ($tipos_vehiculos as $tipo_vehiculo) {
             TipoVehiculo::create([

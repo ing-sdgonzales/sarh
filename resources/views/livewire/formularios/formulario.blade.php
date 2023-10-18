@@ -24,23 +24,23 @@
                                             x-on:livewire-upload-finish="isUploading = false"
                                             x-on:livewire-upload-error="isUploading = false"
                                             x-on:livewire-upload-progress="progress = $event.detail.progress">
-                                            {{-- <div class="mb-4">
-                                                @if ($imagen == true && $imagen_actual == '')
+                                            <div class="mb-4">
+                                                @if ($imagen)
                                                     <img src="{{ $imagen->temporaryUrl() }}"
                                                         class="mx-auto max-w-full rounded-lg" style="height: 150px"
                                                         alt="imagen" />
-                                                @elseif($imagen_control == true && $modo_edicion == true)
+                                                {{-- @elseif($imagen_control == true && $modo_edicion == true)
                                                     <img @if ($imagen_actual != $imagen) src="{{ $imagen->temporaryUrl() }}"
                                                     @else
                                                     src="{{ asset('storage') . '/' . $imagen }}" @endif
                                                         class="mx-auto max-w-full rounded-lg" style="height: 150px"
-                                                        alt="imagen" />
+                                                        alt="imagen" /> --}}
                                                 @else
                                                     <img src="{{ url('/') }}/img/default.png"
                                                         class="mx-auto max-w-full rounded-lg" style="height: 150px"
                                                         alt="imagen" />
                                                 @endif
-                                            </div> --}}
+                                            </div>
                                             <input wire:model='imagen' id="imagen" accept=".jpg, .jpeg, .png"
                                                 class="relative m-0 block w-full sm:w-auto min-w-0 flex-auto rounded-md border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                                                 type="file" id="imagen" style="width: 357.33px" />
@@ -107,7 +107,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Puesto</label>
                                         <div class="mt-2">
                                             <input wire:model='puesto' type="text" name="puesto" id="puesto"
-                                                required
+                                                required readonly disabled
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
