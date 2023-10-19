@@ -54,15 +54,15 @@
                                 <td class="py-2 px-4">
                                     @if ($candidato->estado == 0)
                                         <span
-                                            class="inline-block whitespace-nowrap rounded-[0.27rem] bg-yellow-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-yellow-800">Pendiente
+                                            class="inline-block whitespace-nowrap rounded-[0.27rem] bg-yellow-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-yellow-800">Pendiente
                                             de entrevista</span>
                                     @elseif ($candidato->estado == 1)
                                         <span
-                                            class="inline-block whitespace-nowrap rounded-[0.27rem] bg-success-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-succes-800">En
+                                            class="inline-block whitespace-nowrap rounded-[0.27rem] bg-success-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-succes-800">En
                                             proceso de contratación</span>
                                     @else
                                         <span
-                                            class="inline-block whitespace-nowrap rounded-[0.27rem] bg-gray-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-gray-800">Sin
+                                            class="inline-block whitespace-nowrap rounded-[0.27rem] bg-gray-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-gray-800">Sin
                                             efectos</span>
                                     @endif
                                 </td>

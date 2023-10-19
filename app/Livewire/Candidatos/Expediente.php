@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Candidatos;
 
+use App\Models\Candidato;
 use App\Models\RequisitoCandidato;
+use App\Notifications\AvisoRequisitosRechazados;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -70,11 +72,11 @@ class Expediente extends Component
         $req->observacion = $this->observacion;
         $req->valido = $this->aprobado;
         $req->revisado = 1;
-        $req->fecha_revision = date("Y-m-d h:i:s");
+        $req->fecha_revision = date("Y-m-d H:i:s");
 
         $req->save();
 
-        $estado =  'rechazó';
+        $estado = 'rechazó';
         if ($this->aprobado == 1) {
             $estado = 'aprobó';
         }
@@ -98,7 +100,36 @@ class Expediente extends Component
             ->causedBy(auth()->user())
             ->withProperties(['user_id' => auth()->id()])
             ->log("El usuario " . auth()->user()->name . " " . $estado . " el requisito: " . $log->requisito . " del candidato " . $log->nombre);
-        return back();
+        session()->flash('message');
+        return redirect()->route('expedientes', ['candidato_id' => $this->id_candidato]);
+    }
+
+    public function notificar()
+    {
+        $requisitoRechazados = DB::table('requisitos_candidatos')
+            ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+            ->select(
+                'requisitos.requisito as requisito',
+                'requisitos_candidatos.observacion as observacion'
+            )
+            ->where('requisitos_candidatos.candidatos_id', '=', $this->id_candidato)
+            ->where('requisitos_candidatos.puestos_nominales_id', '=', $this->puesto)
+            ->where('requisitos_candidatos.valido', '=', 0)
+            ->where('requisitos_candidatos.revisado', '=', 1)
+            ->get();
+
+        if ($requisitoRechazados->count() > 0) {
+            $candidato = Candidato::findOrFail($this->id_candidato);
+            $candidato->notify(new AvisoRequisitosRechazados($requisitoRechazados));
+
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name .  " notificó al candidato: " . $candidato->nombre . " que debe actualizar sus requisitos.");
+
+            session()->flash('message');
+            return redirect()->route('expedientes', ['candidato_id' => $this->id_candidato]);
+        }
     }
 
     public function verificarRequisito($requisito_id)

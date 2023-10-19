@@ -3,9 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\RequisitoCandidato;
+use App\Models\RequisitoPuesto;
 use Exception;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,6 +16,7 @@ class ListarRequisitos extends Component
 {
     use WithFileUploads;
     use WithPagination;
+
     public $id_candidato, $filtro = '', $requisitos_candidato, $requisito = [], $requisitos_cargados = [], $archivo, $puestos;
     public $puesto;
 
@@ -92,13 +95,49 @@ class ListarRequisitos extends Component
                         'max:5120',
                     ],
                 ]);
-                $path = $archivo->store('requisitos', 'public');
-                RequisitoCandidato::updateOrCreate([
+
+                $requisito = RequisitoCandidato::where([
                     'candidatos_id' => $this->id_candidato,
                     'puestos_nominales_id' => $this->puesto,
-                    'requisitos_id' => $requisito_id,
-                    'ubicacion' => $path
-                ]);
+                    'requisitos_id' => $requisito_id
+                ])
+                ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                ->first();
+
+                if ($requisito) {
+                    if (Storage::disk('public')->exists($requisito->ubicacion)) {
+                        Storage::disk('public')->delete($requisito->ubicacion);
+                    }
+                }
+                $path = $archivo->store('requisitos', 'public');
+
+                if ($requisito) {
+                    $requisito->update([
+                        'ubicacion' => $path,
+                        'observacion' => '',
+                        'fecha_carga' => date("Y-m-d H:i:s"),
+                        'valido' => 0,
+                        'fecha_revision' => null
+                    ]);
+                    $requisito->revisado = 0;
+                    $requisito->save();
+                    $this->requisitos_cargados[] = [
+                        'requisito' =>$requisito->requisito
+                    ];
+                    dd($this->requisitos_cargados);
+                } else {
+                    $req = RequisitoCandidato::create([
+                        'candidatos_id' => $this->id_candidato,
+                        'puestos_nominales_id' => $this->puesto,
+                        'requisitos_id' => $requisito_id,
+                        'ubicacion' => $path
+                    ]);
+                    
+                    $this->requisitos_cargados[] = [
+                        'requisito' => $req->requisito
+                    ];
+                    dd($this->requisitos_cargados);
+                }
 
                 $this->requisitos_cargados[$requisito_id] = $archivo->getClientOriginalName();
             }

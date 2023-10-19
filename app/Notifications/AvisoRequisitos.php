@@ -37,7 +37,15 @@ class AvisoRequisitos extends Notification
         return (new MailMessage)
             ->greeting('¡Hola!')
             ->subject('Requisitos de contratación')
-            ->line('Notificación para presentar requisitos de contratación.')
+            ->line('Buen día, según la información proporcionada, le adjuntamos por esta vía la documentación relacionada para la conformación de su expediente:')
+            ->line('1. Enlace para adjuntar los requisitos correspondientes.')
+            ->line('2. Formato de Declaración Jurada. (No se aceptará otro formato)')
+            ->line('3. Formato de Hoja de Vida, el cual debe ser llenado de conformidad con los datos allí incluidos; deberá imprimirlo, firmarlo y agregarlo dentro de los requisitos de su expediente en formato PDF.')
+            ->line('Además, solicitamos poner atención a la descripción de cada requisito, ya que son aspectos relevantes para la conformación y correcta presentación de su expediente.')
+            ->line('¡IMPORTANTE!')
+            ->line('1. Todo documento debe ser impreso en TAMAÑO OFICIO.')
+            ->line('2. El título debe ser presentado en el día de entrega de sus respectivos documentos, para su confrontación.')
+            ->line('Para cualquier información adicional, quedamos a su disposición.')
             ->action('Requisitos', route('buscar_aplicacion'))
             ->line('Si no has realizado ninguna aplicación laboral, puedes ignorar o eliminar este e-mail.');
     }

@@ -36,8 +36,9 @@ class Formulario extends Component
     public $referencias_laborales = [['nombre' => '', 'empresa' => '', 'teléfono' => '']];
     public $referencias_personales = [['nombre' => '', 'lugar_trabajo' => '', 'teléfono' => '']];
     /* variables de consulta */
-    public $id_candidato, $dpi, $nit, $igss, $imagen, $nombres, $apellidos, $puesto, $pretension_salarial, $departamento, $municipio, $fecha_nacimiento,
-        $nacionalidad, $estado_civil, $direccion, $departamento_emision, $municipio_emision, $licencia, $tipo_licencia;
+    public $id_candidato, $dpi, $nit, $igss, $imagen, $nombres, $apellidos, $puesto, $email, $pretension_salarial, $departamento, 
+    $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion, $departamento_emision, $municipio_emision, $licencia, 
+    $tipo_licencia;
     
     #[Layout('layouts.app2')]
     public function render()

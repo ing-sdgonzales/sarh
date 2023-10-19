@@ -35,7 +35,7 @@
                     <tbody>
                         @foreach ($actividades as $actividad)
                             <tr>
-                                <td class="py-2 px-4">{{ $loop->iteration }}</td>
+                                <td class="py-2 px-4">{{ $loop->iteration }}.</td>
                                 <td class="py-2 px-4">{{ $actividad->name }}</td>
                                 <td class="py-2 px-4 text-justify">{{ $actividad->description }}</td>
                                 <td class="py-2 px-4">{{ date('d-m-Y H:i:s', strtotime($actividad->updated_at)) }}</td>

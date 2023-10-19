@@ -89,7 +89,7 @@
                                     <div>
                                         @if ($req->fecha_carga && $req->fecha_revision == null)
                                             <span
-                                                class="inline-block whitespace-nowrap rounded-[0.27rem] bg-yellow-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-yellow-800">Pendiente
+                                                class="inline-block whitespace-nowrap rounded-[0.27rem] bg-yellow-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-yellow-800">Pendiente
                                                 de revision</span>
                                         @elseif ($req->fecha_carga && $req->fecha_revision && $req->valido == 1)
                                             <div class="flex w-full justify-center">
