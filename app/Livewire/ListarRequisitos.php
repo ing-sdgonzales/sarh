@@ -4,9 +4,11 @@ namespace App\Livewire;
 
 use App\Models\RequisitoCandidato;
 use App\Models\RequisitoPuesto;
+use App\Notifications\NotificacionCargaRequisitos;
 use Exception;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -17,7 +19,7 @@ class ListarRequisitos extends Component
     use WithFileUploads;
     use WithPagination;
 
-    public $id_candidato, $filtro = '', $requisitos_candidato, $requisito = [], $requisitos_cargados = [], $archivo, $puestos;
+    public $id_candidato, $nombre_candidato, $filtro = '', $requisitos_candidato, $requisito = [], $requisitos_cargados = [], $archivo, $puestos;
     public $puesto;
 
     /* variables de progreso */
@@ -101,8 +103,8 @@ class ListarRequisitos extends Component
                     'puestos_nominales_id' => $this->puesto,
                     'requisitos_id' => $requisito_id
                 ])
-                ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
-                ->first();
+                    ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                    ->first();
 
                 if ($requisito) {
                     if (Storage::disk('public')->exists($requisito->ubicacion)) {
@@ -122,9 +124,8 @@ class ListarRequisitos extends Component
                     $requisito->revisado = 0;
                     $requisito->save();
                     $this->requisitos_cargados[] = [
-                        'requisito' =>$requisito->requisito
+                        'requisito' => $requisito->requisito
                     ];
-                    dd($this->requisitos_cargados);
                 } else {
                     $req = RequisitoCandidato::create([
                         'candidatos_id' => $this->id_candidato,
@@ -132,15 +133,16 @@ class ListarRequisitos extends Component
                         'requisitos_id' => $requisito_id,
                         'ubicacion' => $path
                     ]);
-                    
+
                     $this->requisitos_cargados[] = [
                         'requisito' => $req->requisito
                     ];
-                    dd($this->requisitos_cargados);
                 }
 
-                $this->requisitos_cargados[$requisito_id] = $archivo->getClientOriginalName();
+                /* $this->requisitos_cargados[$requisito_id] = $archivo->getClientOriginalName(); */
             }
+            Notification::route('mail', 'ing.sergiodaniel@gmail.com')
+                ->notify(new NotificacionCargaRequisitos($this->requisitos_cargados, $this->nombre_candidato, $this->id_candidato));
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();
             session()->flash('error', $errorMessages);
@@ -152,6 +154,8 @@ class ListarRequisitos extends Component
     public function mount($id_candidato)
     {
         $this->id_candidato = $id_candidato;
+        $nombre_candidato = DB::table('candidatos')->select('nombre')->where('id', '=', $id_candidato)->first();
+        $this->nombre_candidato = $nombre_candidato->nombre;
     }
 
     public function getRequisitosByPuesto()

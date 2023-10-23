@@ -7,8 +7,7 @@ use App\Models\RequisitoCandidato;
 use App\Notifications\AvisoRequisitosRechazados;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-
-use function Laravel\Prompts\select;
+use setasign\Fpdi\Fpdi;
 
 class Expediente extends Component
 {
@@ -67,19 +66,36 @@ class Expediente extends Component
 
     public function guardar()
     {
+        $validated = $this->validate([
+            'aprobado' => 'required|integer|min:0',
+        ]);
+
+        if ($validated['aprobado'] == 1) {
+            $validated = $this->validate([
+                'aprobado' => 'required|integer|min:0',
+                'observacion' => 'nullable|string'
+            ]);
+        } else {
+            $validated = $this->validate([
+                'aprobado' => 'required|integer|min:0',
+                'observacion' => 'required|filled'
+            ]);
+        }
+        
         $req = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
 
-        $req->observacion = $this->observacion;
-        $req->valido = $this->aprobado;
+        $req->observacion = $validated['observacion'];
+        $req->valido = $validated['aprobado'];
         $req->revisado = 1;
         $req->fecha_revision = date("Y-m-d H:i:s");
-
-        $req->save();
 
         $estado = 'rechazó';
         if ($this->aprobado == 1) {
             $estado = 'aprobó';
+            $this->addWaterMark($req->ubicacion);
         }
+
+        $req->save();
 
         $log = DB::table('requisitos_candidatos')
             ->join('candidatos', 'requisitos_candidatos.candidatos_id', '=', 'candidatos.id')
@@ -129,6 +145,30 @@ class Expediente extends Component
 
             session()->flash('message');
             return redirect()->route('expedientes', ['candidato_id' => $this->id_candidato]);
+        }
+    }
+
+    public function addWaterMark($archivo)
+    {
+        $fpdi = new Fpdi();
+        $count = $fpdi->setSourceFile(public_path('storage/' . $archivo));
+
+        for ($i = 1; $i <= $count; $i++) {
+
+            $template = $fpdi->importPage($i);
+            $size = $fpdi->getTemplateSize($template);
+            $fpdi->AddPage($size['orientation'], array($size['width'], $size['height']));
+            $fpdi->useTemplate($template);
+
+            $fpdi->SetFont("Arial", "", 5);
+            $fpdi->SetTextColor(128, 128, 128);
+
+            $left = 2;
+            $top = 2;
+            $text = "Revisado por:\n" . iconv('utf-8', 'ISO-8859-2', auth()->user()->name) . "\n" . date('d/m/Y H:m:s');
+            $fpdi->SetXY($left, $top);
+            $fpdi->MultiCell(0, 2, $text);
+            $fpdi->Output(public_path('storage/' . $archivo), 'F');
         }
     }
 

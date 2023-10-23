@@ -38,7 +38,7 @@ class AvisoRequisitosRechazados extends Notification
     {
         $message = (new MailMessage)
             ->greeting('¡Hola!')
-            ->subject('Requisitos de contratación')
+            ->subject('Requisitos de contratación cargados')
             ->line('Lamentablemente, algunos de tus requisitos de contratación han sido rechazados. A continuación, se detalla la información de los requisitos rechazados: ');
             foreach ($this->requisitosRechazados as $requisito) {
                 $message->line("Requisito: " . $requisito->requisito);

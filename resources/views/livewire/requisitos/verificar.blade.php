@@ -36,8 +36,8 @@
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                                 <div class="sm:col-span-full">
-                                    <object data="{{ asset('storage') . '/' . $pdf->ubicacion }}" class="w-full h-screen"
-                                        type="application/pdf">
+                                    <object data="{{ asset('storage') . '/' . $pdf->ubicacion }}"
+                                        class="w-full h-screen" type="application/pdf">
                                         alt : <a href="{{ asset('storage') . '/' . $pdf->ubicacion }}">test.pdf</a>
                                     </object>
                                 </div>
@@ -55,6 +55,13 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('aprobado')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="sm:col-span-3">
                                     <label for="observacion"
@@ -65,6 +72,13 @@
                                     </div>
                                     <p class="mt-3 text-sm leading-6 text-gray-600">Breve descripción de la observación.
                                     </p>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('observacion')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -9,14 +9,17 @@ use Illuminate\Notifications\Notification;
 
 class NotificacionCargaRequisitos extends Notification
 {
+    protected $requisitos_cargados, $nombre_candidato, $id_candidato;
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($requisitos_cargados, $nombre_candidato, $id_candidato)
     {
-        //
+        $this->requisitos_cargados = $requisitos_cargados;
+        $this->nombre_candidato = $nombre_candidato;
+        $this->id_candidato = $id_candidato;
     }
 
     /**
@@ -34,10 +37,18 @@ class NotificacionCargaRequisitos extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        $message = (new MailMessage)
+            ->greeting('¡Hola!')
+            ->subject('Requisitos de contratación')
+            ->line('El candidato ' . $this->nombre_candidato . ' ha cargado los siguientes requisitos: ');
+        foreach ($this->requisitos_cargados as $requisito) {
+            $message->line($requisito['requisito']);
+        }
+        $message->line('Para verificar los requisitos que han sido agregados o actualizados, puedes verificar el expediente en el siguiente enlace.')
+            ->action('Requisitos', route('expedientes', ['candidato_id' => $this->id_candidato]));
+
+
+        return $message;
     }
 
     /**
