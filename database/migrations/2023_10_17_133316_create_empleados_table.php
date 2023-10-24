@@ -49,7 +49,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('generos_id')->nullable();
             $table->unsignedTinyInteger('etnias_id');
             $table->unsignedTinyInteger('grupos_sanguineos_id');
-            $table->unsignedTinyInteger('dependencias_funcionales_id');
+            $table->unsignedTinyInteger('dependencias_funcionales_id')->nullable();
             $table->unsignedSmallInteger('municipios_id');
             $table->unsignedTinyInteger('tipos_licencias_id')->nullable();
             $table->unsignedTinyInteger('tipos_vehiculos_id')->nullable();

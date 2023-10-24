@@ -14,7 +14,7 @@
                 <!--Modal title-->
                 <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
-                    Nuevo registro
+                    Verificar requisito
                 </h5>
                 <!--Close button-->
                 <button type="button" wire:click='cerrarModal()'

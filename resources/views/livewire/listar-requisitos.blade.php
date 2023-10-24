@@ -93,7 +93,7 @@
                                                 de revision</span>
                                         @elseif ($req->fecha_carga && $req->fecha_revision && $req->valido == 1)
                                             <div class="flex w-full justify-center">
-                                                <button>
+                                                <button wire:click='descargar({{ $req->id_requisito_cargado }})'>
                                                     <div class="bg-green-300 rounded">
                                                         <div class="flex flex-row items-center p-1">
                                                             {{-- <div class="p-1 text-green-800 text-sm">Descargar</div> --}}
@@ -122,7 +122,8 @@
                                                 </div>
                                             @else
                                                 <div class="flex w-full justify-center">
-                                                    <a type="button" href="{{ route('presentar_formulario', ['id_candidato' => 1]) }}">
+                                                    <a type="button"
+                                                        href="{{ route('presentar_formulario', ['id_candidato' => 1]) }}">
                                                         <div class="bg-primary rounded">
                                                             <div class="flex flex-row items-center p-1">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"

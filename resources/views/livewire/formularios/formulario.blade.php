@@ -41,7 +41,7 @@
                                                         alt="imagen" />
                                                 @endif
                                             </div>
-                                            <input wire:model='imagen' id="imagen" accept=".jpg, .jpeg, .png"
+                                            <input wire:model='imagen' accept=".jpg, .jpeg, .png"
                                                 class="relative m-0 block w-full sm:w-auto min-w-0 flex-auto rounded-md border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                                                 type="file" id="imagen" style="width: 357.33px" />
                                             <!-- Progress Bar -->
@@ -200,7 +200,7 @@
                                             nacimiento</label>
                                         <div class="mt-2">
                                             <input wire:model='fecha_nacimiento' type="date"
-                                                name="fecha_de_nacimiento" id="fecha_nacimiento" required
+                                                name="fecha_nacimiento" id="fecha_nacimiento" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -266,7 +266,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Residencia
                                             actual</label>
                                         <div class="mt-2">
-                                            <input wire:model='direccion' type="text" name="dirección"
+                                            <input wire:model='direccion' type="text" name="direccion"
                                                 id="direccion" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
@@ -818,13 +818,13 @@
                                     </div>
 
                                     <div class="sm:col-span-6">
-                                        <label for="hijos"
+                                        <label
                                             class="block text-sm font-medium leading-6 text-gray-900">Nombres y
                                             apellidos de sus hijos</label>
                                         @foreach ($hijos as $index => $hijo)
                                             <div class="sm:col-span-5 flex items-center">
                                                 <div class="mt-2 flex-grow">
-                                                    <input wire:model='hijo.{{ $index }}' type="text"
+                                                    <input wire:model='hijos.{{ $index }}.nombre' type="text"
                                                         id="hijo_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
@@ -867,7 +867,7 @@
                                 </div>
                                 <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                     <div class="sm:col-span-2 text-center">
-                                        <label for="primaria"
+                                        <label
                                             class="mt-6 block font-medium leading-6 text-gray-900 align-text-bottom">Primaria</label>
                                     </div>
 
@@ -908,7 +908,7 @@
                                     </div>
 
                                     <div class="sm:col-span-2 text-center">
-                                        <label for="secundaria"
+                                        <label
                                             class="mt-6 block font-medium leading-6 text-gray-900 align-text-bottom">Secundaria</label>
                                     </div>
 
@@ -949,7 +949,7 @@
                                     </div>
 
                                     <div class="sm:col-span-2 text-center">
-                                        <label for="diversificado"
+                                        <label
                                             class="mt-6 block font-medium leading-6 text-gray-900 align-text-bottom">Diversificado</label>
                                     </div>
 
@@ -991,7 +991,7 @@
                                     </div>
 
                                     <div class="sm:col-span-2 text-center">
-                                        <label for="universitario"
+                                        <label
                                             class="mt-6 block font-medium leading-6 text-gray-900 align-text-bottom">Universitario</label>
                                     </div>
 
@@ -1033,7 +1033,7 @@
                                     </div>
 
                                     <div class="sm:col-span-2 text-center">
-                                        <label for="maestria_postgrado"
+                                        <label
                                             class="mt-6 block font-medium leading-6 text-gray-900 align-text-bottom">Maestría
                                             o post grado</label>
                                     </div>
@@ -1076,7 +1076,7 @@
                                     </div>
 
                                     <div class="sm:col-span-2 text-center">
-                                        <label for="otra_especialidad"
+                                        <label
                                             class="mt-6 block font-medium leading-6 text-gray-900 align-text-bottom">Otra
                                             especialidad</label>
                                     </div>
@@ -1245,17 +1245,17 @@
                                         @foreach ($idiomas as $index => $idioma)
                                             <div class="sm:col-span-5 flex items-center">
                                                 <div class="mt-2 mr-2 flex-grow">
-                                                    <label for="nombre_{{ $index }}"
+                                                    <label for="idioma_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Idioma</label>
-                                                    <input wire:model='idioma.{{ $index }}.nombre'
-                                                        type="text" id="nombre_{{ $index }}"
+                                                    <input wire:model='idiomas.{{ $index }}.nombre'
+                                                        type="text" id="idioma_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 <div class="mt-2 ml-2 mr-2 flex-grow">
                                                     <label for="habla_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Habla
                                                         %</label>
-                                                    <input wire:model='idioma.{{ $index }}.habla'
+                                                    <input wire:model='idiomas.{{ $index }}.habla'
                                                         type="number" id="habla_{{ $index }}" step="1"
                                                         max="100" min="0"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -1264,7 +1264,7 @@
                                                     <label for="lectura_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Lee
                                                         %</label>
-                                                    <input wire:model='idioma.{{ $index }}.lectura'
+                                                    <input wire:model='idiomas.{{ $index }}.lectura'
                                                         type="number" id="lectura_{{ $index }}"
                                                         step="1" max="100" min="0"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -1273,7 +1273,7 @@
                                                     <label for="escritura_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Escribe
                                                         %</label>
-                                                    <input wire:model='idioma.{{ $index }}.escritura'
+                                                    <input wire:model='idiomas.{{ $index }}.escritura'
                                                         type="number" id="escritura_{{ $index }}"
                                                         step="1" max="100" min="0"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -1318,15 +1318,15 @@
                                                     <label for="nombre_programa_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Nombre
                                                         del programa</label>
-                                                    <input wire:model='programa.{{ $index }}.nombre'
-                                                        type="text" id="nombre_programa_{{ $index }}"
+                                                    <input wire:model='programas.{{ $index }}.nombre'
+                                                        type="text" id="nombre_programa_{{ $index }}" name="nombre_programa_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 <div class="mt-2  ml-3 flex-grow">
                                                     <label for="valoracion_programa_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Valoración
                                                         del programa</label>
-                                                    <select wire:model='programa.{{ $index }}.valoracion'
+                                                    <select wire:model='programas.{{ $index }}.valoracion'
                                                         id="valoracion_programa_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <option value="">Seleccionar valoración</option>
@@ -1386,7 +1386,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Empresa</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.empresa' type="text"
-                                                name="empresa_0" id="empresa_0" required
+                                                name="empresa_0" id="empresa_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1403,7 +1403,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.direccion' type="text"
-                                                name="direccion_0" id="direccion_0" required
+                                                name="direccion_0" id="direccion_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1420,7 +1420,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.telefono' type="text"
-                                                name="telefono_0" id="telefono_0" required
+                                                name="telefono_0" id="telefono_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1438,7 +1438,7 @@
                                             inmediato</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.jefe' type="text"
-                                                name="jefe_0" id="jefe_0" required
+                                                name="jefe_0" id="jefe_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1455,7 +1455,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Cargo</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.cargo' type="text"
-                                                name="cargo_0" id="cargo_0" required
+                                                name="cargo_0" id="cargo_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1472,7 +1472,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Desde</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.desde' type="date"
-                                                name="desde_0" id="desde_0" required
+                                                name="desde_0" id="desde_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1489,7 +1489,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Hasta</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.hasta' type="date"
-                                                name="hasta_0" id="hasta_0" required
+                                                name="hasta_0" id="hasta_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1508,7 +1508,7 @@
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.ultimo_sueldo' type="number"
                                                 name="ultimo_sueldo_0" id="ultimo_sueldo_0" step="0.01"
-                                                min="0" pattern="^\d+(\.\d{1,2})?$" required
+                                                min="0" pattern="^\d+(\.\d{1,2})?$"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1526,7 +1526,7 @@
                                             salida</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.motivo_salida' type="text"
-                                                name="motivo_salida_0" id="motivo_salida_0" required
+                                                name="motivo_salida_0" id="motivo_salida_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1544,7 +1544,7 @@
                                             verificar esta información?</label>
                                         <div class="mt-2">
                                             <select wire:model='historiales_laborales.0.verificar_informacion'
-                                                id="verificar_informacion_0" name="verificar_informacion_0" required
+                                                id="verificar_informacion_0" name="verificar_informacion_0"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($si_no ?? [] as $sn)
@@ -1591,7 +1591,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Empresa</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.empresa' type="text"
-                                                name="empresa_1" id="empresa_1" required
+                                                name="empresa_1" id="empresa_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1608,7 +1608,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.direccion' type="text"
-                                                name="direccion_1" id="direccion_1" required
+                                                name="direccion_1" id="direccion_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1625,7 +1625,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.telefono' type="text"
-                                                name="telefono_1" id="telefono_1" required
+                                                name="telefono_1" id="telefono_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1644,7 +1644,7 @@
                                             inmediato</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.jefe' type="text"
-                                                name="jefe_1" id="jefe_1" required
+                                                name="jefe_1" id="jefe_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1661,7 +1661,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Cargo</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.cargo' type="text"
-                                                name="cargo_1" id="cargo_1" required
+                                                name="cargo_1" id="cargo_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1678,7 +1678,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Desde</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.desde' type="date"
-                                                name="desde_1" id="desde_1" required
+                                                name="desde_1" id="desde_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1695,7 +1695,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Hasta</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.hasta' type="date"
-                                                name="hasta_1" id="hasta_1" required
+                                                name="hasta_1" id="hasta_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1714,7 +1714,7 @@
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.ultimo_sueldo' type="number"
                                                 name="ultimo_sueldo_1" id="ultimo_sueldo_1" step="0.01"
-                                                min="0" pattern="^\d+(\.\d{1,2})?$" required
+                                                min="0" pattern="^\d+(\.\d{1,2})?$"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1732,7 +1732,7 @@
                                             salida</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.motivo_salida' type="text"
-                                                name="motivo_salida_1" id="motivo_salida_1" required
+                                                name="motivo_salida_1" id="motivo_salida_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1750,7 +1750,7 @@
                                             verificar esta información?</label>
                                         <div class="mt-2">
                                             <select wire:model='historiales_laborales.1.verificar_informacion'
-                                                id="verificar_informacion_1" name="verificar_informacion_1" required
+                                                id="verificar_informacion_1" name="verificar_informacion_1"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($si_no ?? [] as $sn)
@@ -1798,7 +1798,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Empresa</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.empresa' type="text"
-                                                name="empresa_2" id="empresa_2" required
+                                                name="empresa_2" id="empresa_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1815,7 +1815,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.direccion' type="text"
-                                                name="direccion_2" id="direccion_2" required
+                                                name="direccion_2" id="direccion_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1832,7 +1832,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.telefono' type="text"
-                                                name="telefono_2" id="telefono_2" required
+                                                name="telefono_2" id="telefono_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1851,7 +1851,7 @@
                                             inmediato</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.jefe' type="text"
-                                                name="jefe_2" id="jefe_2" required
+                                                name="jefe_2" id="jefe_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1868,7 +1868,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Cargo</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.cargo' type="text"
-                                                name="cargo_2" id="cargo_2" required
+                                                name="cargo_2" id="cargo_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1885,7 +1885,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Desde</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.desde' type="date"
-                                                name="desde_2" id="desde_2" required
+                                                name="desde_2" id="desde_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1902,7 +1902,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Hasta</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.hasta' type="date"
-                                                name="hasta_2" id="hasta_2" required
+                                                name="hasta_2" id="hasta_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1921,7 +1921,7 @@
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.ultimo_sueldo' type="number"
                                                 name="ultimo_sueldo_2" id="ultimo_sueldo_2" step="0.01"
-                                                min="0" pattern="^\d+(\.\d{1,2})?$" required
+                                                min="0" pattern="^\d+(\.\d{1,2})?$"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1939,7 +1939,7 @@
                                             salida</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.motivo_salida' type="text"
-                                                name="motivo_salida_2" id="motivo_salida_2" required
+                                                name="motivo_salida_2" id="motivo_salida_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1957,7 +1957,7 @@
                                             verificar esta información?</label>
                                         <div class="mt-2">
                                             <select wire:model='historiales_laborales.2.verificar_informacion'
-                                                id="verificar_informacion_2" name="verificar_informacion_2" required
+                                                id="verificar_informacion_2" name="verificar_informacion_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($si_no ?? [] as $sn)
@@ -2411,16 +2411,16 @@
                                                     <label for="nombre_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Nombre</label>
                                                     <input
-                                                        wire:model='persona_dependiente.{{ $index }}.nombre'
-                                                        type="text" id="nombre_{{ $index }}"
+                                                        wire:model='personas_dependientes.{{ $index }}.nombre'
+                                                        type="text" id="nombre_{{ $index }}" name="nombre_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 <div class="mt-2 ml-3 mr-2 flex-grow">
                                                     <label for="parentesco_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Parentesco</label>
                                                     <input
-                                                        wire:model='persona_dependiente.{{ $index }}.parentesco'
-                                                        type="text" id="parentesco_{{ $index }}"
+                                                        wire:model='personas_dependientes.{{ $index }}.parentesco'
+                                                        type="text" id="parentesco_{{ $index }}" name="parentesco_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 @if ($index === 0)
@@ -2485,7 +2485,6 @@
                                         <div class="mt-2">
                                             <input wire:model='fuente_ingresos_adicionales' type="text"
                                                 name="fuente_ingresos_adicionales" id="fuente_ingresos_adicionales"
-                                                required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -2568,7 +2567,6 @@
                                         </label>
                                         <div class="mt-2">
                                             <select wire:model='tipo_deuda' id="tipo_deuda" name="tipo_deuda"
-                                                required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($tipos_deudas ?? [] as $tipo_deuda)

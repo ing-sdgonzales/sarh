@@ -57,6 +57,7 @@ class ListarRequisitos extends Component
                 'requisitos.id as id',
                 'requisitos.requisito as requisito',
                 'requisitos.especificacion as especificacion',
+                'requisitos_candidatos.id as id_requisito_cargado',
                 'requisitos_candidatos.fecha_revision as fecha_revision',
                 'requisitos_candidatos.valido as valido',
                 'requisitos_candidatos.revisado as revisado',
@@ -149,6 +150,21 @@ class ListarRequisitos extends Component
             return redirect()->route('presentar_requisitos', ['id_candidato' => $this->id_candidato]);
         }
         $this->resetPage();
+    }
+
+    public function descargar($id_requisito)
+    {
+        $requisito = DB::table('requisitos_candidatos')
+            ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+            ->join('candidatos', 'requisitos_candidatos.candidatos_id', '=', 'candidatos.id')
+            ->select(
+                'requisitos.requisito as requisito',
+                'candidatos.dpi as dpi',
+                'requisitos_candidatos.ubicacion as ubicacion'
+            )
+            ->where('requisitos_candidatos.id', '=', $id_requisito)
+            ->first();
+        return response()->download('storage/' . $requisito->ubicacion, $requisito->requisito . '_' . $requisito->dpi . '.pdf');
     }
 
     public function mount($id_candidato)
