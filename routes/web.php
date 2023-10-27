@@ -3,6 +3,7 @@
 use App\Http\Controllers\BuscarAplicacionController;
 use App\Livewire\Candidatos\Candidatos;
 use App\Livewire\Candidatos\Expediente;
+use App\Livewire\Candidatos\VerFormulario;
 use App\Livewire\Formularios\Formulario;
 use App\Livewire\Formularios\Formulario029;
 use App\Livewire\ListarRequisitos;
@@ -39,7 +40,7 @@ Route::get('/presentar_requisitos/{id_candidato}', ListarRequisitos::class)
     ->middleware(['CheckEmailSearch', 'guest:' . config('fortify.guard')])->name('presentar_requisitos');
 Route::get('/presentar_formulario_029/{id_candidato}', Formulario029::class)
     ->middleware(['CheckEmailSearch', 'guest:' . config('fortify.guard')])->name('presentar_formulario029');
-    Route::get('/presentar_formulario/{id_candidato}', Formulario::class)
+Route::get('/presentar_formulario/{id_candidato}/{id_requisito}', Formulario::class)
     ->middleware(['CheckEmailSearch', 'guest:' . config('fortify.guard')])->name('presentar_formulario');
 
 Route::middleware([
@@ -55,6 +56,7 @@ Route::middleware([
     Route::get('/puestos', Puestos::class)->name('puestos');
     Route::get('/candidatos', Candidatos::class)->name('candidatos');
     Route::get('/expediente_candidato/{candidato_id}', Expediente::class)->name('expedientes');
+    Route::get('/ver_formulario/{id_empleado}', VerFormulario::class)->name('formulario');
 
     Route::get('/bitacora_usuarios', BitacoraUsuario::class)->name('bitacora');
 

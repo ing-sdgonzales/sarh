@@ -15,9 +15,8 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->integerIncrements('id');
-            $table->string('dpi', 25)->unique();
             $table->string('nit', 25)->unique();
-            $table->string('igss', 25)->unique();
+            $table->string('igss', 25)->unique()->nullable();
             $table->text('imagen');
             $table->string('nombres', 50);
             $table->string('apellidos', 50);
@@ -35,7 +34,7 @@ return new class extends Migration
             $table->text('estudio_actual')->nullable();
             $table->unsignedTinyInteger('cantidad_personas_dependientes');
             $table->unsignedTinyInteger('ingresos_adicionales');
-            $table->unsignedDecimal('monto_ingreso_total', 9, 2);
+            $table->unsignedDecimal('monto_ingreso_total', 9, 2)->nullable();
             $table->unsignedTinyInteger('posee_deudas');
             $table->unsignedTinyInteger('trabajo_conred');
             $table->unsignedTinyInteger('trabajo_estado');
@@ -51,10 +50,10 @@ return new class extends Migration
             $table->unsignedTinyInteger('grupos_sanguineos_id');
             $table->unsignedTinyInteger('dependencias_funcionales_id')->nullable();
             $table->unsignedSmallInteger('municipios_id');
-            $table->unsignedTinyInteger('tipos_licencias_id')->nullable();
-            $table->unsignedTinyInteger('tipos_vehiculos_id')->nullable();
             $table->unsignedTinyInteger('nacionalidades_id');
             $table->unsignedTinyInteger('tipos_viviendas_id');
+            $table->unsignedTinyInteger('estados_civiles_id');
+            $table->unsignedInteger('candidatos_id')->nullable();
 
             /* references */
             $table->foreign('generos_id')->references('id')->on('generos')->onUpdate('cascade');
@@ -62,10 +61,10 @@ return new class extends Migration
             $table->foreign('grupos_sanguineos_id')->references('id')->on('grupos_sanguineos')->onUpdate('cascade');
             $table->foreign('dependencias_funcionales_id')->references('id')->on('dependencias_funcionales')->onUpdate('cascade');
             $table->foreign('municipios_id')->references('id')->on('municipios')->onUpdate('cascade');
-            $table->foreign('tipos_licencias_id')->references('id')->on('tipos_licencias')->onUpdate('cascade');
-            $table->foreign('tipos_vehiculos_id')->references('id')->on('tipos_vehiculos')->onUpdate('cascade');
             $table->foreign('nacionalidades_id')->references('id')->on('nacionalidades')->onUpdate('cascade');
             $table->foreign('tipos_viviendas_id')->references('id')->on('tipos_viviendas')->onUpdate('cascade');
+            $table->foreign('estados_civiles_id')->references('id')->on('estados_civiles')->onUpdate('cascade');
+            $table->foreign('candidatos_id')->references('id')->on('candidatos')->onUpdate('cascade');
 
             $table->timestamps();
         });

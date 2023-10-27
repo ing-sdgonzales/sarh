@@ -142,7 +142,7 @@ class ListarRequisitos extends Component
 
                 /* $this->requisitos_cargados[$requisito_id] = $archivo->getClientOriginalName(); */
             }
-            Notification::route('mail', 'ing.sergiodaniel@gmail.com')
+            Notification::route('mail', 'carloszuniga061974@gmail.com')
                 ->notify(new NotificacionCargaRequisitos($this->requisitos_cargados, $this->nombre_candidato, $this->id_candidato));
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();

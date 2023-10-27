@@ -123,7 +123,7 @@
                                             @else
                                                 <div class="flex w-full justify-center">
                                                     <a type="button"
-                                                        href="{{ route('presentar_formulario', ['id_candidato' => 1]) }}">
+                                                        href="{{ route('presentar_formulario', ['id_candidato' => 1, 'id_requisito' => $req->id]) }}">
                                                         <div class="bg-primary rounded">
                                                             <div class="flex flex-row items-center p-1">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"

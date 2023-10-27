@@ -828,6 +828,13 @@
                                                         id="hijo_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('hijos.{{ $index }}.nombre')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
                                                 @if ($index === 0)
                                                     <div class="mt-2 ml-2">
                                                         <button class="btn text-black btn-info btn-sm"
@@ -1251,6 +1258,13 @@
                                                         type="text" id="idioma_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('idiomas.{{ $index }}.nombre')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
                                                 <div class="mt-2 ml-2 mr-2 flex-grow">
                                                     <label for="habla_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Habla
@@ -1259,6 +1273,13 @@
                                                         type="number" id="habla_{{ $index }}" step="1"
                                                         max="100" min="0"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('idiomas.{{ $index }}.habla')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
                                                 </div>
                                                 <div class="mt-2 ml-2 mr-2 flex-grow">
                                                     <label for="lectura_{{ $index }}"
@@ -1269,6 +1290,13 @@
                                                         step="1" max="100" min="0"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('idiomas.{{ $index }}.lectura')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
                                                 <div class="mt-2 ml-2 flex-grow">
                                                     <label for="escritura_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Escribe
@@ -1277,6 +1305,13 @@
                                                         type="number" id="escritura_{{ $index }}"
                                                         step="1" max="100" min="0"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('idiomas.{{ $index }}.escritura')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
                                                 </div>
                                                 @if ($index === 0)
                                                     <div class="mt-8 ml-2">
@@ -1322,6 +1357,13 @@
                                                         type="text" id="nombre_programa_{{ $index }}" name="nombre_programa_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('programas.{{ $index }}.nombre')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
                                                 <div class="mt-2  ml-3 flex-grow">
                                                     <label for="valoracion_programa_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Valoración
@@ -1336,6 +1378,13 @@
                                                         <option value="4">Alto</option>
                                                         <option value="5">Muy alto</option>
                                                     </select>
+                                                </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('programas.{{ $index }}.valoracion')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
                                                 </div>
                                                 @if ($index === 0)
                                                     <div class="mt-8 ml-2">
@@ -2415,6 +2464,13 @@
                                                         type="text" id="nombre_{{ $index }}" name="nombre_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('personas_dependientes.{{ $index }}.nombre')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
+                                                </div>
                                                 <div class="mt-2 ml-3 mr-2 flex-grow">
                                                     <label for="parentesco_{{ $index }}"
                                                         class="block text-sm font-medium leading-6 text-gray-900">Parentesco</label>
@@ -2422,6 +2478,13 @@
                                                         wire:model='personas_dependientes.{{ $index }}.parentesco'
                                                         type="text" id="parentesco_{{ $index }}" name="parentesco_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                </div>
+                                                <div>
+                                                    <span class="text-red-600 text-sm">
+                                                        @error('personas_dependientes.{{ $index }}.parentesco')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </span>
                                                 </div>
                                                 @if ($index === 0)
                                                     <div class="mt-8 ml-2">

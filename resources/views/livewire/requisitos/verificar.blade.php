@@ -36,10 +36,15 @@
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                                 <div class="sm:col-span-full">
-                                    <object data="{{ asset('storage') . '/' . $pdf->ubicacion }}"
-                                        class="w-full h-screen" type="application/pdf">
-                                        alt : <a href="{{ asset('storage') . '/' . $pdf->ubicacion }}">test.pdf</a>
-                                    </object>
+                                    @if (Str::endsWith($documento->ubicacion, '.pdf'))
+                                        <object data="{{ asset('storage') . '/' . $pdf->ubicacion }}"
+                                            class="w-full h-screen" type="application/pdf">
+                                            alt : <a href="{{ asset('storage') . '/' . $pdf->ubicacion }}">test.pdf</a>
+                                        </object>
+                                    @elseif (Str::endsWith($documento->ubicacion, '.docx'))
+                                        <iframe src="{{ asset('storage/' . $pdf->ubicacion) }}"
+                                            class="w-full h-screen"></iframe>
+                                    @endif
                                 </div>
                                 <div class="sm:col-span-3">
                                     <label for="aprobado"

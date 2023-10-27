@@ -2,8 +2,12 @@
 
 namespace App\Livewire\Formularios;
 
+use App\Http\Controllers\FormularioController;
 use App\Models\Empleado;
+use App\Models\RequisitoCandidato;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
 
@@ -37,7 +41,7 @@ class Formulario extends Component
     public $referencias_laborales = [['nombre' => '', 'empresa' => '', 'teléfono' => '']];
     public $referencias_personales = [['nombre' => '', 'lugar_trabajo' => '', 'teléfono' => '']];
     /* variables de consulta */
-    public $id_candidato, $dpi, $nit, $igss, $imagen, $nombres, $apellidos, $puesto, $email, $pretension_salarial, $departamento,
+    public $id_candidato, $id_requisito, $id_puesto, $dpi, $nit, $igss, $imagen, $nombres, $apellidos, $puesto, $email, $pretension_salarial, $departamento,
         $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion, $departamento_emision, $municipio_emision, $licencia,
         $tipo_licencia, $tipo_vehiculo, $placa, $telefono_casa, $telefono_movil, $familiar_conred, $nombre_familiar_conred,
         $cargo_familiar_conred, $conocido_conred, $nombre_conocido_conred, $cargo_conocido_conred, $telefono_padre, $nombre_padre,
@@ -51,6 +55,7 @@ class Formulario extends Component
         $tipo_intervencion, $sufrido_accidente, $tipo_accidente, $alergia_medicamento, $tipo_medicamento, $tipo_sangre, $nombre_contacto_emergencia,
         $telefono_contacto_emergencia, $direccion_contacto_emergencia;
 
+    public $empleado, $imagen_actual;
     #[Layout('layouts.app2')]
     public function render()
     {
@@ -77,11 +82,12 @@ class Formulario extends Component
 
     public function guardar()
     {
+        $img = '';
         $validated = $this->validate([
             'imagen' => 'image|required|mimes:jpg,jpeg,png|max:2048',
             'nombres' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'apellidos' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'pretension_salarial' => 'required|decima:2',
+            'pretension_salarial' => 'required|decimal:2',
             'departamento' => 'required|integer|min:1',
             'municipio' => 'required|integer|min:1',
             'fecha_nacimiento' => 'required|date',
@@ -97,103 +103,108 @@ class Formulario extends Component
             'tipo_licencia' => 'nullable|integer',
             'tipo_vehiculo' => 'nullable|integer',
             'placa' => 'nullable|regex:/^[PM]\d{3}[BCDFGHJKLMNPQRSTVWXYZ]{3}$/',
-            'telefono_casa' => ['nullable', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
+            'telefono_casa' => ['nullable', 'regex:/^(2|3|4|5|7)\d{3}-\d{4}$/'],
             'telefono_movil' => ['required', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
             'email' => 'required|filled|email:dns',
             'familiar_conred' => 'required|integer|min:0',
-            'nombre_familiar_conred' => 'required_if:familiar_conred,1',
-            'cargo_familiar_conred' => 'required_if:familiar_conred,1',
+            'nombre_familiar_conred' => 'required_if:familiar_conred,1|nullable',
+            'cargo_familiar_conred' => 'required_if:familiar_conred,1|nullable',
             'conocido_conred' => 'required|integer|min:0',
-            'nombre_conocido_conred' => 'required_if:concido_conred,1',
-            'cargo_conocido_conred' => 'required_if:conocido_conred,1',
-            'telefono_padre' => ['nullable', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
+            'nombre_conocido_conred' => 'required_if:conocido_conred,1|nullable',
+            'cargo_conocido_conred' => 'required_if:conocido_conred,1|nullable',
+            'telefono_padre' => ['nullable', 'regex:/^(2|3|4|5|7)\d{3}-\d{4}$/'],
             'nombre_padre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'ocupacion_padre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'telefono_madre' => ['nullable', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
+            'telefono_madre' => ['nullable', 'regex:/^(2|3|4|5|7)\d{3}-\d{4}$/'],
             'nombre_madre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'ocupacion_madre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'telefono_conviviente' => ['nullable', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
-            'nombre_conviviente' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'ocupacion_conviviente' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'hijos.*.nombre' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'establecimiento_primaria' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'telefono_conviviente' => ['nullable', 'regex:/^(2|3|4|5|7)\d{3}-\d{4}$/'],
+            'nombre_conviviente' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'ocupacion_conviviente' => 'required_with:nombre_conviviente|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'hijos.*.nombre' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'establecimiento_primaria' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
             'titulo_primaria' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'establecimiento_secundaria' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'titulo_secundaria' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'establecimiento_diversificado' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'titulo_diversificado' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'establecimiento_universitario' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'titulo_universitario' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'establecimiento_maestria_postgrado' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'titulo_maestria_postgrado' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'establecimiento_otra_especialidad' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'titulo_otra_especialidad' => 'nullable|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'establecimiento_secundaria' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
+            'titulo_secundaria' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'establecimiento_diversificado' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
+            'titulo_diversificado' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'establecimiento_universitario' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
+            'titulo_universitario' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'establecimiento_maestria_postgrado' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
+            'titulo_maestria_postgrado' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'establecimiento_otra_especialidad' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'titulo_otra_especialidad' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
             'estudia_actualmente' => 'required|integer|min:0',
-            'estudio_actual' => 'required_if:estudia_actualmente,1|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'horario_estudio_actual' => 'required_if:estudia_actualmente,1',
-            'establecimiento_estudio_actual' => 'required_if:estudia_actualmente,1|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'estudio_actual' => 'required_if:estudia_actualmente,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'horario_estudio_actual' => 'required_if:estudia_actualmente,1|nullable',
+            'establecimiento_estudio_actual' => 'required_if:estudia_actualmente,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
             'etnia' => 'required|integer|min:1',
-            'otro_etnia' => 'required_if:etnia,',
+            'otro_etnia' => 'required_if:etnia,|nullable',
             'idiomas.*.nombre' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'idiomas.*.habla' => ['required_if:idiomas.*.idioma,!=,'],
-            'idiomas.*.lectura' => ['required_if:idiomas.*.idioma,!=,'],
-            'idiomas.*.escritura' => ['required_if:idiomas.*.idioma,!=,'],
+            'idiomas.*.habla' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
+            'idiomas.*.lectura' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
+            'idiomas.*.escritura' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
             'programas.*.nombre' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'programas.*.valoracion' => ['required_if:programas.*.nombre,!=,', 'integer', 'min:1', 'max:5'],
-            'historiales_laborales.*.empresa' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'historiales_laborales.*.direccion' => ['required_if:historiales_laborales.*.empresa,!=,'],
-            'historiales_laborales.*.telefono' => ['required_if:historiales_laborales.*.empresa,!=,', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
-            'historiales_laborales.*.jefe' => ['required_if:historiales_laborales.*.empresa,!=,', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'historiales_laborales.*.cargo' => ['required_if:historiales_laborales.*.empresa,!=,', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'historiales_laborales.*.desde' => ['required_if:historiales_laborales.*.empresa,!=,', 'date'],
-            'historiales_laborales.*.hasta' => ['required_if:historiales_laborales.*.empresa,!=,', 'date', 'after:historiales_laborales.*.desde'],
-            'historiales_laborales.*.ultimo_sueldo' => ['required_if:historiales_laborales.*.empresa,!=,', 'decimal:2'],
-            'historiales_laborales.*.motivo_salida' => ['required_if:historiales_laborales.*.empresa,!=,', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'historiales_laborales.*.verificar_informacion' => ['required_if:historiales_laborales.*.empresa,!=,', 'integer', 'min:0'],
-            'historiales_laborales.*.razon_informacion' => ['required_if:historiales_laborales.*.verificar_informacion,0', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'programas.*.valoracion' => ['required_with:programas.*.nombre', 'integer', 'min:1', 'max:5'],
+            'historiales_laborales.*.empresa' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'],
+            'historiales_laborales.*.direccion' => ['required_with:historiales_laborales.*.empresa'],
+            'historiales_laborales.*.telefono' => ['required_with:historiales_laborales.*.empresa', 'regex:/^(2|3|4|5|7)\d{3}-\d{4}$/'],
+            'historiales_laborales.*.jefe' => ['required_with:historiales_laborales.*.empresa', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'historiales_laborales.*.cargo' => ['required_with:historiales_laborales.*.empresa', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'historiales_laborales.*.desde' => ['required_with:historiales_laborales.*.empresa', 'date'],
+            'historiales_laborales.*.hasta' => ['required_with:historiales_laborales.*.empresa', 'date', 'after:historiales_laborales.*.desde'],
+            'historiales_laborales.*.ultimo_sueldo' => ['required_with:historiales_laborales.*.empresa', 'decimal:2'],
+            'historiales_laborales.*.motivo_salida' => ['required_with:historiales_laborales.*.empresa', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'historiales_laborales.*.verificar_informacion' => ['required_with:historiales_laborales.*.empresa', 'integer', 'min:0'],
+            'historiales_laborales.*.razon_informacion' => ['required_with:historiales_laborales.*.verificar_informacion,0', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'referencias_personales.*.nombre' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'referencias_personales.*.lugar_trabajo' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'referencias_personales.*.lugar_trabajo' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'],
             'referencias_personales.*.telefono' => ['required', 'filled', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
             'referencias_laborales.*.nombre' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'referencias_laborales.*.empresa' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'referencias_laborales.*.empresa' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'],
             'referencias_laborales.*.telefono' => ['required', 'filled', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
             'tipo_vivienda' => 'required|integer|min:1',
             'pago_vivienda' => 'required|decimal:2',
             'cantidad_personas_dependientes' => 'required|integer|min:0',
-            'personas_dependientes.*.nombre' => ['required_if:cantidad_personas_dependientes, >=,1', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-            'personas_dependientes.*.parentesco' => ['required_if:cantidad_personas_dependientes, >=,1', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'personas_dependientes.*.nombre' => ['required_if:cantidad_personas_dependientes, >=,1', 'nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'personas_dependientes.*.parentesco' => ['required_with:personas_dependientes.*.nombre', 'nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'ingresos_adicionales' => 'required|integer|min:0',
             'fuente_ingresos_adicionales' => 'required_if:ingresos_adicionales,1',
             'personas_aportan_ingresos' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'monto_ingreso_total' => 'nullable|decimal:2',
             'posee_deudas' => 'required|integer|min:0',
-            'tipo_deuda' => 'required_if:posee_deudas,1|integer|min:1',
-            'monto_deuda' => 'required_if:posee_deudas,1|decimal:2',
+            'tipo_deuda' => 'required_if:posee_deudas,1|nullable|integer|min:1',
+            'monto_deuda' => 'required_if:posee_deudas,1|nullable|decimal:2',
             'trabajo_conred' => 'required|integer|min:0',
             'trabajo_estado' => 'required|integer|min:0',
             'jubilado_estado' => 'required|integer|min:0',
-            'institucion_jubilacion' => 'required_if:jubilado_estado,1|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'institucion_jubilacion' => 'required_if:jubilado_estado,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
             'padecimiento_salud' => 'required|integer|min:0',
-            'tipo_enfermedad' => 'required_if:padecimiento_salud,1|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'tipo_enfermedad' => 'required_if:padecimiento_salud,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'intervencion_quirurgica' => 'required|integer|min:0',
-            'tipo_intervencion' => 'required_if:intervencion_quirurgica,1|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'tipo_intervencion' => 'required_if:intervencion_quirurgica,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'sufrido_accidente' => 'required|integer|min:0',
-            'tipo_accidente' => 'required_if:sufrido_accidente,1|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'tipo_accidente' => 'required_if:sufrido_accidente,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'alergia_medicamento' => 'required|integer|min:0',
-            'tipo_medicamento' => 'required_if:alergia_medicamento,1|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+            'tipo_medicamento' => 'required_if:alergia_medicamento,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'tipo_sangre' => 'required|integer|min:1',
             'nombre_contacto_emergencia' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
-            'direccon_contacto_emergencia' => 'required|filled',
-            'telefono_contacto_emergencia' => ['required', 'regex:/^(3|4|5)\d{3}-\d{4}$/']
+            'direccion_contacto_emergencia' => 'required|filled',
+            'telefono_contacto_emergencia' => ['required', 'regex:/^(2|3|4|5|7)\d{3}-\d{4}$/']
         ]);
 
         try {
-            DB::transaction(function () use ($validated) {
-                $empleado = Empleado::create([
-                    'dpi' => $validated['dpi'],
+            if ($this->imagen == $this->imagen_actual) {
+                $img = $this->imagen;
+            } else {
+                $img = $this->imagen->store('candidatos', 'public');
+                Storage::delete('public/' . $this->imagen_actual);
+            }
+            DB::transaction(function () use ($validated, $img) {
+                $this->empleado = Empleado::create([
                     'nit' => $validated['nit'],
                     'igss' => $validated['igss'],
-                    'imagen' => $validated['imagen'],
+                    'imagen' => $img,
                     'nombres' => $validated['nombres'],
                     'apellidos' => $validated['apellidos'],
                     'email' => $validated['email'],
@@ -215,23 +226,52 @@ class Formulario extends Component
                     'pago_vivienda' => $validated['pago_vivienda'],
                     'etnias_id' => $validated['etnia'],
                     'grupos_sanguineos_id' => $validated['tipo_sangre'],
-                    'dependencias_funcionales_id' => 1,
                     'municipios_id' => $validated['municipio'],
-                    'tipos_licencias_id' => $validated['tipo_licencia'],
-                    'tipos_vehiculos_id' => $validated['tipo_vehiculo'],
                     'nacionalidades_id' => $validated['nacionalidad'],
-                    'tipos_viviendas_id' => $validated['tipo_vivienda']
+                    'tipos_viviendas_id' => $validated['tipo_vivienda'],
+                    'estados_civiles_id' => $validated['estado_civil']
                 ]);
+
+                $requisito = RequisitoCandidato::where([
+                    'candidatos_id' => $this->id_candidato,
+                    'puestos_nominales_id' => $this->puesto,
+                    'requisitos_id' => $this->id_requisito
+                ])
+                    ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                    ->first();
+                if ($requisito) {
+                    $requisito->update([
+                        'ubicacion' => '',
+                        'observacion' => '',
+                        'fecha_carga' => date("Y-m-d H:i:s"),
+                        'valido' => 0,
+                        'fecha_revision' => null
+                    ]);
+                    $requisito->revisado = 0;
+                    $requisito->save();
+                } else {
+                    RequisitoCandidato::create([
+                        'candidatos_id' => $this->id_candidato,
+                        'puestos_nominales_id' => $this->puesto,
+                        'requisitos_id' => $this->id_requisito,
+                        'ubicacion' => ''
+                    ]);
+                }
+                /* $documento = new FormularioController;
+                $documento->generarDoc($this->empleado->id, $this->id_requisito, $this->id_candidato); */
             });
-        } catch (\Throwable $th) {
-            //throw $th;
+            return redirect()->route('presentar_requisitos', ['id_candidato' => $this->id_candidato]);
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            return redirect()->route('presentar_formulario', ['id_candidato' => $this->id_candidato, 'id_requisito' => $this->id_requisito]);
         }
-        
     }
 
-    public function mount($id_candidato)
+    public function mount($id_candidato, $id_requisito)
     {
         $this->id_candidato = $id_candidato;
+        $this->id_requisito = $id_requisito;
         $this->cargarPuesto($id_candidato);
     }
 
@@ -244,6 +284,7 @@ class Formulario extends Component
             ->where('aplicaciones_candidatos.candidatos_id', '=', $id_candidato)
             ->first();
         $this->puesto = $puesto->puesto;
+        $this->id_puesto = $puesto->id_puesto;
     }
 
     public function getMunicipiosByDepartamento()

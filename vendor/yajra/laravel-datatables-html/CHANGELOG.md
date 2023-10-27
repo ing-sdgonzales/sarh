@@ -8,6 +8,20 @@
 
 ## CHANGELOG
 
+### v10.9.1 - 2023-10-04
+
+- fix: add missing Arrayable param #208
+- fix phpstan error: Parameter #1 $value of method Yajra\DataTables\Html\Builder::searchPanes() expects array|bool|(callable(): mixed), Yajra\DataTables\Html\SearchPane given.
+
+### v10.9.0 - 2023-10-02
+
+- feat: add dtsp collapse option setter #206
+- feat: add initCollapsed option setter #207
+
+### v10.8.2 - 2023-10-02
+
+- fix: show searchPanes by default #205
+
 ### v10.8.1 - 2023-08-16
 
 - Revert "fix: Mixed Content problem with updating minifiedAjax method and get current url based on http or https scheme" #202
