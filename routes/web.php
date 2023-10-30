@@ -56,7 +56,7 @@ Route::middleware([
     Route::get('/puestos', Puestos::class)->name('puestos');
     Route::get('/candidatos', Candidatos::class)->name('candidatos');
     Route::get('/expediente_candidato/{candidato_id}', Expediente::class)->name('expedientes');
-    Route::get('/ver_formulario/{id_empleado}', VerFormulario::class)->name('formulario');
+    Route::get('/ver_formulario/{id_candidato}/{id_requisito}', VerFormulario::class)->name('formulario');
 
     Route::get('/bitacora_usuarios', BitacoraUsuario::class)->name('bitacora');
 

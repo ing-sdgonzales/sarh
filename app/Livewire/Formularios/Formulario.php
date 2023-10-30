@@ -234,7 +234,7 @@ class Formulario extends Component
 
                 $requisito = RequisitoCandidato::where([
                     'candidatos_id' => $this->id_candidato,
-                    'puestos_nominales_id' => $this->puesto,
+                    'puestos_nominales_id' => $this->id_puesto,
                     'requisitos_id' => $this->id_requisito
                 ])
                     ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
@@ -252,7 +252,7 @@ class Formulario extends Component
                 } else {
                     RequisitoCandidato::create([
                         'candidatos_id' => $this->id_candidato,
-                        'puestos_nominales_id' => $this->puesto,
+                        'puestos_nominales_id' => $this->id_puesto,
                         'requisitos_id' => $this->id_requisito,
                         'ubicacion' => ''
                     ]);

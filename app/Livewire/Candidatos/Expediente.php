@@ -81,7 +81,7 @@ class Expediente extends Component
                 'observacion' => 'required|filled'
             ]);
         }
-        
+
         $req = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
 
         $req->observacion = $validated['observacion'];
@@ -183,10 +183,10 @@ class Expediente extends Component
                 'observacion'
             )
             ->where('candidatos_id', '=', $this->id_candidato)
-            ->where('id', '=', $requisito_id)
+            ->where('requisitos_id', '=', $requisito_id)
             ->where('puestos_nominales_id', '=', $this->puesto)
             ->first();
-        if ($this->pdf->fecha_revision != null && ($this->pdf->valido == 0 || $this->pdf->valido == 1)) {
+        if (is_null($this->pdf->fecha_revision) != 1 && ($this->pdf->valido == 0 || $this->pdf->valido == 1)) {
             $this->aprobado = $this->pdf->valido;
         } else {
             $this->aprobado = '';
@@ -213,10 +213,12 @@ class Expediente extends Component
                 'requisitos_candidatos.fecha_revision as fecha_revision',
                 'requisitos_candidatos.valido as valido',
                 'requisitos_candidatos.revisado as revisado',
+                'requisitos_candidatos.candidatos_id',
                 'requisitos_candidatos.fecha_carga as fecha_carga'
             )
             ->where('aplicaciones_candidatos.candidatos_id', '=', $this->id_candidato)
             ->where('aplicaciones_candidatos.puestos_nominales_id', '=', $this->puesto)
+            ->orderBy('requisitos.id', 'asc')
             ->get();
         $this->total_requisitos =  $this->requisitos->count();
     }

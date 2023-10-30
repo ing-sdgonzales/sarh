@@ -65,7 +65,8 @@ class ListarRequisitos extends Component
                 'renglones.renglon as renglon'
             )
             ->where('aplicaciones_candidatos.candidatos_id', '=', $this->id_candidato)
-            ->where('aplicaciones_candidatos.puestos_nominales_id', '=', $this->puesto);
+            ->where('aplicaciones_candidatos.puestos_nominales_id', '=', $this->puesto)
+            ->orderBy('requisitos.id', 'asc');
         $this->total_requisitos =  $requisitos->count();
 
         $this->total_requisitos_cargados = DB::table('requisitos_candidatos')
