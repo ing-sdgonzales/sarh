@@ -8,6 +8,7 @@ use App\Notifications\NotificacionCargaRequisitos;
 use Exception;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
@@ -165,7 +166,10 @@ class ListarRequisitos extends Component
             )
             ->where('requisitos_candidatos.id', '=', $id_requisito)
             ->first();
-        return response()->download('storage/' . $requisito->ubicacion, $requisito->requisito . '_' . $requisito->dpi . '.pdf');
+
+        $ext = pathinfo('storage/' . $requisito->ubicacion, PATHINFO_EXTENSION);
+
+        return response()->download('storage/' . $requisito->ubicacion, $requisito->requisito . '_' . $requisito->dpi . '.' . $ext);
     }
 
     public function mount($id_candidato)

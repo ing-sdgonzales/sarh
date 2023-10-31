@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 class FormularioController extends Controller
 {
 
-    public function generarDoc($id_empleado, $id_requisito, $id_candidato)
+    public function generarDoc($id_empleado)
     {
         $empleado = Empleado::select(
             'empleados.id as id',
@@ -68,8 +68,11 @@ class FormularioController extends Controller
 
         /* $phpWord = IOFactory::load('templates/procesed/formulario_' . $id_empleado . '.docx', 'Word2007');
         $phpWord->save('templates/procesed/formulario_' . $id_empleado . '.pdf', 'PDF'); */
-        Storage::disk('public')->put('requisitos/' . $archivo, $contents);
+        $ubicacion = 'requisitos/' . $archivo;
+        Storage::disk('public')->put($ubicacion, $contents);
 
         /* unlink($path); */
+
+        return $ubicacion;
     }
 }

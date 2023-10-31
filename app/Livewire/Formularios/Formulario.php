@@ -3,6 +3,7 @@
 namespace App\Livewire\Formularios;
 
 use App\Http\Controllers\FormularioController;
+use App\Models\Dpi;
 use App\Models\Empleado;
 use App\Models\RequisitoCandidato;
 use Exception;
@@ -229,7 +230,14 @@ class Formulario extends Component
                     'municipios_id' => $validated['municipio'],
                     'nacionalidades_id' => $validated['nacionalidad'],
                     'tipos_viviendas_id' => $validated['tipo_vivienda'],
-                    'estados_civiles_id' => $validated['estado_civil']
+                    'estados_civiles_id' => $validated['estado_civil'],
+                    'candidatos_id' => $this->id_candidato
+                ]);
+
+                Dpi::create([
+                    'dpi' => $validated['dpi'],
+                    'municipios_id' => $validated['municipio_emision'],
+                    'empleados_id' => $this->empleado->id
                 ]);
 
                 $requisito = RequisitoCandidato::where([
@@ -257,8 +265,6 @@ class Formulario extends Component
                         'ubicacion' => ''
                     ]);
                 }
-                /* $documento = new FormularioController;
-                $documento->generarDoc($this->empleado->id, $this->id_requisito, $this->id_candidato); */
             });
             return redirect()->route('presentar_requisitos', ['id_candidato' => $this->id_candidato]);
         } catch (Exception $e) {
