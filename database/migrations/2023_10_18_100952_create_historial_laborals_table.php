@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('cargo', 50);
             $table->date('desde');
             $table->date('hasta');
-            $table->decimal('ultimo_suelto', 9, 2);
+            $table->decimal('ultimo_sueldo', 9, 2);
             $table->text('motivo_salida');
             $table->unsignedTinyInteger('verificar_informacion');
             $table->text('razon_informacion')->nullable();

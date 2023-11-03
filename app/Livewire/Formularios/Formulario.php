@@ -9,10 +9,14 @@ use App\Models\Empleado;
 use App\Models\EstudioActualEmpleado;
 use App\Models\FamiliarConred;
 use App\Models\HijoEmpleado;
+use App\Models\HistorialLaboral;
 use App\Models\Idioma;
 use App\Models\LicenciaConducir;
 use App\Models\MadreEmpleado;
 use App\Models\PadreEmpleado;
+use App\Models\ProgramaComputacion;
+use App\Models\ReferenciaLaboral;
+use App\Models\ReferenciaPersonal;
 use App\Models\RegistroAcademicoEmpleado;
 use App\Models\RequisitoCandidato;
 use App\Models\TelefonoEmpleado;
@@ -33,14 +37,14 @@ class Formulario extends Component
         $hijos = [['nombre' => '']],
         $idiomas = [['idioma' => '', 'habla' => '', 'lee' => '', 'escribe' => '']],
         $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
-        $programas = [['nombre' => '', 'valoracion' => '']],
+        $programas = [['programa' => '', 'valoracion' => '']],
         $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
     public $historiales_laborales = [
         [
             'empresa' => '',
             'direccion' => '',
             'telefono' => '',
-            'jefe' => '',
+            'jefe_inmediato' => '',
             'cargo' => '',
             'desde' => '',
             'hasta' => '',
@@ -152,23 +156,23 @@ class Formulario extends Component
             'establecimiento_estudio_actual' => 'required_if:estudia_actualmente,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
             'etnia' => 'required|integer|min:1',
             'otro_etnia' => 'required_if:etnia,|nullable',
-            'idiomas.*.nombre' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'idiomas.*.idioma' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'idiomas.*.habla' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
-            'idiomas.*.lectura' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
-            'idiomas.*.escritura' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
-            'programas.*.nombre' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'idiomas.*.lee' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
+            'idiomas.*.escribe' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
+            'programas.*.programa' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'programas.*.valoracion' => ['required_with:programas.*.nombre', 'integer', 'min:1', 'max:5'],
             'historiales_laborales.*.empresa' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'],
             'historiales_laborales.*.direccion' => ['required_with:historiales_laborales.*.empresa'],
             'historiales_laborales.*.telefono' => ['required_with:historiales_laborales.*.empresa', 'regex:/^(2|3|4|5|7)\d{3}-\d{4}$/'],
-            'historiales_laborales.*.jefe' => ['required_with:historiales_laborales.*.empresa', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'historiales_laborales.*.jefe_inmediato' => ['required_with:historiales_laborales.*.empresa', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'historiales_laborales.*.cargo' => ['required_with:historiales_laborales.*.empresa', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'historiales_laborales.*.desde' => ['required_with:historiales_laborales.*.empresa', 'date'],
             'historiales_laborales.*.hasta' => ['required_with:historiales_laborales.*.empresa', 'date', 'after:historiales_laborales.*.desde'],
             'historiales_laborales.*.ultimo_sueldo' => ['required_with:historiales_laborales.*.empresa', 'decimal:2'],
             'historiales_laborales.*.motivo_salida' => ['required_with:historiales_laborales.*.empresa', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'historiales_laborales.*.verificar_informacion' => ['required_with:historiales_laborales.*.empresa', 'integer', 'min:0'],
-            'historiales_laborales.*.razon_informacion' => ['required_with:historiales_laborales.*.verificar_informacion,0', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+            'historiales_laborales.*.razon_informacion' => ['required_if:historiales_laborales.*.verificar_informacion,0', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'referencias_personales.*.nombre' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'referencias_personales.*.lugar_trabajo' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'],
             'referencias_personales.*.telefono' => ['required', 'filled', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
@@ -400,29 +404,88 @@ class Formulario extends Component
                     Idioma::where('empleados_id', $this->empleado->id)
                         ->whereNotIn('idioma', collect($this->idiomas)->pluck('idioma')->toArray())
                         ->delete();
-                    
-                    foreach ($this->idiomas as $idioma) {
+
+                    foreach ($validated['idiomas'] as $idioma) {
                         $lang =  $idioma['idioma'];
                         Idioma::updateOrCreate(['empleados_id' => $this->empleado->id, 'idioma' => $lang], [
                             'idioma' => $idioma['idioma'],
                             'habla' => $idioma['habla'],
-                            'lectura' => $idioma['lectura'],
-                            'escritura' => $idioma['escritura']
+                            'lee' => $idioma['lee'],
+                            'escribe' => $idioma['escribe']
                         ]);
                     }
                 }
 
-                if (count($this->hijos) > 0) {
-                    HijoEmpleado::where('empleados_id', $this->empleado->id)
-                        ->whereNotIn('nombre', collect($this->hijos)->pluck('nombre')->toArray())
+                if (count($this->programas) > 0) {
+                    ProgramaComputacion::where('empleados_id', $this->empleado->id)
+                        ->whereNotIn('programa', collect($this->programas)->pluck('programa')->toArray())
                         ->delete();
 
-                    foreach ($this->hijos as $hijo) {
-                        $nombre = $hijo['nombre'];
-                        HijoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'nombre' => $nombre], [
-                            'nombre' => $hijo['nombre']
+                    foreach ($validated['programas'] as $programa) {
+                        $pro = $programa['programa'];
+                        ProgramaComputacion::updateOrCreate(['empleados_id' => $this->empleado->id, 'programa' => $pro], [
+                            'programa' => $programa['programa'],
+                            'valoracion' => $programa['valoracion']
                         ]);
                     }
+                }
+
+                if (count($this->historiales_laborales) > 0) {
+                    foreach ($validated['historiales_laborales'] as $historial) {
+                        if (!empty(array_filter($historial))) {
+                            $registro = HistorialLaboral::where('empleados_id', $this->empleado->id)
+                                ->where('empresa', $historial['empresa'])
+                                ->where('cargo', $historial['cargo'])
+                                ->where('desde', $historial['desde'])
+                                ->where('hasta', $historial['hasta'])
+                                ->first();
+
+                            if ($registro) {
+                                $registro->update($historial);
+                            } else {
+                                $historial['empleados_id'] = $this->empleado->id;
+                                HistorialLaboral::create($historial);
+                            }
+                        }
+                    }
+                    HistorialLaboral::where('empleados_id', $this->empleado->id)
+                        ->where(function ($query) {
+                            $query->whereNull('empresa')
+                                ->whereNull('direccion')
+                                ->whereNull('cargo')
+                                ->whereNull('desde')
+                                ->whereNull('hasta')
+                                ->orWhere(function ($query) {
+                                    $query->where('empresa', '')
+                                        ->where('direccion', '')
+                                        ->where('cargo', '')
+                                        ->where('desde', '')
+                                        ->where('hasta', '');
+                                });
+                        })
+                        ->delete();
+                }
+
+                foreach ($validated['referencias_personales'] as $rp) {
+                    $tel_rp = $rp['telefono'];
+                    ReferenciaPersonal::updateOrCreate(['empleados_id' => $this->empleado->id, 'telefono' => $tel_rp], [
+                        'nombre' => $rp['nombre'],
+                        'lugar_trabajo' => $rp['lugar_trabajo'],
+                        'telefono' => $rp['telefono']
+                    ]);
+                }
+
+                foreach ($validated['referencias_laborales'] as $rl) {
+                    $tel_rl = $rl['telefono'];
+                    ReferenciaLaboral::updateOrCreate(['empleados_id' => $this->empleado->id, 'telefono' => $tel_rl], [
+                        'nombre' => $rl['nombre'],
+                        'empresa' => $rl['empresa'],
+                        'telefono' => $rl['telefono']
+                    ]);
+                }
+
+                if (count($this->personas_dependientes) > 0) {
+                    # code...
                 }
 
                 $requisito = RequisitoCandidato::where([
@@ -532,7 +595,7 @@ class Formulario extends Component
 
     public function add_program()
     {
-        $this->programas[] = ['nombre' => '', 'valoracion' => ''];
+        $this->programas[] = ['programa' => '', 'valoracion' => ''];
     }
 
     public function remove_program($index)
