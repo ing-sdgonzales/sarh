@@ -4,6 +4,7 @@ namespace App\Livewire\Candidatos;
 
 use App\Http\Controllers\FormularioController;
 use App\Models\Empleado;
+use App\Models\HijoEmpleado;
 use App\Models\RequisitoCandidato;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -128,6 +129,7 @@ class VerFormulario extends Component
         $this->id_empleado = $candidato->id_empleado;
         $this->imagen = $candidato->imagen;
         $this->nombres = $candidato->nombres;
+        $this->apellidos = $candidato->apellidos;
         $this->pretension_salarial = number_format($candidato->pretension_salarial, 2, '.', ',');
         $this->departamento = $candidato->departamento;
         $this->municipio = $candidato->municipio;
@@ -138,9 +140,9 @@ class VerFormulario extends Component
         $this->municipio_emision = $candidato->municipio_emision;
         $this->igss = $candidato->igss;
         $this->nit = $candidato->nit;
-        
 
-        $this->apellidos = $candidato->apellidos;
+
+        
         $this->email = $candidato->email;
         $this->fecha_nacimiento = $candidato->fecha_nacimiento;
         $this->direccion = $candidato->direccion;

@@ -2,10 +2,21 @@
 
 namespace App\Livewire\Formularios;
 
-use App\Http\Controllers\FormularioController;
+use App\Models\ConocidoConred;
+use App\Models\Conviviente;
 use App\Models\Dpi;
 use App\Models\Empleado;
+use App\Models\EstudioActualEmpleado;
+use App\Models\FamiliarConred;
+use App\Models\HijoEmpleado;
+use App\Models\Idioma;
+use App\Models\LicenciaConducir;
+use App\Models\MadreEmpleado;
+use App\Models\PadreEmpleado;
+use App\Models\RegistroAcademicoEmpleado;
 use App\Models\RequisitoCandidato;
+use App\Models\TelefonoEmpleado;
+use App\Models\Vehiculo;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -213,7 +224,6 @@ class Formulario extends Component
                     'direccion' => $validated['direccion'],
                     'pretension_salarial' => $validated['pretension_salarial'],
                     'estudia_actualmente' => $validated['estudia_actualmente'],
-                    'estudio_actual' => $validated['estudio_actual'],
                     'cantidad_personas_dependientes' => $validated['cantidad_personas_dependientes'],
                     'ingresos_adicionales' => $validated['ingresos_adicionales'],
                     'monto_ingreso_total' => $validated['monto_ingreso_total'],
@@ -225,6 +235,8 @@ class Formulario extends Component
                     'personas_aportan_ingresos' => $validated['personas_aportan_ingresos'],
                     'fuente_ingresos_adicionales' => $validated['fuente_ingresos_adicionales'],
                     'pago_vivienda' => $validated['pago_vivienda'],
+                    'familiar_conred' => $validated['familiar_conred'],
+                    'conocido_conred' => $validated['conocido_conred'],
                     'etnias_id' => $validated['etnia'],
                     'grupos_sanguineos_id' => $validated['tipo_sangre'],
                     'municipios_id' => $validated['municipio'],
@@ -234,11 +246,184 @@ class Formulario extends Component
                     'candidatos_id' => $this->id_candidato
                 ]);
 
-                Dpi::create([
+                Dpi::updateOrCreate(['empleados_id' => $this->empleado->id], [
                     'dpi' => $validated['dpi'],
-                    'municipios_id' => $validated['municipio_emision'],
-                    'empleados_id' => $this->empleado->id
+                    'municipios_id' => $validated['municipio_emision']
                 ]);
+
+                if (!empty($this->licencia)) {
+                    LicenciaConducir::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                        'licencia' => $validated['licencia'],
+                        'tipos_licencias_id' => $validated['tipo_licencia']
+                    ]);
+                }
+
+                if (!empty($this->placa)) {
+                    Vehiculo::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                        'placa' => $validated['placa'],
+                        'tipos_vehiculos_id' => $validated['tipo_vehiculo']
+                    ]);
+                } elseif (empty($this->placa)) {
+                    $placa = Vehiculo::where('empleados_id', $this->empleado->id)->first();
+                    if ($placa) {
+                        $placa->delete();
+                    }
+                }
+
+                TelefonoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                    'telefono' => $validated['telefono_movil'],
+                    'telefono_casa' => $validated['telefono_casa']
+                ]);
+
+                if ($this->familiar_conred == 1) {
+                    FamiliarConred::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                        'nombre' => $validated['nombre_familiar_conred'],
+                        'cargo' => $validated['cargo_familiar_conred']
+                    ]);
+                } elseif ($this->familiar_conred == 0) {
+                    $familiar_conred = FamiliarConred::where('empleados_id', $this->empleado->id)->first();
+                    if ($familiar_conred) {
+                        $familiar_conred->delete();
+                    }
+                }
+
+                if ($this->conocido_conred == 1) {
+                    ConocidoConred::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                        'nombre' => $validated['nombre_conocido_conred'],
+                        'cargo' => $validated['cargo_conocido_conred']
+                    ]);
+                } elseif ($this->conocido_conred == 0) {
+                    $conocido_conred = ConocidoConred::where('empleados_id', $this->empleado->id);
+                    if ($conocido_conred) {
+                        $conocido_conred->delete();
+                    }
+                }
+
+                PadreEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                    'nombre' => $validated['nombre_padre'],
+                    'ocupacion' => $validated['ocupacion_padre'],
+                    'telefono' => $validated['telefono_padre']
+                ]);
+
+                MadreEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                    'nombre' => $validated['nombre_madre'],
+                    'ocupacion' => $validated['ocupacion_madre'],
+                    'telefono' => $validated['telefono_madre']
+                ]);
+
+                if (!empty($this->nombre_conviviente)) {
+                    Conviviente::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                        'nombre' => $validated['nombre_conviviente'],
+                        'ocupacion' => $validated['ocupacion_conviviente'],
+                        'telefono' => $validated['telefono_conviviente']
+                    ]);
+                } elseif (empty($this->nombre_conviviente)) {
+                    $conviviente = Conviviente::where('empleados_id', $this->empleado->id)->first();
+                    if ($conviviente) {
+                        $conviviente->delete();
+                    }
+                }
+
+                if (count($this->hijos) > 0) {
+                    HijoEmpleado::where('empleados_id', $this->empleado->id)
+                        ->whereNotIn('nombre', collect($this->hijos)->pluck('nombre')->toArray())
+                        ->delete();
+
+                    foreach ($this->hijos as $hijo) {
+                        $nombre = $hijo['nombre'];
+                        HijoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'nombre' => $nombre], [
+                            'nombre' => $hijo['nombre']
+                        ]);
+                    }
+                }
+
+                RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_primaria], [
+                    'establecimiento' => $validated['establecimiento_primaria'],
+                    'titulo' => $validated['titulo_primaria'],
+                    'registros_academicos_id' => 1
+                ]);
+
+                if (!empty($this->titulo_secundaria)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_secundaria], [
+                        'establecimiento' => $validated['establecimiento_secundaria'],
+                        'titulo' => $validated['titulo_secundaria'],
+                        'registros_academicos_id' => 2
+                    ]);
+                }
+
+                if (!empty($this->titulo_diversificado)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_diversificado], [
+                        'establecimiento' => $validated['establecimiento_diversificado'],
+                        'titulo' => $validated['titulo_diversificado'],
+                        'registros_academicos_id' => 3
+                    ]);
+                }
+
+                if (!empty($this->titulo_universitario)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_universitario], [
+                        'establecimiento' => $validated['establecimiento_universitario'],
+                        'titulo' => $validated['titulo_universitario'],
+                        'registros_academicos_id' => 6
+                    ]);
+                }
+
+                if (!empty($this->titulo_maestria_postgrado)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_maestria_postgrado], [
+                        'establecimiento' => $validated['establecimiento_maestria_postgrado'],
+                        'titulo' => $validated['titulo_maestria_postgrado'],
+                        'registros_academicos_id' => 8
+                    ]);
+                }
+
+                if (!empty($this->titulo_otra_especialidad)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_otra_especialidad], [
+                        'establecimiento' => $validated['establecimiento_otra_especialidad'],
+                        'titulo' => $validated['titulo_otra_especialidad'],
+                        'registros_academicos_id' => 10
+                    ]);
+                }
+
+                if ($this->estudia_actualmente == 1) {
+                    EstudioActualEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                        'carrera' => $validated['estudio_actual'],
+                        'establecimiento' => $validated['establecimiento_estudio_actual'],
+                        'horario' => $validated['horario_estudio_actual']
+                    ]);
+                } elseif ($this->estudia_actualmente == 0) {
+                    $estudio_actual = EstudioActualEmpleado::where('empleados_id', $this->empleado->id)->first();
+                    if ($estudio_actual) {
+                        $estudio_actual->delete();
+                    }
+                }
+
+                if (count($this->idiomas) > 0) {
+                    Idioma::where('empleados_id', $this->empleado->id)
+                        ->whereNotIn('idioma', collect($this->idiomas)->pluck('idioma')->toArray())
+                        ->delete();
+                    
+                    foreach ($this->idiomas as $idioma) {
+                        $lang =  $idioma['idioma'];
+                        Idioma::updateOrCreate(['empleados_id' => $this->empleado->id, 'idioma' => $lang], [
+                            'idioma' => $idioma['idioma'],
+                            'habla' => $idioma['habla'],
+                            'lectura' => $idioma['lectura'],
+                            'escritura' => $idioma['escritura']
+                        ]);
+                    }
+                }
+
+                if (count($this->hijos) > 0) {
+                    HijoEmpleado::where('empleados_id', $this->empleado->id)
+                        ->whereNotIn('nombre', collect($this->hijos)->pluck('nombre')->toArray())
+                        ->delete();
+
+                    foreach ($this->hijos as $hijo) {
+                        $nombre = $hijo['nombre'];
+                        HijoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'nombre' => $nombre], [
+                            'nombre' => $hijo['nombre']
+                        ]);
+                    }
+                }
 
                 $requisito = RequisitoCandidato::where([
                     'candidatos_id' => $this->id_candidato,
@@ -321,7 +506,7 @@ class Formulario extends Component
 
     public function add_son()
     {
-        $this->hijos[] = '';
+        $this->hijos[] = ['nombre' => ''];
     }
 
     public function remove_son($index)
@@ -334,7 +519,7 @@ class Formulario extends Component
 
     public function add_lang()
     {
-        $this->idiomas[] = '';
+        $this->idiomas[] = ['idioma' => '', 'habla' => '', 'lee' => '', 'escribe' => ''];
     }
 
     public function remove_lang($index)

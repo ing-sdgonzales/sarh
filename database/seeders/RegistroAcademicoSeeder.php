@@ -13,7 +13,7 @@ class RegistroAcademicoSeeder extends Seeder
      */
     public function run(): void
     {
-        $registrosData = ['Primaria','Secundaria', 'Diversificado', 'Universidad', 'Postgrado', 'Maestría'];
+        $registrosData = ['Primaria','Secundaria', 'Diversificado', 'Técnico ocupacional', 'Técnico universitario', 'Universidad', 'Postgrado', 'Maestría', 'Doctorado', 'Otro'];
 
         foreach ($registrosData as $registros) {
             RegistroAcademico::create([

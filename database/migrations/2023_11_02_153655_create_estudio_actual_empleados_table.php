@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('padres_empleados', function (Blueprint $table) {
+        Schema::create('estudios_actuales_empleados', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            
+
             $table->integerIncrements('id');
-            $table->string('nombre', 100);
-            $table->string('telefono', 15)->nullable();
-            $table->string('ocupacion', 50);
+            $table->text('carrera');
+            $table->text('establecimiento');
+            $table->text('horario');
 
             /* fks */
             $table->unsignedInteger('empleados_id');
-
+            
             /* references */
             $table->foreign('empleados_id')->references('id')->on('empleados')->onUpdate('cascade');
-            
+
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('padres_empleados');
+        Schema::dropIfExists('estudios_actuales_empleados');
     }
 };

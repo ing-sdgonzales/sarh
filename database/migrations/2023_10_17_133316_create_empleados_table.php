@@ -31,7 +31,6 @@ return new class extends Migration
             $table->unsignedDecimal('pretension_salarial', 9, 2);
             $table->mediumText('observaciones')->nullable();
             $table->unsignedTinyInteger('estudia_actualmente');
-            $table->text('estudio_actual')->nullable();
             $table->unsignedTinyInteger('cantidad_personas_dependientes');
             $table->unsignedTinyInteger('ingresos_adicionales');
             $table->unsignedDecimal('monto_ingreso_total', 9, 2)->nullable();
@@ -43,6 +42,8 @@ return new class extends Migration
             $table->string('personas_aportan_ingresos', 100)->nullable();
             $table->string('fuente_ingresos_adicionales', 50)->nullable();
             $table->unsignedDecimal('pago_vivienda', 9, 2);
+            $table->unsignedTinyInteger('familiar_conred');
+            $table->unsignedTinyInteger('conocido_conred');
 
             /* fks */
             $table->unsignedTinyInteger('generos_id')->nullable();
