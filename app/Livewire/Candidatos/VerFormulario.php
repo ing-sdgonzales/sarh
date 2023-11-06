@@ -5,15 +5,24 @@ namespace App\Livewire\Candidatos;
 use App\Http\Controllers\FormularioController;
 use App\Models\Empleado;
 use App\Models\HijoEmpleado;
+use App\Models\HistorialLaboral;
+use App\Models\Idioma;
+use App\Models\PersonaDependiente;
+use App\Models\ProgramaComputacion;
+use App\Models\ReferenciaLaboral;
+use App\Models\ReferenciaPersonal;
+use App\Models\RegistroAcademicoEmpleado;
 use App\Models\RequisitoCandidato;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Symfony\Component\CssSelector\Node\FunctionNode;
 
+use function PHPSTORM_META\map;
+
 class VerFormulario extends Component
 {
-    public $id_empleado, $id_requisito_candidato;
+    public $id_empleado, $id_requisito_candidato, $observacion;
     public $modal = false;
     public $departamentos, $municipios, $municipios_emision,
         $hijos = [['nombre' => '']],
@@ -21,12 +30,15 @@ class VerFormulario extends Component
         $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
         $programas = [['nombre' => '', 'valoracion' => '']],
         $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
+    public $valoracion = [['val' => 1, 'res' => 'Muy bajo'], 
+        ['val' => 2, 'res' => 'Bajo'], ['val' => 3, 'res' => 'Moderado'], 
+        ['val' => 4, 'res' => 'Alto'], ['val' => 5, 'res' => 'Muy alto']];
     public $historiales_laborales = [
         [
             'empresa' => '',
             'direccion' => '',
             'telefono' => '',
-            'jefe' => '',
+            'jefe_inmediato' => '',
             'cargo' => '',
             'desde' => '',
             'hasta' => '',
@@ -93,11 +105,10 @@ class VerFormulario extends Component
             'empleados.direccion as direccion',
             'empleados.pretension_salarial as pretension_salarial',
             'empleados.estudia_actualmente as estudia_actualmente',
-            'empleados.estudio_actual as estudio_actual',
             'empleados.cantidad_personas_dependientes as cantidad_personas_dependientes',
             'empleados.ingresos_adicionales as ingresos_adicionales',
             'empleados.monto_ingreso_total as monto_ingreso_total',
-            'empleados.posee_deudas as posee deudas',
+            'empleados.posee_deudas as posee_deudas',
             'empleados.trabajo_conred as trabajo_conred',
             'empleados.trabajo_estado as trabajo_estado',
             'empleados.jubilado_estado as jubilado_estado',
@@ -105,6 +116,8 @@ class VerFormulario extends Component
             'empleados.personas_aportan_ingresos as personas_aportan_ingresos',
             'empleados.fuente_ingresos_adicionales as fuente_ingresos_adicionales',
             'empleados.pago_vivienda as pago_vivienda',
+            'empleados.familiar_conred as familiar_conred',
+            'empleados.conocido_conred as conocido_conred',
             'municipios.id as id_municipio',
             'municipios.nombre as municipio',
             'departamentos.id as id_departamento',
@@ -115,7 +128,61 @@ class VerFormulario extends Component
             'estados_civiles.estado_civil as estado_civil',
             'dpis.dpi as dpi',
             'municipios.nombre as municipio_emision',
-            'departamentos.nombre as departamento_emision'
+            'departamentos.nombre as departamento_emision',
+            'licencias_conducir.licencia as licencia',
+            'tipos_licencias.id as id_tipo_licencia',
+            'tipos_licencias.tipo_licencia as tipo_licencia',
+            'tipos_vehiculos.id as id_tipo_vehiculo',
+            'tipos_vehiculos.tipo_vehiculo as tipo_vehiculo',
+            'vehiculos.placa as placa',
+            'telefonos_empleados.id as id_telefono_empleado',
+            'telefonos_empleados.telefono_casa as telefono_casa',
+            'telefonos_empleados.telefono as telefono',
+            'familiares_conred.id as id_familiar_conred',
+            'familiares_conred.nombre as nombre_familiar_conred',
+            'familiares_conred.cargo as cargo_familiar_conred',
+            'conocidos_conred.id as id_conocido_conred',
+            'conocidos_conred.nombre as nombre_conocido_conred',
+            'conocidos_conred.cargo as cargo_conocido_conred',
+            'padres_empleados.id as id_padre',
+            'padres_empleados.telefono as telefono_padre',
+            'padres_empleados.nombre as nombre_padre',
+            'padres_empleados.ocupacion as ocupacion_padre',
+            'madres_empleados.id as id_madre',
+            'madres_empleados.telefono as telefono_madre',
+            'madres_empleados.nombre as nombre_madre',
+            'madres_empleados.ocupacion as ocupacion_madre',
+            'convivientes.id as id_conviviente',
+            'convivientes.telefono as telefono_conviviente',
+            'convivientes.nombre as nombre_conviviente',
+            'convivientes.ocupacion as ocupacion_conviviente',
+            'estudios_actuales_empleados.id as id_estudio_actual',
+            'estudios_actuales_empleados.carrera as estudio_actual',
+            'estudios_actuales_empleados.establecimiento as establecimiento_estudio_actual',
+            'estudios_actuales_empleados.horario as horario_estudio_actual',
+            'etnias.id as id_etnia',
+            'etnias.etnia as etnia',
+            'tipos_viviendas.id as id_tipo_vivienda',
+            'tipos_viviendas.tipo_vivienda as tipo_vivienda',
+            'deudas.id as id_deuda',
+            'deudas.monto as monto_deuda',
+            'tipos_deudas.id as id_tipo_deuda',
+            'tipos_deudas.tipo_deuda as tipo_deuda',
+            'historias_clinicas.id as id_historia_clinica',
+            'historias_clinicas.padecimiento_salud as padecimiento_salud',
+            'historias_clinicas.tipo_enfermedad as tipo_enfermedad',
+            'historias_clinicas.intervencion_quirurgica as intervencion_quirurgica',
+            'historias_clinicas.tipo_intervencion as tipo_intervencion',
+            'historias_clinicas.sufrido_accidente as sufrido_accidente',
+            'historias_clinicas.tipo_accidente as tipo_accidente',
+            'historias_clinicas.alergia_medicamento as alergia_medicamento',
+            'historias_clinicas.tipo_medicamento as tipo_medicamento',
+            'grupos_sanguineos.id as id_grupo_sanguineo',
+            'grupos_sanguineos.grupo as tipo_sangre',
+            'contactos_emergencias.id as id_contacto_emergencia',
+            'contactos_emergencias.nombre as nombre_contacto_emergencia',
+            'contactos_emergencias.telefono as telefono_contacto_emergencia',
+            'contactos_emergencias.direccion as direccion_contacto_emergencia'
 
         )
             ->join('municipios', 'empleados.municipios_id', '=', 'municipios.id')
@@ -125,7 +192,26 @@ class VerFormulario extends Component
             ->join('dpis', 'empleados.id', '=', 'dpis.empleados_id')
             ->join('municipios as mun_emision', 'dpis.municipios_id', '=', 'mun_emision.id')
             ->join('departamentos as dep_emision', 'municipios.departamentos_id', '=', 'dep_emision.id')
+            ->leftjoin('vehiculos', 'empleados.id', '=', 'vehiculos.empleados_id')
+            ->join('tipos_vehiculos', 'vehiculos.tipos_vehiculos_id', '=', 'tipos_vehiculos.id')
+            ->leftjoin('licencias_conducir', 'empleados.id', '=', 'licencias_conducir.empleados_id')
+            ->join('tipos_licencias', 'licencias_conducir.tipos_licencias_id', '=', 'tipos_licencias.id')
+            ->join('telefonos_empleados', 'empleados.id', '=', 'telefonos_empleados.empleados_id')
+            ->leftjoin('familiares_conred', 'empleados.id', '=', 'familiares_conred.empleados_id')
+            ->leftjoin('conocidos_conred', 'empleados.id', '=', 'conocidos_conred.empleados_id')
+            ->join('padres_empleados', 'empleados.id', '=', 'padres_empleados.empleados_id')
+            ->join('madres_empleados', 'empleados.id', '=', 'madres_empleados.empleados_id')
+            ->leftjoin('convivientes', 'empleados.id', '=', 'convivientes.empleados_id')
+            ->leftjoin('estudios_actuales_empleados', 'empleados.id', '=', 'estudios_actuales_empleados.empleados_id')
+            ->join('etnias', 'empleados.etnias_id', '=', 'etnias.id')
+            ->join('tipos_viviendas', 'empleados.tipos_viviendas_id', '=', 'tipos_viviendas.id')
+            ->leftjoin('deudas', 'empleados.id', '=', 'deudas.empleados_id')
+            ->join('tipos_deudas', 'deudas.tipos_deudas_id', '=', 'tipos_deudas.id')
+            ->join('historias_clinicas', 'empleados.id', '=', 'historias_clinicas.empleados_id')
+            ->join('grupos_sanguineos', 'empleados.grupos_sanguineos_id', '=', 'grupos_sanguineos.id')
+            ->join('contactos_emergencias', 'empleados.id', '=', 'contactos_emergencias.empleados_id')
             ->first();
+
         $this->id_empleado = $candidato->id_empleado;
         $this->imagen = $candidato->imagen;
         $this->nombres = $candidato->nombres;
@@ -133,21 +219,106 @@ class VerFormulario extends Component
         $this->pretension_salarial = number_format($candidato->pretension_salarial, 2, '.', ',');
         $this->departamento = $candidato->departamento;
         $this->municipio = $candidato->municipio;
+        $this->fecha_nacimiento = $candidato->fecha_nacimiento;
         $this->nacionalidad = $candidato->nacionalidad;
         $this->estado_civil = $candidato->estado_civil;
+        $this->direccion = $candidato->direccion;
         $this->dpi = $candidato->dpi;
         $this->departamento_emision = $candidato->departamento_emision;
         $this->municipio_emision = $candidato->municipio_emision;
         $this->igss = $candidato->igss;
         $this->nit = $candidato->nit;
-
-
-        
+        $this->licencia = $candidato->licencia;
+        $this->tipo_licencia = $candidato->tipo_licencia;
+        $this->tipo_vehiculo = $candidato->tipo_vehiculo;
+        $this->placa = $candidato->placa;
+        $this->telefono_casa = $candidato->telefono_casa;
+        $this->telefono_movil = $candidato->telefono;
         $this->email = $candidato->email;
-        $this->fecha_nacimiento = $candidato->fecha_nacimiento;
-        $this->direccion = $candidato->direccion;
-
+        $this->familiar_conred = $this->si_no[$candidato->familiar_conred]['res'];
+        $this->nombre_familiar_conred = $candidato->nombre_familiar_conred;
+        $this->cargo_familiar_conred = $candidato->cargo_familiar_conred;
+        $this->conocido_conred = $this->si_no[$candidato->conocido_conred]['res'];
+        $this->nombre_conocido_conred = $candidato->nombre_conocido_conred;
+        $this->cargo_conocido_conred = $candidato->cargo_conocido_conred;
+        $this->telefono_padre = $candidato->telefono_padre;
+        $this->nombre_padre = $candidato->nombre_padre;
+        $this->ocupacion_padre = $candidato->ocupacion_padre;
+        $this->telefono_madre = $candidato->telefono_madre;
+        $this->nombre_madre = $candidato->nombre_madre;
+        $this->ocupacion_madre = $candidato->ocupacion_madre;
+        $this->telefono_conviviente = $candidato->telefono_conviviente;
+        $this->nombre_conviviente = $candidato->nombre_conviviente;
+        $this->ocupacion_conviviente = $candidato->ocupacion_conviviente;
+        $this->hijos = HijoEmpleado::where('empleados_id', $candidato->id_empleado)
+            ->get()
+            ->toArray();
+        $estudios = RegistroAcademicoEmpleado::where('empleados_id', $candidato->id_empleado)->get();
+        foreach ($estudios as $es) {
+            if ($es->registros_academicos_id == 1) {
+                $this->establecimiento_primaria = $es->establecimiento;
+                $this->titulo_primaria = $es->titulo;
+            } elseif ($es->registros_academicos_id == 2) {
+                $this->establecimiento_secundaria = $es->establecimiento;
+                $this->titulo_secundaria = $es->titulo;
+            } elseif ($es->registros_academicos_id == 3) {
+                $this->establecimiento_diversificado = $es->establecimiento;
+                $this->titulo_diversificado = $es->titulo;
+            } elseif ($es->registros_academicos_id == 6) {
+                $this->establecimiento_universitario = $es->establecimiento;
+                $this->titulo_universitario = $es->titulo;
+            } elseif ($es->registros_academicos_id == 8) {
+                $this->establecimiento_maestria_postgrado = $es->establecimiento;
+                $this->titulo_maestria_postgrado = $es->titulo;
+            } elseif ($es->registros_academicos_id == 10) {
+                $this->establecimiento_otra_especialidad = $es->establecimiento;
+                $this->titulo_otra_especialidad;
+            }
+        }
         $this->estudia_actualmente = $this->si_no[$candidato->estudia_actualmente]['res'];
+        $this->estudio_actual = $candidato->estudio_actual;
+        $this->horario_estudio_actual = $candidato->horario_estudio_actual;
+        $this->establecimiento_estudio_actual = $candidato->establecimiento_estudio_actual;
+        $this->etnia = $candidato->etnia;
+        $this->idiomas = Idioma::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+        $this->programas = ProgramaComputacion::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+        foreach ($this->programas as &$programa) {
+            $programa['valoracion'] = $this->valoracion[$programa['valoracion']-1]['res'];
+        }
+        $this->historiales_laborales = HistorialLaboral::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+        foreach ($this->historiales_laborales as &$historial) {
+            $historial['verificar_informacion'] = $this->si_no[$historial['verificar_informacion']]['res'];
+            $historial['ultimo_sueldo'] = number_format($historial['ultimo_sueldo'], 2, '.', ',');
+        }
+        $this->referencias_personales = ReferenciaPersonal::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+        $this->referencias_laborales = ReferenciaLaboral::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+        $this->tipo_vivienda = $candidato->tipo_vivienda;
+        $this->pago_vivienda = number_format($candidato->pago_vivienda, 2, '.', ',');
+        $this->cantidad_personas_dependientes = $candidato->cantidad_personas_dependientes;
+        $this->personas_dependientes = PersonaDependiente::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+        $this->ingresos_adicionales = $this->si_no[$candidato->ingresos_adicionales]['res'];
+        $this->fuente_ingresos_adicionales = $candidato->fuente_ingresos_adicionales;
+        $this->personas_aportan_ingresos = $candidato->personas_aportan_ingresos;
+        $this->monto_ingreso_total = $candidato->monto_ingreso_total;
+        $this->posee_deudas = $this->si_no[$candidato->posee_deudas]['res'];
+        $this->tipo_deuda = $candidato->tipo_deuda;
+        $this->monto_deuda = number_format($candidato->monto_deuda, 2, '.', ',');
+        $this->trabajo_conred = $this->si_no[$candidato->trabajo_conred]['res'];
+        $this->trabajo_estado = $this->si_no[$candidato->trabajo_estado]['res'];
+        $this->jubilado_estado = $this->si_no[$candidato->jubilado_estado]['res'];
+        $this->institucion_jubilacion = $candidato->institucion_jubilacion;
+        $this->padecimiento_salud = $this->si_no[$candidato->padecimiento_salud]['res'];
+        $this->tipo_enfermedad = $candidato->tipo_enfermedad;
+        $this->intervencion_quirurgica = $this->si_no[$candidato->intervencion_quirurgica]['res'];
+        $this->tipo_intervencion = $candidato->tipo_intervencion;
+        $this->sufrido_accidente = $this->si_no[$candidato->sufrido_accidente]['res'];
+        $this->tipo_accidente = $candidato->tipo_accidente;
+        $this->alergia_medicamento = $this->si_no[$candidato->alergia_medicamento]['res'];
+        $this->tipo_medicamento = $candidato->tipo_medicamento;
+        $this->tipo_sangre = $candidato->tipo_sangre;
+        $this->nombre_contacto_emergencia = $candidato->nombre_contacto_emergencia;
+        $this->telefono_contacto_emergencia = $candidato->telefono_contacto_emergencia;
+        $this->direccion_contacto_emergencia = $candidato->direccion_contacto_emergencia;        
     }
 
     public function cargarPuesto($id_candidato)
@@ -207,11 +378,18 @@ class VerFormulario extends Component
     public function rechazarFormulario()
     {
         try {
+            $validated = $this->validate([
+                'observacion' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'
+            ]);
+
             $requisito = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
 
-            $requisito->observacion = $this->observacion;
+            $requisito->observacion = $validated['observacion'];
+            $requisito->revisado = 1;
             $requisito->valido = 0;
             $requisito->fecha_revision = date("Y-m-d H:i:s");
+
+            $requisito->save();
 
             $log = DB::table('requisitos_candidatos')
                 ->join('candidatos', 'requisitos_candidatos.candidatos_id', '=', 'candidatos.id')
@@ -241,6 +419,8 @@ class VerFormulario extends Component
 
     public function abrirModal()
     {
+        $requisito = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
+        $this->observacion = $requisito->observacion;
         $this->modal = true;
     }
 

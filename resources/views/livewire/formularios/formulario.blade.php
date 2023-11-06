@@ -25,11 +25,15 @@
                                             x-on:livewire-upload-error="isUploading = false"
                                             x-on:livewire-upload-progress="progress = $event.detail.progress">
                                             <div class="mb-4">
-                                                @if ($imagen)
+                                                @if ($imagen && !$imagen_actual)
                                                     <img src="{{ $imagen->temporaryUrl() }}"
                                                         class="mx-auto max-w-full rounded-lg" style="height: 150px"
                                                         alt="imagen" />
-                                                {{-- @elseif($imagen_control == true && $modo_edicion == true)
+                                                @elseif($imagen_actual)
+                                                    <img src="{{ asset('storage') . '/'. $imagen_actual }}"
+                                                        class="mx-auto max-w-full rounded-lg" style="height: 150px"
+                                                        alt="imagen" />
+                                                    {{-- @elseif($imagen_control == true && $modo_edicion == true)
                                                     <img @if ($imagen_actual != $imagen) src="{{ $imagen->temporaryUrl() }}"
                                                     @else
                                                     src="{{ asset('storage') . '/' . $imagen }}" @endif
@@ -152,8 +156,9 @@
                                         <label for="departamento"
                                             class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
                                         <div class="mt-2">
-                                            <select wire:model='departamento' wire:change='getMunicipiosByDepartamento'
-                                                id="departamento" name="departamento" required
+                                            <select wire:model='departamento'
+                                                wire:change='getMunicipiosByDepartamento' id="departamento"
+                                                name="departamento" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($departamentos ?? [] as $departamento)
@@ -348,7 +353,8 @@
 
                                     <div class="sm:col-span-3">
                                         <label for="igss"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Número de afiliación IGSS</label>
+                                            class="block text-sm font-medium leading-6 text-gray-900">Número de
+                                            afiliación IGSS</label>
                                         <div class="mt-2">
                                             <input wire:model='igss' type="text" name="igss" id="igss"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -818,14 +824,13 @@
                                     </div>
 
                                     <div class="sm:col-span-6">
-                                        <label
-                                            class="block text-sm font-medium leading-6 text-gray-900">Nombres y
+                                        <label class="block text-sm font-medium leading-6 text-gray-900">Nombres y
                                             apellidos de sus hijos</label>
                                         @foreach ($hijos as $index => $hijo)
                                             <div class="sm:col-span-5 flex items-center">
                                                 <div class="mt-2 flex-grow">
-                                                    <input wire:model='hijos.{{ $index }}.nombre' type="text"
-                                                        id="hijo_{{ $index }}"
+                                                    <input wire:model='hijos.{{ $index }}.nombre'
+                                                        type="text" id="hijo_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 <div>
@@ -1354,7 +1359,8 @@
                                                         class="block text-sm font-medium leading-6 text-gray-900">Nombre
                                                         del programa</label>
                                                     <input wire:model='programas.{{ $index }}.programa'
-                                                        type="text" id="nombre_programa_{{ $index }}" name="nombre_programa_{{ $index }}"
+                                                        type="text" id="nombre_programa_{{ $index }}"
+                                                        name="nombre_programa_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 <div>
@@ -1899,8 +1905,8 @@
                                             jefe
                                             inmediato</label>
                                         <div class="mt-2">
-                                            <input wire:model='historiales_laborales.2.jefe_inmediato' type="text"
-                                                name="jefe_2" id="jefe_2"
+                                            <input wire:model='historiales_laborales.2.jefe_inmediato'
+                                                type="text" name="jefe_2" id="jefe_2"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -2461,7 +2467,8 @@
                                                         class="block text-sm font-medium leading-6 text-gray-900">Nombre</label>
                                                     <input
                                                         wire:model='personas_dependientes.{{ $index }}.nombre'
-                                                        type="text" id="nombre_{{ $index }}" name="nombre_{{ $index }}"
+                                                        type="text" id="nombre_{{ $index }}"
+                                                        name="nombre_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 <div>
@@ -2476,7 +2483,8 @@
                                                         class="block text-sm font-medium leading-6 text-gray-900">Parentesco</label>
                                                     <input
                                                         wire:model='personas_dependientes.{{ $index }}.parentesco'
-                                                        type="text" id="parentesco_{{ $index }}" name="parentesco_{{ $index }}"
+                                                        type="text" id="parentesco_{{ $index }}"
+                                                        name="parentesco_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 <div>
@@ -2489,7 +2497,7 @@
                                                 @if ($index === 0)
                                                     <div class="mt-8 ml-2">
                                                         <button class="btn text-black btn-info btn-sm"
-                                                            wire:click.prevent="add_lang()"><svg
+                                                            wire:click.prevent="add_persona_dependiente()"><svg
                                                                 xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                 viewBox="0 0 24 24" stroke-width="1.5"
                                                                 stroke="green" class="w-6 h-6">
@@ -2501,7 +2509,7 @@
                                                 @else
                                                     <div class="mt-8 ml-2">
                                                         <button class="btn btn-danger btn-sm"
-                                                            wire:click.prevent="remove_lang({{ $index }})"><svg
+                                                            wire:click.prevent="remove_persona_dependiente({{ $index }})"><svg
                                                                 xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                 viewBox="0 0 24 24" stroke-width="1.5"
                                                                 stroke="red" class="w-6 h-6">

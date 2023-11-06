@@ -39,7 +39,7 @@
                                     <label for="observacion"
                                         class="block text-sm font-medium leading-6 text-gray-900">Observación</label>
                                     <div class="mt-2">
-                                        <textarea wire:model='observacion' id="observacion" name="observación" rows="3"
+                                        <textarea wire:model='observacion' id="observacion" name="observacion" rows="3"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
                                     </div>
                                     <p class="mt-3 text-sm leading-6 text-gray-600">Breve descripción de la observación.
@@ -63,7 +63,7 @@
                         </div> --}}
 
                 </div>
-                <div wire:loading.flex wire:target="guardar"
+                <div wire:loading.flex wire:target="rechazarFormulario"
                     class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                     <div
                         class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">

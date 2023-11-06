@@ -11,5 +11,5 @@ class HistoriaClinica extends Model
 
     protected $table = 'historias_clinicas';
     protected $fillable = ['padecimiento_salud', 'tipo_enfermedad', 'intervencion_quirurgica', 'tipo_intervencion', 'sufrido_accidente', 
-    'tipo_accidente', 'alergia_medicamento', 'tipo_alergia'];
+    'tipo_accidente', 'alergia_medicamento', 'tipo_alergia', 'empleados_id'];
 }

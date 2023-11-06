@@ -15,7 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->integerIncrements('id');
-            $table->string('nomnbre', 100);
+            $table->string('nombre', 100);
             $table->string('telefono', 15)->nullable();
             $table->string('ocupacion', 50);
 

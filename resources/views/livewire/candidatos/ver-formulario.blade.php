@@ -733,7 +733,7 @@
                                             <div class="mt-2 mr-2 flex-grow">
                                                 <label for="idioma_{{ $index }}"
                                                     class="block text-sm font-medium leading-6 text-gray-900">Idioma</label>
-                                                <input wire:model='idiomas.{{ $index }}.nombre' type="text"
+                                                <input wire:model='idiomas.{{ $index }}.idioma' type="text"
                                                     id="idioma_{{ $index }}" disabled readonly
                                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             </div>
@@ -749,7 +749,7 @@
                                                 <label for="lectura_{{ $index }}"
                                                     class="block text-sm font-medium leading-6 text-gray-900">Lee
                                                     %</label>
-                                                <input wire:model='idiomas.{{ $index }}.lectura'
+                                                <input wire:model='idiomas.{{ $index }}.lee'
                                                     type="text" id="lectura_{{ $index }}" disabled readonly
                                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             </div>
@@ -757,7 +757,7 @@
                                                 <label for="escritura_{{ $index }}"
                                                     class="block text-sm font-medium leading-6 text-gray-900">Escribe
                                                     %</label>
-                                                <input wire:model='idiomas.{{ $index }}.escritura'
+                                                <input wire:model='idiomas.{{ $index }}.escribe'
                                                     type="number" id="escritura_{{ $index }}" disabled
                                                     readonly
                                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -777,7 +777,7 @@
                                                 <label for="nombre_programa_{{ $index }}"
                                                     class="block text-sm font-medium leading-6 text-gray-900">Nombre
                                                     del programa</label>
-                                                <input wire:model='programas.{{ $index }}.nombre'
+                                                <input wire:model='programas.{{ $index }}.programa'
                                                     type="text" id="nombre_programa_{{ $index }}"
                                                     name="nombre_programa_{{ $index }}" disabled readonly
                                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -847,7 +847,7 @@
                                         class="block text-sm font-medium leading-6 text-gray-900">Nombre del jefe
                                         inmediato</label>
                                     <div class="mt-2">
-                                        <input wire:model='historiales_laborales.0.jefe' type="text"
+                                        <input wire:model='historiales_laborales.0.jefe_inmediato' type="text"
                                             name="jefe_0" id="jefe_0" disabled readonly
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
@@ -969,7 +969,7 @@
                                         jefe
                                         inmediato</label>
                                     <div class="mt-2">
-                                        <input wire:model='historiales_laborales.1.jefe' type="text"
+                                        <input wire:model='historiales_laborales.1.jefe_inmediato' type="text"
                                             name="jefe_1" id="jefe_1" disabled readonly
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
@@ -1010,7 +1010,7 @@
                                         class="block text-sm font-medium leading-6 text-gray-900">Último
                                         sueldo</label>
                                     <div class="mt-2">
-                                        <input wire:model='historiales_laborales.1.ultimo_sueldo' type="number"
+                                        <input wire:model='historiales_laborales.1.ultimo_sueldo' type="text"
                                             name="ultimo_sueldo_1" id="ultimo_sueldo_1" disabled readonly
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
@@ -1092,7 +1092,7 @@
                                         jefe
                                         inmediato</label>
                                     <div class="mt-2">
-                                        <input wire:model='historiales_laborales.2.jefe' type="text"
+                                        <input wire:model='historiales_laborales.2.jefe_inmediato' type="text"
                                             name="jefe_2" id="jefe_2" disabled readonly
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
@@ -1133,7 +1133,7 @@
                                         class="block text-sm font-medium leading-6 text-gray-900">Último
                                         sueldo</label>
                                     <div class="mt-2">
-                                        <input wire:model='historiales_laborales.2.ultimo_sueldo' type="number"
+                                        <input wire:model='historiales_laborales.2.ultimo_sueldo' type="text"
                                             name="ultimo_sueldo_2" id="ultimo_sueldo_2" disabled readonly
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
