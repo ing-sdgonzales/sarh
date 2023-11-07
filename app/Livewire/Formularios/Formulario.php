@@ -25,8 +25,10 @@ use App\Models\RegistroAcademicoEmpleado;
 use App\Models\RequisitoCandidato;
 use App\Models\TelefonoEmpleado;
 use App\Models\Vehiculo;
+use App\Notifications\NotificacionCargaRequisitos;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\WithFileUploads;
@@ -42,7 +44,8 @@ class Formulario extends Component
         $idiomas = [['idioma' => '', 'habla' => '', 'lee' => '', 'escribe' => '']],
         $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
         $programas = [['programa' => '', 'valoracion' => '']],
-        $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
+        $personas_dependientes = [['nombre' => '', 'parentesco' => '']],
+        $requisitos_cargados = [];
     public $historiales_laborales = [
         [
             'empresa' => '',
@@ -75,7 +78,7 @@ class Formulario extends Component
         $tipo_intervencion, $sufrido_accidente, $tipo_accidente, $alergia_medicamento, $tipo_medicamento, $tipo_sangre, $nombre_contacto_emergencia,
         $telefono_contacto_emergencia, $direccion_contacto_emergencia;
 
-    public $empleado, $imagen_actual;
+    public $empleado, $imagen_actual, $nombre_candidato;
     #[Layout('layouts.app2')]
     public function render()
     {
@@ -547,23 +550,22 @@ class Formulario extends Component
                     'telefono' => $validated['telefono_contacto_emergencia']
                 ]);
 
-                $requisito = RequisitoCandidato::where([
-                    'candidatos_id' => $this->id_candidato,
-                    'puestos_nominales_id' => $this->id_puesto,
-                    'requisitos_id' => $this->id_requisito
-                ])
+                $requisito = RequisitoCandidato::where('candidatos_id', $this->id_candidato)
+                    ->where('puestos_nominales_id', $this->id_puesto)
+                    ->where('requisitos_id', $this->id_requisito)
                     ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                    ->select('requisitos_candidatos.id as id_requisito_candidato', 'requisitos.requisito as requisito')
                     ->first();
                 if ($requisito) {
-                    $requisito->update([
-                        'ubicacion' => '',
-                        'observacion' => '',
-                        'fecha_carga' => date("Y-m-d H:i:s"),
-                        'valido' => 0,
-                        'fecha_revision' => null
-                    ]);
-                    $requisito->revisado = 0;
-                    $requisito->save();
+                    $req = RequisitoCandidato::findOrFail($requisito->id_requisito_candidato);
+                    $req->ubicacion = '';
+                    $req->observacion = null;
+                    $req->fecha_carga = date("Y-m-d H:i:s");
+                    $req->valido = 0;
+                    $req->revisado = 0;
+                    $req->fecha_revision = null;
+                    $req->save();
+                    $this->requisitos_cargados[] = ['requisito' => $requisito->requisito];
                 } else {
                     RequisitoCandidato::create([
                         'candidatos_id' => $this->id_candidato,
@@ -571,8 +573,19 @@ class Formulario extends Component
                         'requisitos_id' => $this->id_requisito,
                         'ubicacion' => ''
                     ]);
+
+                    $nuevo_requisito = RequisitoCandidato::where('candidatos_id', $this->id_candidato)
+                    ->where('puestos_nominales_id', $this->id_puesto)
+                    ->where('requisitos_id', $this->id_requisito)
+                    ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                    ->select('requisitos.requisito as requisito')
+                    ->first();
+
+                    $this->requisitos_cargados[] = ['requisito' => $nuevo_requisito->requisito];
                 }
             });
+            Notification::route('mail', 'ing.sergiodaniel@gmail.com')
+                ->notify(new NotificacionCargaRequisitos($this->requisitos_cargados, $this->nombre_candidato, $this->id_candidato));
             return redirect()->route('presentar_requisitos', ['id_candidato' => $this->id_candidato]);
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();
@@ -584,6 +597,8 @@ class Formulario extends Component
     public function mount($id_candidato, $id_requisito)
     {
         $this->id_candidato = $id_candidato;
+        $nombre_candidato = DB::table('candidatos')->select('nombre')->where('id', '=', $id_candidato)->first();
+        $this->nombre_candidato = $nombre_candidato->nombre;
         $this->id_requisito = $id_requisito;
         $this->cargarPuesto($id_candidato);
 

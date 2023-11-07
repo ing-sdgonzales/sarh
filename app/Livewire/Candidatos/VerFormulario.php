@@ -335,11 +335,12 @@ class VerFormulario extends Component
 
     public function aprobar()
     {
+        
         try {
             DB::transaction(function () {
+                
                 $documento = new FormularioController;
                 $ubicacion = $documento->generarDoc($this->id_empleado);
-
                 $requisito = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
 
                 $requisito->ubicacion = $ubicacion;

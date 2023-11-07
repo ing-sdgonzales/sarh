@@ -45,8 +45,8 @@ class AvisoRequisitosRechazados extends Notification
                 $message->line("Observación: " . $requisito->observacion);
             }
             $message->line('Si tienes alguna pregunta o necesitas asistencia, por favor contáctanos.')
-            ->action('Requisitos', route('buscar_aplicacion'))
-            ->line('Si no has realizado ninguna aplicación laboral, puedes ignorar o eliminar este correo electrónico.');
+                ->action('Requisitos', route('buscar_aplicacion'))
+                ->line('Si no has realizado ninguna aplicación laboral, puedes ignorar o eliminar este correo electrónico.');
 
         return $message;
     }

@@ -107,6 +107,7 @@ class ListarRequisitos extends Component
                     'requisitos_id' => $requisito_id
                 ])
                     ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                    ->select('requisitos.requisito as requisito', 'requisitos_candidatos.id as id_requisito_candidato')
                     ->first();
 
                 if ($requisito) {
@@ -117,25 +118,36 @@ class ListarRequisitos extends Component
                 $path = $archivo->store('requisitos', 'public');
 
                 if ($requisito) {
-                    $requisito->update([
-                        'ubicacion' => $path,
-                        'observacion' => '',
-                        'fecha_carga' => date("Y-m-d H:i:s"),
-                        'valido' => 0,
-                        'fecha_revision' => null
-                    ]);
+                    $req = RequisitoCandidato::findOrFail($requisito->id_requisito_candidato);
+
+                    $req->ubicacion = $path;
+                    $req->observacion = '';
+                    $req->fecha_carga = date("Y-m-d H:i:s");
+                    $req->valido = 0;
+                    $req->fecha_revision = null;
                     $requisito->revisado = 0;
+
                     $requisito->save();
+                    
                     $this->requisitos_cargados[] = [
                         'requisito' => $requisito->requisito
                     ];
                 } else {
-                    $req = RequisitoCandidato::create([
+                    RequisitoCandidato::create([
                         'candidatos_id' => $this->id_candidato,
                         'puestos_nominales_id' => $this->puesto,
                         'requisitos_id' => $requisito_id,
                         'ubicacion' => $path
                     ]);
+
+                    $req = RequisitoCandidato::where([
+                        'candidatos_id' => $this->id_candidato,
+                        'puestos_nominales_id' => $this->puesto,
+                        'requisitos_id' => $requisito_id
+                    ])
+                        ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                        ->select('requisitos.requisito as requisito', 'requisitos_candidatos.id as id_requisito_candidato')
+                        ->first();
 
                     $this->requisitos_cargados[] = [
                         'requisito' => $req->requisito
@@ -144,7 +156,7 @@ class ListarRequisitos extends Component
 
                 /* $this->requisitos_cargados[$requisito_id] = $archivo->getClientOriginalName(); */
             }
-            Notification::route('mail', 'carloszuniga061974@gmail.com')
+            Notification::route('mail', 'ing.sergiodaniel@gmail.com')
                 ->notify(new NotificacionCargaRequisitos($this->requisitos_cargados, $this->nombre_candidato, $this->id_candidato));
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();
