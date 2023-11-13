@@ -81,6 +81,9 @@ class ListarRequisitos extends Component
             ->where('valido', '=', 1)
             ->count();
         $this->puesto = $this->puestos[0]->id;
+        if($this->total_requisitos_aprobados > 0){
+            session()->flash('requisito', 'requisitos_aprobados');
+        }
         $this->porcentaje_requisitos_presentados = ($this->total_requisitos_cargados / $this->total_requisitos) * 100;
         $this->porcentaje_requisitos_aprobados = ($this->total_requisitos_aprobados / $this->total_requisitos) * 100;
         return view('livewire.listar-requisitos', [
@@ -189,6 +192,7 @@ class ListarRequisitos extends Component
         $this->id_candidato = $id_candidato;
         $nombre_candidato = DB::table('candidatos')->select('nombre')->where('id', '=', $id_candidato)->first();
         $this->nombre_candidato = $nombre_candidato->nombre;
+
     }
 
     public function getRequisitosByPuesto()

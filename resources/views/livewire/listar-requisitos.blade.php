@@ -192,5 +192,33 @@
                 })
             </script>
         @endif
+        @if (session()->has('requisito'))
+            @if (session('requisito') == 'requisitos_aprobados')
+                <script>
+                    Toastify({
+                        text: "¡Tienes documentos listos para descargar!",
+                        duration: 8000,
+                        gravity: "top",
+                        position: "right",
+                        close: true,
+                        style: {
+                            background: "#2ECC71",
+                        }
+                    }).showToast();
+                </script>
+            @endif
+        @endif
+        <script>
+            Toastify({
+                text: "Puedes cargar tus requisitos en la columna de Acciones",
+                duration: 8000,
+                gravity: "top",
+                position: "right",
+                close: true,
+                style: {
+                    background: "#E67E22",
+                }
+            }).showToast();
+        </script>
     @endpush
 </div>

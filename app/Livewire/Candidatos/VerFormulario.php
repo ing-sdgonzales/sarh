@@ -30,9 +30,11 @@ class VerFormulario extends Component
         $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
         $programas = [['nombre' => '', 'valoracion' => '']],
         $personas_dependientes = [['nombre' => '', 'parentesco' => '']];
-    public $valoracion = [['val' => 1, 'res' => 'Muy bajo'], 
-        ['val' => 2, 'res' => 'Bajo'], ['val' => 3, 'res' => 'Moderado'], 
-        ['val' => 4, 'res' => 'Alto'], ['val' => 5, 'res' => 'Muy alto']];
+    public $valoracion = [
+        ['val' => 1, 'res' => 'Nada'],
+        ['val' => 2, 'res' => 'Regular'], ['val' => 3, 'res' => 'Bueno'],
+        ['val' => 4, 'res' => 'Excelente']
+    ];
     public $historiales_laborales = [
         [
             'empresa' => '',
@@ -102,7 +104,6 @@ class VerFormulario extends Component
             'empleados.apellidos as apellidos',
             'empleados.email as email',
             'empleados.fecha_nacimiento as fecha_nacimiento',
-            'empleados.direccion as direccion',
             'empleados.pretension_salarial as pretension_salarial',
             'empleados.estudia_actualmente as estudia_actualmente',
             'empleados.cantidad_personas_dependientes as cantidad_personas_dependientes',
@@ -118,6 +119,13 @@ class VerFormulario extends Component
             'empleados.pago_vivienda as pago_vivienda',
             'empleados.familiar_conred as familiar_conred',
             'empleados.conocido_conred as conocido_conred',
+            'empleados.otro_etnia as otro_etnia',
+            'direcciones.id as id_direccion',
+            'direcciones.direccion as direccion',
+            'mun_residencia.id as id_municipio_residencia',
+            'mun_residencia.nombre as municipio_residencia',
+            'dep_residencia.id as id_departamento_residencia',
+            'dep_residencia.nombre as departamento_residencia',
             'municipios.id as id_municipio',
             'municipios.nombre as municipio',
             'departamentos.id as id_departamento',
@@ -127,8 +135,8 @@ class VerFormulario extends Component
             'estados_civiles.id as id_estado_civil',
             'estados_civiles.estado_civil as estado_civil',
             'dpis.dpi as dpi',
-            'municipios.nombre as municipio_emision',
-            'departamentos.nombre as departamento_emision',
+            'mun_emision.nombre as municipio_emision',
+            'dep_emision.nombre as departamento_emision',
             'licencias_conducir.licencia as licencia',
             'tipos_licencias.id as id_tipo_licencia',
             'tipos_licencias.tipo_licencia as tipo_licencia',
@@ -185,13 +193,16 @@ class VerFormulario extends Component
             'contactos_emergencias.direccion as direccion_contacto_emergencia'
 
         )
+            ->join('direcciones', 'empleados.id', '=', 'direcciones.empleados_id')
+            ->join('municipios as mun_residencia', 'direcciones.municipios_id', '=', 'mun_residencia.id')
+            ->join('departamentos as dep_residencia', 'mun_residencia.departamentos_id', '=', 'dep_residencia.id')
             ->join('municipios', 'empleados.municipios_id', '=', 'municipios.id')
             ->join('departamentos', 'municipios.departamentos_id', '=', 'departamentos.id')
             ->join('nacionalidades', 'empleados.nacionalidades_id', '=', 'nacionalidades.id')
             ->join('estados_civiles', 'empleados.estados_civiles_id', '=', 'estados_civiles.id')
             ->join('dpis', 'empleados.id', '=', 'dpis.empleados_id')
             ->join('municipios as mun_emision', 'dpis.municipios_id', '=', 'mun_emision.id')
-            ->join('departamentos as dep_emision', 'municipios.departamentos_id', '=', 'dep_emision.id')
+            ->join('departamentos as dep_emision', 'mun_emision.departamentos_id', '=', 'dep_emision.id')
             ->leftjoin('vehiculos', 'empleados.id', '=', 'vehiculos.empleados_id')
             ->join('tipos_vehiculos', 'vehiculos.tipos_vehiculos_id', '=', 'tipos_vehiculos.id')
             ->leftjoin('licencias_conducir', 'empleados.id', '=', 'licencias_conducir.empleados_id')
@@ -216,13 +227,13 @@ class VerFormulario extends Component
         $this->imagen = $candidato->imagen;
         $this->nombres = $candidato->nombres;
         $this->apellidos = $candidato->apellidos;
-        $this->pretension_salarial = number_format($candidato->pretension_salarial, 2, '.', ',');
+        $this->pretension_salarial = 'Q ' . number_format($candidato->pretension_salarial, 2, '.', ',');
         $this->departamento = $candidato->departamento;
         $this->municipio = $candidato->municipio;
         $this->fecha_nacimiento = $candidato->fecha_nacimiento;
         $this->nacionalidad = $candidato->nacionalidad;
         $this->estado_civil = $candidato->estado_civil;
-        $this->direccion = $candidato->direccion;
+        $this->direccion = $candidato->direccion . ', ' . $candidato->municipio_residencia . ', ' . $candidato->departamento_residencia;
         $this->dpi = $candidato->dpi;
         $this->departamento_emision = $candidato->departamento_emision;
         $this->municipio_emision = $candidato->municipio_emision;
@@ -280,20 +291,21 @@ class VerFormulario extends Component
         $this->horario_estudio_actual = $candidato->horario_estudio_actual;
         $this->establecimiento_estudio_actual = $candidato->establecimiento_estudio_actual;
         $this->etnia = $candidato->etnia;
+        $this->otro_etnia = $candidato->otro_etnia;
         $this->idiomas = Idioma::where('empleados_id', $candidato->id_empleado)->get()->toArray();
         $this->programas = ProgramaComputacion::where('empleados_id', $candidato->id_empleado)->get()->toArray();
         foreach ($this->programas as &$programa) {
-            $programa['valoracion'] = $this->valoracion[$programa['valoracion']-1]['res'];
+            $programa['valoracion'] = $this->valoracion[$programa['valoracion'] - 1]['res'];
         }
         $this->historiales_laborales = HistorialLaboral::where('empleados_id', $candidato->id_empleado)->get()->toArray();
         foreach ($this->historiales_laborales as &$historial) {
             $historial['verificar_informacion'] = $this->si_no[$historial['verificar_informacion']]['res'];
-            $historial['ultimo_sueldo'] = number_format($historial['ultimo_sueldo'], 2, '.', ',');
+            $historial['ultimo_sueldo'] = 'Q ' . number_format($historial['ultimo_sueldo'], 2, '.', ',');
         }
         $this->referencias_personales = ReferenciaPersonal::where('empleados_id', $candidato->id_empleado)->get()->toArray();
         $this->referencias_laborales = ReferenciaLaboral::where('empleados_id', $candidato->id_empleado)->get()->toArray();
         $this->tipo_vivienda = $candidato->tipo_vivienda;
-        $this->pago_vivienda = number_format($candidato->pago_vivienda, 2, '.', ',');
+        $this->pago_vivienda = 'Q ' . number_format($candidato->pago_vivienda, 2, '.', ',');
         $this->cantidad_personas_dependientes = $candidato->cantidad_personas_dependientes;
         $this->personas_dependientes = PersonaDependiente::where('empleados_id', $candidato->id_empleado)->get()->toArray();
         $this->ingresos_adicionales = $this->si_no[$candidato->ingresos_adicionales]['res'];
@@ -302,7 +314,11 @@ class VerFormulario extends Component
         $this->monto_ingreso_total = $candidato->monto_ingreso_total;
         $this->posee_deudas = $this->si_no[$candidato->posee_deudas]['res'];
         $this->tipo_deuda = $candidato->tipo_deuda;
-        $this->monto_deuda = number_format($candidato->monto_deuda, 2, '.', ',');
+        if ($candidato->monto_deuda > 0) {
+            $this->monto_deuda = 'Q ' . number_format($candidato->monto_deuda, 2, '.', ',');
+        } else {
+            $this->monto_deuda = number_format($candidato->monto_deuda, 2, '.', ',');
+        }
         $this->trabajo_conred = $this->si_no[$candidato->trabajo_conred]['res'];
         $this->trabajo_estado = $this->si_no[$candidato->trabajo_estado]['res'];
         $this->jubilado_estado = $this->si_no[$candidato->jubilado_estado]['res'];
@@ -318,7 +334,7 @@ class VerFormulario extends Component
         $this->tipo_sangre = $candidato->tipo_sangre;
         $this->nombre_contacto_emergencia = $candidato->nombre_contacto_emergencia;
         $this->telefono_contacto_emergencia = $candidato->telefono_contacto_emergencia;
-        $this->direccion_contacto_emergencia = $candidato->direccion_contacto_emergencia;        
+        $this->direccion_contacto_emergencia = $candidato->direccion_contacto_emergencia;
     }
 
     public function cargarPuesto($id_candidato)
@@ -335,12 +351,12 @@ class VerFormulario extends Component
 
     public function aprobar()
     {
-        
+
         try {
             DB::transaction(function () {
-                
+
                 $documento = new FormularioController;
-                $ubicacion = $documento->generarDoc($this->id_empleado);
+                $ubicacion = $documento->generarDoc($this->id_empleado, auth()->user()->name);
                 $requisito = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
 
                 $requisito->ubicacion = $ubicacion;

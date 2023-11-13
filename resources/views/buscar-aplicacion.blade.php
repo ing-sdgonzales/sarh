@@ -22,4 +22,21 @@
             </div>
         </form>
     </x-authentication-card>
+    @push('js')
+        <script>
+            Swal.fire({
+                title: "¡Bienvenido!",
+                html: `
+                <h1><strong>Sistema de Administración de Recursos Humanos</strong></h1>
+                <p>Utiliza esta plataforma para cargar y gestionar tus requisitos de manera eficiente.</p>
+                `,
+                text: "Sistema de Administración de Recursos Humanos",
+                imageUrl: "https://conred.gob.gt/wp-content/uploads/logo-CONRED-normal.png",
+                imageWidth: 85,
+                imageHeight: 85,
+                imageAlt: "SE-CONRED",
+                confirmButtonColor: '#1F2937'
+            });
+        </script>
+    @endpush
 </x-guest-layout>

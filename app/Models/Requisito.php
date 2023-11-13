@@ -10,5 +10,5 @@ class Requisito extends Model
     use HasFactory;
 
     protected $table = 'requisitos';
-    protected $fillaable = ['requisito', 'especificacion'];
+    protected $fillable = ['requisito', 'especificacion'];
 }

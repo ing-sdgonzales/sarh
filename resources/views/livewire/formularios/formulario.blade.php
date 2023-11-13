@@ -284,6 +284,53 @@
                                         </div>
                                     </div>
 
+                                    <div class="sm:col-span-3">
+                                        <label for="departamento_residencia"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
+                                        <div class="mt-2">
+                                            <select wire:model='departamento_residencia'
+                                                wire:change='getMunicipiosByDepartamentoResidencia' id="departamento_residencia"
+                                                name="departamento_residencia" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($departamentos ?? [] as $departamento)
+                                                    <option value="{{ $departamento->id }}">
+                                                        {{ $departamento->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('departamento_residencia')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="municipio_residencia"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Municipio</label>
+                                        <div class="mt-2">
+                                            <select wire:model='municipio_residencia' id="municipio_residencia" name="municipio_residencia" required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($municipios_residencia ?? [] as $municipio_residencia)
+                                                    <option value="{{ $municipio_residencia->id }}">{{ $municipio_residencia->nombre }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('municipio_residencia')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
                                     <div class="sm:col-span-2">
                                         <label for="dpi"
                                             class="block text-sm font-medium leading-6 text-gray-900">DPI</label>
@@ -1216,7 +1263,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Grupo étnico al
                                             que pertenece</label>
                                         <div class="mt-2">
-                                            <select wire:model='etnia' id="etnia" name="etnia"
+                                            <select wire:model='etnia' id="etnia" name="etnia" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($etnias ?? [] as $etnia)
@@ -1378,11 +1425,10 @@
                                                         id="valoracion_programa_{{ $index }}"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                         <option value="">Seleccionar valoración</option>
-                                                        <option value="1">Muy bajo</option>
-                                                        <option value="2">Bajo</option>
-                                                        <option value="3">Moderado</option>
-                                                        <option value="4">Alto</option>
-                                                        <option value="5">Muy alto</option>
+                                                        <option value="1">Nada</option>
+                                                        <option value="2">Regular</option>
+                                                        <option value="3">Bueno</option>
+                                                        <option value="4">Excelente</option>
                                                     </select>
                                                 </div>
                                                 <div>

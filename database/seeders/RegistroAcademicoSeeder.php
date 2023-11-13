@@ -17,7 +17,7 @@ class RegistroAcademicoSeeder extends Seeder
 
         foreach ($registrosData as $registros) {
             RegistroAcademico::create([
-                'titulo' => $registros
+                'nivel' => $registros
             ]);
         }
     }

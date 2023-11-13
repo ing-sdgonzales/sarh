@@ -43,7 +43,7 @@ class Candidatos extends Component
     {
         $this->estados_civiles = DB::table('estados_civiles')->select('id', 'estado_civil')->get();
         $this->departamentos = DB::table('departamentos')->select('id', 'nombre')->get();
-        $this->registros_academicos =  DB::table('registros_academicos')->select('id', 'titulo')->get();
+        $this->registros_academicos =  DB::table('registros_academicos')->select('id', 'nivel')->get();
         $this->colegios = DB::table('colegios')->select('id', 'nombre')->get();
         $this->dependencias = DB::table('dependencias_nominales')->select('id', 'dependencia')->get();
         $this->tipos_contrataciones = DB::table('tipos_contrataciones')->select('id', 'tipo')->get();

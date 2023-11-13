@@ -6,6 +6,7 @@ use App\Models\ConocidoConred;
 use App\Models\ContactoEmergencia;
 use App\Models\Conviviente;
 use App\Models\Deuda;
+use App\Models\Direccion;
 use App\Models\Dpi;
 use App\Models\Empleado;
 use App\Models\EstudioActualEmpleado;
@@ -27,6 +28,7 @@ use App\Models\TelefonoEmpleado;
 use App\Models\Vehiculo;
 use App\Notifications\NotificacionCargaRequisitos;
 use Exception;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
@@ -39,7 +41,7 @@ class Formulario extends Component
 {
     use WithFileUploads;
 
-    public $departamentos, $municipios, $municipios_emision,
+    public $departamentos, $municipios, $municipios_emision, $municipios_residencia,
         $hijos = [['nombre' => '']],
         $idiomas = [['idioma' => '', 'habla' => '', 'lee' => '', 'escribe' => '']],
         $si_no = [['val' => 0, 'res' => 'No'], ['val' => 1, 'res' => 'Sí']],
@@ -65,7 +67,7 @@ class Formulario extends Component
     public $referencias_personales = [['nombre' => '', 'lugar_trabajo' => '', 'teléfono' => '']];
     /* variables de consulta */
     public $id_candidato, $id_empleado, $id_requisito, $id_puesto, $dpi, $nit, $igss, $imagen, $nombres, $apellidos, $puesto, $email, $pretension_salarial, $departamento,
-        $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion, $departamento_emision, $municipio_emision, $licencia,
+        $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion, $departamento_residencia, $municipio_residencia, $departamento_emision, $municipio_emision, $licencia,
         $tipo_licencia, $tipo_vehiculo, $placa, $telefono_casa, $telefono_movil, $familiar_conred, $nombre_familiar_conred,
         $cargo_familiar_conred, $conocido_conred, $nombre_conocido_conred, $cargo_conocido_conred, $telefono_padre, $nombre_padre,
         $ocupacion_padre, $telefono_madre, $nombre_madre, $ocupacion_madre, $telefono_conviviente, $nombre_conviviente, $ocupacion_conviviente,
@@ -121,6 +123,8 @@ class Formulario extends Component
             'nacionalidad' => 'required|integer|min:1',
             'estado_civil' => 'required|integer|min:1',
             'direccion' => 'required|filled',
+            'departamento_residencia' => 'required|integer|min:1',
+            'municipio_residencia' => 'required|integer|min:1',
             'dpi' => ['required', 'filled', 'size:15', 'regex:/^[1-9]\d{3} [1-9][0-9]{4} ([0][1-9]|[1][0-9]|[2][0-2])([0][1-9]|[1][0-9]|[2][0-9]|[3][0-9])$/'],
             'departamento_emision' => 'required|integer|min:1',
             'municipio_emision' => 'required|integer|min:1',
@@ -166,7 +170,7 @@ class Formulario extends Component
             'horario_estudio_actual' => 'required_if:estudia_actualmente,1|nullable',
             'establecimiento_estudio_actual' => 'required_if:estudia_actualmente,1|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/',
             'etnia' => 'required|integer|min:1',
-            'otro_etnia' => 'required_if:etnia,|nullable',
+            'otro_etnia' => 'required_if:etnia,5|nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'idiomas.*.idioma' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
             'idiomas.*.habla' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
             'idiomas.*.lee' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
@@ -228,7 +232,7 @@ class Formulario extends Component
                 Storage::delete('public/' . $this->imagen_actual);
             }
             DB::transaction(function () use ($validated, $img) {
-                $this->empleado = Empleado::updateOrCreate(['candidatos_id' => $this->id_candidato],[
+                $this->empleado = Empleado::updateOrCreate(['candidatos_id' => $this->id_candidato], [
                     'nit' => $validated['nit'],
                     'igss' => $validated['igss'],
                     'imagen' => $img,
@@ -253,12 +257,18 @@ class Formulario extends Component
                     'familiar_conred' => $validated['familiar_conred'],
                     'conocido_conred' => $validated['conocido_conred'],
                     'etnias_id' => $validated['etnia'],
+                    'otro_etnia' => $validated['otro_etnia'],
                     'grupos_sanguineos_id' => $validated['tipo_sangre'],
                     'municipios_id' => $validated['municipio'],
                     'nacionalidades_id' => $validated['nacionalidad'],
                     'tipos_viviendas_id' => $validated['tipo_vivienda'],
                     'estados_civiles_id' => $validated['estado_civil'],
-                    'candidatos_id' => $this->id_candidato
+                    'candidatos_id' => $this->id_candidato,
+                ]);
+
+                Direccion::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                    'direccion' => $validated['direccion'],
+                    'municipios_id' => $validated['municipio_emision']
                 ]);
 
                 Dpi::updateOrCreate(['empleados_id' => $this->empleado->id], [
@@ -575,11 +585,11 @@ class Formulario extends Component
                     ]);
 
                     $nuevo_requisito = RequisitoCandidato::where('candidatos_id', $this->id_candidato)
-                    ->where('puestos_nominales_id', $this->id_puesto)
-                    ->where('requisitos_id', $this->id_requisito)
-                    ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
-                    ->select('requisitos.requisito as requisito')
-                    ->first();
+                        ->where('puestos_nominales_id', $this->id_puesto)
+                        ->where('requisitos_id', $this->id_requisito)
+                        ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                        ->select('requisitos.requisito as requisito')
+                        ->first();
 
                     $this->requisitos_cargados[] = ['requisito' => $nuevo_requisito->requisito];
                 }
@@ -613,7 +623,6 @@ class Formulario extends Component
             'empleados.apellidos as apellidos',
             'empleados.email as email',
             'empleados.fecha_nacimiento as fecha_nacimiento',
-            'empleados.direccion as direccion',
             'empleados.pretension_salarial as pretension_salarial',
             'empleados.estudia_actualmente as estudia_actualmente',
             'empleados.cantidad_personas_dependientes as cantidad_personas_dependientes',
@@ -629,6 +638,13 @@ class Formulario extends Component
             'empleados.pago_vivienda as pago_vivienda',
             'empleados.familiar_conred as familiar_conred',
             'empleados.conocido_conred as conocido_conred',
+            'empleados.otro_etnia as otro_etnia',
+            'direcciones.id as id_direccion',
+            'direcciones.direccion as direccion',
+            'municipios.id as id_municipio_residencia',
+            'municipios.nombre as municipio_residencia',
+            'departamentos.id as id_departamento_residencia',
+            'departamentos.nombre as departamento_residencia',
             'municipios.id as id_municipio',
             'municipios.nombre as municipio',
             'departamentos.id as id_departamento',
@@ -698,13 +714,16 @@ class Formulario extends Component
             'contactos_emergencias.direccion as direccion_contacto_emergencia'
 
         )
+            ->join('direcciones', 'empleados.id', '=', 'direcciones.empleados_id')
+            ->join('municipios as mun_residencia', 'direcciones.municipios_id', '=', 'mun_residencia.id')
+            ->join('departamentos as dep_residencia', 'mun_residencia.departamentos_id', '=', 'dep_residencia.id')
             ->join('municipios', 'empleados.municipios_id', '=', 'municipios.id')
             ->join('departamentos', 'municipios.departamentos_id', '=', 'departamentos.id')
             ->join('nacionalidades', 'empleados.nacionalidades_id', '=', 'nacionalidades.id')
             ->join('estados_civiles', 'empleados.estados_civiles_id', '=', 'estados_civiles.id')
             ->join('dpis', 'empleados.id', '=', 'dpis.empleados_id')
             ->join('municipios as mun_emision', 'dpis.municipios_id', '=', 'mun_emision.id')
-            ->join('departamentos as dep_emision', 'municipios.departamentos_id', '=', 'dep_emision.id')
+            ->join('departamentos as dep_emision', 'mun_emision.departamentos_id', '=', 'dep_emision.id')
             ->leftjoin('vehiculos', 'empleados.id', '=', 'vehiculos.empleados_id')
             ->join('tipos_vehiculos', 'vehiculos.tipos_vehiculos_id', '=', 'tipos_vehiculos.id')
             ->leftjoin('licencias_conducir', 'empleados.id', '=', 'licencias_conducir.empleados_id')
@@ -725,109 +744,115 @@ class Formulario extends Component
             ->join('contactos_emergencias', 'empleados.id', '=', 'contactos_emergencias.empleados_id')
             ->first();
 
-        $this->id_empleado = $candidato->id_empleado;
-        $this->imagen = $candidato->imagen;
-        $this->imagen_actual = $candidato->imagen;
-        $this->nombres = $candidato->nombres;
-        $this->apellidos = $candidato->apellidos;
-        $this->pretension_salarial = $candidato->pretension_salarial;
-        $this->departamento = $candidato->id_departamento;
-        $this->getMunicipiosByDepartamento();
-        $this->municipio = $candidato->id_municipio;
-        $this->fecha_nacimiento = $candidato->fecha_nacimiento;
-        $this->nacionalidad = $candidato->id_nacionalidad;
-        $this->estado_civil = $candidato->id_estado_civil;
-        $this->direccion = $candidato->direccion;
-        $this->dpi = $candidato->dpi;
-        $this->departamento_emision = $candidato->id_departamento_emision;
-        $this->getMunicipiosByDepartamentoEmision();
-        $this->municipio_emision = $candidato->id_municipio_emision;
-        $this->igss = $candidato->igss;
-        $this->nit = $candidato->nit;
-        $this->licencia = $candidato->licencia;
-        $this->tipo_licencia = $candidato->id_tipo_licencia;
-        $this->tipo_vehiculo = $candidato->id_tipo_vehiculo;
-        $this->placa = $candidato->placa;
-        $this->telefono_casa = $candidato->telefono_casa;
-        $this->telefono_movil = $candidato->telefono;
-        $this->email = $candidato->email;
-        $this->familiar_conred = $candidato->familiar_conred;
-        $this->nombre_familiar_conred = $candidato->nombre_familiar_conred;
-        $this->cargo_familiar_conred = $candidato->cargo_familiar_conred;
-        $this->conocido_conred = $candidato->conocido_conred;
-        $this->nombre_conocido_conred = $candidato->nombre_conocido_conred;
-        $this->cargo_conocido_conred = $candidato->cargo_conocido_conred;
-        $this->telefono_padre = $candidato->telefono_padre;
-        $this->nombre_padre = $candidato->nombre_padre;
-        $this->ocupacion_padre = $candidato->ocupacion_padre;
-        $this->telefono_madre = $candidato->telefono_madre;
-        $this->nombre_madre = $candidato->nombre_madre;
-        $this->ocupacion_madre = $candidato->ocupacion_madre;
-        $this->telefono_conviviente = $candidato->telefono_conviviente;
-        $this->nombre_conviviente = $candidato->nombre_conviviente;
-        $this->ocupacion_conviviente = $candidato->ocupacion_conviviente;
-        $this->hijos = HijoEmpleado::where('empleados_id', $candidato->id_empleado)
-            ->get()
-            ->toArray();
-        $estudios = RegistroAcademicoEmpleado::where('empleados_id', $candidato->id_empleado)->get();
-        foreach ($estudios as $es) {
-            if ($es->registros_academicos_id == 1) {
-                $this->establecimiento_primaria = $es->establecimiento;
-                $this->titulo_primaria = $es->titulo;
-            } elseif ($es->registros_academicos_id == 2) {
-                $this->establecimiento_secundaria = $es->establecimiento;
-                $this->titulo_secundaria = $es->titulo;
-            } elseif ($es->registros_academicos_id == 3) {
-                $this->establecimiento_diversificado = $es->establecimiento;
-                $this->titulo_diversificado = $es->titulo;
-            } elseif ($es->registros_academicos_id == 6) {
-                $this->establecimiento_universitario = $es->establecimiento;
-                $this->titulo_universitario = $es->titulo;
-            } elseif ($es->registros_academicos_id == 8) {
-                $this->establecimiento_maestria_postgrado = $es->establecimiento;
-                $this->titulo_maestria_postgrado = $es->titulo;
-            } elseif ($es->registros_academicos_id == 10) {
-                $this->establecimiento_otra_especialidad = $es->establecimiento;
-                $this->titulo_otra_especialidad;
+        if ($candidato) {
+            $this->id_empleado = $candidato->id_empleado;
+            $this->imagen = $candidato->imagen;
+            $this->imagen_actual = $candidato->imagen;
+            $this->nombres = $candidato->nombres;
+            $this->apellidos = $candidato->apellidos;
+            $this->pretension_salarial = $candidato->pretension_salarial;
+            $this->departamento = $candidato->id_departamento;
+            $this->getMunicipiosByDepartamento();
+            $this->municipio = $candidato->id_municipio;
+            $this->fecha_nacimiento = $candidato->fecha_nacimiento;
+            $this->nacionalidad = $candidato->id_nacionalidad;
+            $this->estado_civil = $candidato->id_estado_civil;
+            $this->direccion = $candidato->direccion;
+            $this->departamento_residencia = $candidato->id_departamento_residencia;
+            $this->getMunicipiosByDepartamentoResidencia();
+            $this->municipio_residencia = $candidato->id_municipio_residencia;
+            $this->dpi = $candidato->dpi;
+            $this->departamento_emision = $candidato->id_departamento_emision;
+            $this->getMunicipiosByDepartamentoEmision();
+            $this->municipio_emision = $candidato->id_municipio_emision;
+            $this->igss = $candidato->igss;
+            $this->nit = $candidato->nit;
+            $this->licencia = $candidato->licencia;
+            $this->tipo_licencia = $candidato->id_tipo_licencia;
+            $this->tipo_vehiculo = $candidato->id_tipo_vehiculo;
+            $this->placa = $candidato->placa;
+            $this->telefono_casa = $candidato->telefono_casa;
+            $this->telefono_movil = $candidato->telefono;
+            $this->email = $candidato->email;
+            $this->familiar_conred = $candidato->familiar_conred;
+            $this->nombre_familiar_conred = $candidato->nombre_familiar_conred;
+            $this->cargo_familiar_conred = $candidato->cargo_familiar_conred;
+            $this->conocido_conred = $candidato->conocido_conred;
+            $this->nombre_conocido_conred = $candidato->nombre_conocido_conred;
+            $this->cargo_conocido_conred = $candidato->cargo_conocido_conred;
+            $this->telefono_padre = $candidato->telefono_padre;
+            $this->nombre_padre = $candidato->nombre_padre;
+            $this->ocupacion_padre = $candidato->ocupacion_padre;
+            $this->telefono_madre = $candidato->telefono_madre;
+            $this->nombre_madre = $candidato->nombre_madre;
+            $this->ocupacion_madre = $candidato->ocupacion_madre;
+            $this->telefono_conviviente = $candidato->telefono_conviviente;
+            $this->nombre_conviviente = $candidato->nombre_conviviente;
+            $this->ocupacion_conviviente = $candidato->ocupacion_conviviente;
+            $this->hijos = HijoEmpleado::where('empleados_id', $candidato->id_empleado)
+                ->get()
+                ->toArray();
+            $estudios = RegistroAcademicoEmpleado::where('empleados_id', $candidato->id_empleado)->get();
+            foreach ($estudios as $es) {
+                if ($es->registros_academicos_id == 1) {
+                    $this->establecimiento_primaria = $es->establecimiento;
+                    $this->titulo_primaria = $es->titulo;
+                } elseif ($es->registros_academicos_id == 2) {
+                    $this->establecimiento_secundaria = $es->establecimiento;
+                    $this->titulo_secundaria = $es->titulo;
+                } elseif ($es->registros_academicos_id == 3) {
+                    $this->establecimiento_diversificado = $es->establecimiento;
+                    $this->titulo_diversificado = $es->titulo;
+                } elseif ($es->registros_academicos_id == 6) {
+                    $this->establecimiento_universitario = $es->establecimiento;
+                    $this->titulo_universitario = $es->titulo;
+                } elseif ($es->registros_academicos_id == 8) {
+                    $this->establecimiento_maestria_postgrado = $es->establecimiento;
+                    $this->titulo_maestria_postgrado = $es->titulo;
+                } elseif ($es->registros_academicos_id == 10) {
+                    $this->establecimiento_otra_especialidad = $es->establecimiento;
+                    $this->titulo_otra_especialidad;
+                }
             }
+            $this->estudia_actualmente = $candidato->estudia_actualmente;
+            $this->estudio_actual = $candidato->estudio_actual;
+            $this->horario_estudio_actual = $candidato->horario_estudio_actual;
+            $this->establecimiento_estudio_actual = $candidato->establecimiento_estudio_actual;
+            $this->etnia = $candidato->id_etnia;
+            $this->otro_etnia = $candidato->otro_etnia;
+            $this->idiomas = Idioma::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+            $this->programas = ProgramaComputacion::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+            $this->historiales_laborales = HistorialLaboral::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+            $this->referencias_personales = ReferenciaPersonal::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+            $this->referencias_laborales = ReferenciaLaboral::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+            $this->tipo_vivienda = $candidato->id_tipo_vivienda;
+            $this->pago_vivienda = $candidato->pago_vivienda;
+            $this->cantidad_personas_dependientes = $candidato->cantidad_personas_dependientes;
+            $this->personas_dependientes = PersonaDependiente::where('empleados_id', $candidato->id_empleado)->get()->toArray();
+            $this->ingresos_adicionales = $candidato->ingresos_adicionales;
+            $this->fuente_ingresos_adicionales = $candidato->fuente_ingresos_adicionales;
+            $this->personas_aportan_ingresos = $candidato->personas_aportan_ingresos;
+            $this->monto_ingreso_total = $candidato->monto_ingreso_total;
+            $this->posee_deudas = $candidato->posee_deudas;
+            $this->tipo_deuda = $candidato->id_tipo_deuda;
+            $this->monto_deuda = $candidato->monto_deuda;
+            $this->trabajo_conred = $candidato->trabajo_conred;
+            $this->trabajo_estado = $candidato->trabajo_estado;
+            $this->jubilado_estado = $candidato->jubilado_estado;
+            $this->institucion_jubilacion = $candidato->institucion_jubilacion;
+            $this->padecimiento_salud = $candidato->padecimiento_salud;
+            $this->tipo_enfermedad = $candidato->tipo_enfermedad;
+            $this->intervencion_quirurgica = $candidato->intervencion_quirurgica;
+            $this->tipo_intervencion = $candidato->tipo_intervencion;
+            $this->sufrido_accidente = $candidato->sufrido_accidente;
+            $this->tipo_accidente = $candidato->tipo_accidente;
+            $this->alergia_medicamento = $candidato->alergia_medicamento;
+            $this->tipo_medicamento = $candidato->tipo_medicamento;
+            $this->tipo_sangre = $candidato->id_tipo_sangre;
+            $this->nombre_contacto_emergencia = $candidato->nombre_contacto_emergencia;
+            $this->telefono_contacto_emergencia = $candidato->telefono_contacto_emergencia;
+            $this->direccion_contacto_emergencia = $candidato->direccion_contacto_emergencia;
         }
-        $this->estudia_actualmente = $candidato->estudia_actualmente;
-        $this->estudio_actual = $candidato->estudio_actual;
-        $this->horario_estudio_actual = $candidato->horario_estudio_actual;
-        $this->establecimiento_estudio_actual = $candidato->establecimiento_estudio_actual;
-        $this->etnia = $candidato->id_etnia;
-        $this->idiomas = Idioma::where('empleados_id', $candidato->id_empleado)->get()->toArray();
-        $this->programas = ProgramaComputacion::where('empleados_id', $candidato->id_empleado)->get()->toArray();
-        $this->historiales_laborales = HistorialLaboral::where('empleados_id', $candidato->id_empleado)->get()->toArray();
-        $this->referencias_personales = ReferenciaPersonal::where('empleados_id', $candidato->id_empleado)->get()->toArray();
-        $this->referencias_laborales = ReferenciaLaboral::where('empleados_id', $candidato->id_empleado)->get()->toArray();
-        $this->tipo_vivienda = $candidato->id_tipo_vivienda;
-        $this->pago_vivienda = $candidato->pago_vivienda;
-        $this->cantidad_personas_dependientes = $candidato->cantidad_personas_dependientes;
-        $this->personas_dependientes = PersonaDependiente::where('empleados_id', $candidato->id_empleado)->get()->toArray();
-        $this->ingresos_adicionales = $candidato->ingresos_adicionales;
-        $this->fuente_ingresos_adicionales = $candidato->fuente_ingresos_adicionales;
-        $this->personas_aportan_ingresos = $candidato->personas_aportan_ingresos;
-        $this->monto_ingreso_total = $candidato->monto_ingreso_total;
-        $this->posee_deudas = $candidato->posee_deudas;
-        $this->tipo_deuda = $candidato->id_tipo_deuda;
-        $this->monto_deuda = $candidato->monto_deuda;
-        $this->trabajo_conred = $candidato->trabajo_conred;
-        $this->trabajo_estado = $candidato->trabajo_estado;
-        $this->jubilado_estado = $candidato->jubilado_estado;
-        $this->institucion_jubilacion = $candidato->institucion_jubilacion;
-        $this->padecimiento_salud = $candidato->padecimiento_salud;
-        $this->tipo_enfermedad = $candidato->tipo_enfermedad;
-        $this->intervencion_quirurgica = $candidato->intervencion_quirurgica;
-        $this->tipo_intervencion = $candidato->tipo_intervencion;
-        $this->sufrido_accidente = $candidato->sufrido_accidente;
-        $this->tipo_accidente = $candidato->tipo_accidente;
-        $this->alergia_medicamento = $candidato->alergia_medicamento;
-        $this->tipo_medicamento = $candidato->tipo_medicamento;
-        $this->tipo_sangre = $candidato->id_tipo_sangre;
-        $this->nombre_contacto_emergencia = $candidato->nombre_contacto_emergencia;
-        $this->telefono_contacto_emergencia = $candidato->telefono_contacto_emergencia;
-        $this->direccion_contacto_emergencia = $candidato->direccion_contacto_emergencia;
     }
 
     public function cargarPuesto($id_candidato)
@@ -867,6 +892,20 @@ class Formulario extends Component
             $this->municipios = [];
         }
     }
+
+    public function getMunicipiosByDepartamentoResidencia()
+    {
+        $this->municipio_residencia = '';
+        if ($this->departamento_residencia) {
+            $this->municipios_residencia = DB::table('municipios')
+                ->select('id', 'nombre', 'departamentos_id')
+                ->where('departamentos_id', '=', $this->departamento_residencia)
+                ->get();
+        } else {
+            $this->municipios = [];
+        }
+    }
+
 
     public function add_son()
     {

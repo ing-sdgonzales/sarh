@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->date('fecha_ingreso')->nullable();
             $table->date('fecha_nacimiento');
-            $table->text('direccion');
             $table->string('cuenta_banco', 50)->nullable();
             $table->date('fecha_retiro')->nullable();
             $table->unsignedTinyInteger('estado')->default(0);
@@ -44,6 +43,7 @@ return new class extends Migration
             $table->unsignedDecimal('pago_vivienda', 9, 2);
             $table->unsignedTinyInteger('familiar_conred');
             $table->unsignedTinyInteger('conocido_conred');
+            $table->string('otro_etnia', 50)->nullable();
 
             /* fks */
             $table->unsignedTinyInteger('generos_id')->nullable();

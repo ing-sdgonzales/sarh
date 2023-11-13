@@ -15,7 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->tinyIncrements('id');
-            $table->text('titulo');
+            $table->text('nivel');
 
             $table->timestamps();
         });

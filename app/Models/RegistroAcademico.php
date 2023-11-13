@@ -10,5 +10,5 @@ class RegistroAcademico extends Model
     use HasFactory;
 
     protected $table = 'registros_academicos';
-    protected $fillable = ['titulo'];
+    protected $fillable = ['nivel'];
 }

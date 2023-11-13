@@ -17,7 +17,8 @@ class EtniaSeeder extends Seeder
             ['etnia' => 'Maya'],
             ['etnia' => 'Xinca'],
             ['etnia' => 'Garífuna'],
-            ['etnia' => 'Ladino']
+            ['etnia' => 'Ladino'],
+            ['etnia' => 'Otro']
         ];
 
         foreach ($etniasData as $etnia) {

@@ -323,7 +323,7 @@
                                             <option value="">Seleccionar...</option>
                                             @foreach ($registros_academicos ?? [] as $registro_academico)
                                                 <option value="{{ $registro_academico->id }}">
-                                                    {{ $registro_academico->titulo }}
+                                                    {{ $registro_academico->nivel }}
                                                 </option>
                                             @endforeach
                                         </select>
