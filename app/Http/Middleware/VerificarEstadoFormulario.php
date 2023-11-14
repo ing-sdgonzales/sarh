@@ -16,7 +16,9 @@ class VerificarEstadoFormulario
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $formulario = RequisitoCandidato::where('requisitos_id', $request->id_requisito)->first();
+        $formulario = RequisitoCandidato::where('requisitos_id', $request->id_requisito)
+            ->where('candidatos_id', $request->id_candidato)
+            ->first();
         if ($formulario) {
             if ($formulario->fecha_carga && $formulario->fecha_revision == null && $formulario->revisado == 0) {
                 return redirect()->route('presentar_requisitos', ['id_candidato' => $formulario->candidatos_id]);

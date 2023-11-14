@@ -164,15 +164,24 @@ class FormularioController extends Controller
         $candidato = RequisitoCandidato::select(
             'requisitos_candidatos.fecha_carga as fecha_carga',
             'requisitos_candidatos.fecha_revision as fecha_revision',
-            'catalogo_puestos.puesto as puesto'
+            'catalogo_puestos.puesto as puesto',
+            'tipos_servicios.tipo_servicio as tipo_servicio',
+            'renglones.renglon as renglon'
         )
             ->join('puestos_nominales', 'requisitos_candidatos.puestos_nominales_id', '=', 'puestos_nominales.id')
             ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', '=', 'catalogo_puestos.id')
+            ->join('tipos_servicios', 'puestos_nominales.tipos_servicios_id', '=', 'tipos_servicios.id')
+            ->join('renglones', 'puestos_nominales.renglones_id', '=', 'renglones.id')
             ->where('requisitos_candidatos.candidatos_id', $empleado->id_candidato)
             ->first();
 
         /* plantilla */
-        $doc = new TemplateProcessor('templates/formulario.docx');
+        if ($candidato->renglon == '029') {
+            $doc = new TemplateProcessor('templates/formulario029.docx');
+        } else {
+            $doc = new TemplateProcessor('templates/formulario.docx');
+        }
+
         Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
         Settings::setPdfRendererPath('.');
 
@@ -184,8 +193,18 @@ class FormularioController extends Controller
         $doc->setValue('departamento_residencia', $empleado->departamento_residencia);
         $doc->setValue('nombres', $empleado->nombres);
         $doc->setValue('apellidos', $empleado->apellidos);
-        $doc->setValue('puesto', $candidato->puesto);
-        $doc->setValue('pretension_salarial', number_format($empleado->pretension_salarial, 2, '.', ','));
+        if ($candidato->renglon == '029') {
+            if ($empleado->tipo_servicio == 'Servicios Técnicos') {
+                $doc->setValue('servicios_tecnicos', 'X');
+                $doc->setValue('servicios_profesionales', '');
+            } else {
+                $doc->setValue('servicios_tecnicos', '');
+                $doc->setValue('servicios_profesionales', 'X');
+            }
+        } else {
+            $doc->setValue('puesto', $candidato->puesto);
+        }
+        $doc->setValue('pretension_salarial', 'Q ' . number_format($empleado->pretension_salarial, 2, '.', ','));
         $doc->setValue('municipio', $empleado->municipio);
         $doc->setValue('departamento', $empleado->departamento);
         $doc->setValue('fecha_nacimiento', date('d/m/Y', strtotime($empleado->fecha_nacimiento)));

@@ -285,27 +285,27 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <!-- User Management -->
-                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Users') }}
-                            </div>
+                            @hasanyrole('Súper Administrador|Administrador')
+                                <!-- User Management -->
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('Manage Users') }}
+                                </div>
+                                <x-dropdown-link href="{{ route('usuarios') }}">
+                                    {{ __('Users') }}
+                                </x-dropdown-link>
 
-                            <x-dropdown-link href="{{ route('usuarios') }}">
-                                {{ __('Users') }}
-                            </x-dropdown-link>
+                                <x-dropdown-link href="{{ route('roles') }}">
+                                    {{ __('Roles') }}
+                                </x-dropdown-link>
 
-                            <x-dropdown-link href="{{ route('roles') }}">
-                                {{ __('Roles') }}
-                            </x-dropdown-link>
+                                <x-dropdown-link href="{{ route('permisos') }}">
+                                    {{ __('Permissions') }}
+                                </x-dropdown-link>
 
-                            <x-dropdown-link href="{{ route('permisos') }}">
-                                {{ __('Permissions') }}
-                            </x-dropdown-link>
-
-                            <x-dropdown-link href="{{ route('bitacora') }}">
-                                {{ __('Bitácora') }}
-                            </x-dropdown-link>
-
+                                <x-dropdown-link href="{{ route('bitacora') }}">
+                                    {{ __('Bitácora') }}
+                                </x-dropdown-link>
+                            @endhasanyrole
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
                                 {{ __('Manage Account') }}

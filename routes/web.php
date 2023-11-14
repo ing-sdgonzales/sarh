@@ -12,6 +12,7 @@ use App\Livewire\Puesto\Puestos;
 use App\Livewire\Requisitos\Requisitos;
 use App\Livewire\Roles\Rol;
 use App\Livewire\Usuarios\BitacoraUsuario;
+use App\Livewire\Usuarios\Usuarios;
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Rules\Role;
 
@@ -39,8 +40,10 @@ Route::post('/buscar_aplicacion', [BuscarAplicacionController::class, 'buscar'])
 
 Route::get('/presentar_requisitos/{id_candidato}', ListarRequisitos::class)
     ->middleware(['CheckEmailSearch', 'guest:' . config('fortify.guard')])->name('presentar_requisitos');
+
 Route::get('/presentar_formulario_029/{id_candidato}', Formulario029::class)
     ->middleware(['CheckEmailSearch', 'guest:' . config('fortify.guard')])->name('presentar_formulario029');
+    
 Route::get('/presentar_formulario/{id_candidato}/{id_requisito}', Formulario::class)
     ->middleware(['CheckEmailSearch', 'VerificarEstadoFormulario', 'guest:' . config('fortify.guard')])->name('presentar_formulario');
 
@@ -49,18 +52,18 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/usuarios', [UserController::class, 'show'])->name('usuarios');
+    Route::get('/usuarios', Usuarios::class)->middleware('can:Ver usuarios')->name('usuarios');
     Route::get('/roles', Rol::class)->middleware('can:Ver roles')->name('roles');
     Route::get('/permisos', Permiso::class)->middleware('can:Ver permisos')->name('permisos');
-    Route::get('/getUsers', [UsuariosTable::class])->name('listarUsuarios');
+    /* Route::get('/getUsers', [UsuariosTable::class])->middleware('can:Ver usuarios')->name('listarUsuarios'); */
 
-    Route::get('/puestos', Puestos::class)->name('puestos');
-    Route::get('/candidatos', Candidatos::class)->name('candidatos');
-    Route::get('/requisitos', Requisitos::class)->name('requisitos');
-    Route::get('/expediente_candidato/{candidato_id}', Expediente::class)->name('expedientes');
-    Route::get('/ver_formulario/{id_candidato}/{id_requisito}', VerFormulario::class)->name('formulario');
+    Route::get('/puestos', Puestos::class)->middleware('can:Ver puestos')->name('puestos');
+    Route::get('/candidatos', Candidatos::class)->middleware('can:Ver candidatos')->name('candidatos');
+    Route::get('/requisitos', Requisitos::class)->middleware('can:Ver requisitos')->name('requisitos');
+    Route::get('/expediente_candidato/{candidato_id}', Expediente::class)->middleware('can:Ver expediente')->name('expedientes');
+    Route::get('/ver_formulario/{id_candidato}/{id_requisito}', VerFormulario::class)->middleware('can:Ver formulario')->name('formulario');
 
-    Route::get('/bitacora_usuarios', BitacoraUsuario::class)->name('bitacora');
+    Route::get('/bitacora_usuarios', BitacoraUsuario::class)->middleware('can:Ver bitácora')->name('bitacora');
 
     Route::get('/dashboard', function () {
         return view('dashboard');

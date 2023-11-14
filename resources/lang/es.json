@@ -70,5 +70,6 @@
     "Roles": "Roles",
     "Permissions": "Permisos", 
     "Table": "Tabla",
-    "doesn't exist": "no existe"
+    "doesn't exist": "no existe",
+    "This action is unauthorized.": "Esta accion no está autorizada."
 }

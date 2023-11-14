@@ -1,14 +1,14 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Requisitos') }}
+            {{ __('Users') }}
         </h2>
     </x-slot>
 
     <div class="py-12 bg-gray-200 h-screen">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="mb-2">
-                @can('Crear requisitos')
+            @can('Crear usuario')
+                <div class="mb-2">
                     <button type="button" wire:click="crear()"
                         class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -16,36 +16,33 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                     </button>
-                @endcan
-
-                @canany(['Crear requisito', 'Editar Requisitos'])
                     @if ($modal)
-                        @include('livewire.requisitos.crear')
+                        @include('livewire.usuarios.crear')
                     @endif
-                @endcanany
-            </div>
+                </div>
+            @endcan
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <table class="min-w-full bg-white rounded-lg overflow-hidden text-center">
                     <thead class="bg-gray-100 text-center">
                         <tr>
                             <th class="w-1/12 py-2 px-4">No.</th>
-                            <th class="w-1/4 py-2 px-4">Requisito</th>
-                            <th class="w-1/4 py-2 px-4">Especificación</th>
+                            <th class="w-1/4 py-2 px-4">Usuario</th>
+                            <th class="w-1/4 py-2 px-4">Nombre</th>
                             <th class="w-1/12 py-2 px-4">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($requisitos as $requisito)
+                        @foreach ($usuarios as $user)
                             <tr>
                                 <td class="py-2 px-4">{{ $loop->iteration }}.</td>
-                                <td class="py-2 px-4">{{ $requisito->requisito }}</td>
-                                <td class="py-2 px-4">{{ $requisito->especificacion }}</td>
+                                <td class="py-2 px-4">{{ $user->email }}</td>
+                                <td class="py-2 px-4">{{ $user->name }}</td>
                                 <td class="py-2 px-4">
                                     <div class="relative" data-te-dropdown-position="dropstart">
                                         <button
                                             class="flex items-center mx-auto whitespace-nowrap rounded bg-gray-400 px-2 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-gray-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-gray-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-gray-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                                            type="button" id="dropdownMenuButton{{ $requisito->id }}"
+                                            type="button" id="dropdownMenuButton{{ $user->id }}"
                                             data-te-dropdown-toggle-ref aria-expanded="false" data-te-ripple-init
                                             data-te-ripple-color="light">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -57,25 +54,23 @@
                                             </svg>
                                         </button>
                                         <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
-                                            aria-labelledby="dropdownMenuButton{{ $requisito->id }}"
+                                            aria-labelledby="dropdownMenuButton{{ $user->id }}"
                                             data-te-dropdown-menu-ref>
-                                            @can('Editar requisitos')
-                                                <li>
-                                                    <button type="button" wire:click='editar({{ $requisito->id }})'
-                                                        class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                        data-te-dropdown-item-ref>
-                                                        <div class="flex items-end space-x-2">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                class="w-5 h-5">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                                            </svg>
-                                                            <h6 class="text-sm font-normal text-neutral-700">Editar</h6>
-                                                        </div>
-                                                    </button>
-                                                </li>
-                                            @endcan
+                                            <li>
+                                                <button type="button" wire:click='editar({{ $user->id }})'
+                                                    class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                    data-te-dropdown-item-ref>
+                                                    <div class="flex items-end space-x-2">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                            class="w-5 h-5">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                                        </svg>
+                                                        <h6 class="text-sm font-normal text-neutral-700">Editar</h6>
+                                                    </div>
+                                                </button>
+                                            </li>
                                         </ul>
                                     </div>
                                 </td>
@@ -85,7 +80,7 @@
                 </table>
             </div>
             <div class="mt-2">
-                {{ $requisitos->links('pagination::tailwind') }}
+                {{ $usuarios->links('pagination::tailwind') }}
             </div>
         </div>
     </div>

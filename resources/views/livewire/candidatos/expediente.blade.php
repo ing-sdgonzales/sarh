@@ -66,14 +66,16 @@
                         </select>
                     </div>
                 </div>
-                <div class="sm:col-span-4">
-                    <div class="mt-2 w-full text-right">
-                        <button type="button" wire:click="notificar()"
-                            class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
-                            {{ __('Notificar') }}
-                        </button>
+                @can('Notificar requisitos')
+                    <div class="sm:col-span-4">
+                        <div class="mt-2 w-full text-right">
+                            <button type="button" wire:click="notificar()"
+                                class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                                {{ __('Notificar') }}
+                            </button>
+                        </div>
                     </div>
-                </div>
+                @endcan
             </div>
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <table class="min-w-full bg-white rounded-lg overflow-hidden text-center">
@@ -142,47 +144,51 @@
                                                 <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
                                                     aria-labelledby="dropdownMenuButton{{ $req->id }}"
                                                     data-te-dropdown-menu-ref>
-                                                    <li>
-                                                        <a href="{{ route('formulario', ['id_candidato' => $req->candidatos_id, 'id_requisito' => $req->id]) }}"
-                                                            type="button"
-                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600">
-                                                            <div class="flex items-end space-x-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="w-5 h-5">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                                                                </svg>
-                                                                <h6 class="text-sm font-normal text-neutral-700">
-                                                                    Formulario
-                                                                </h6>
-                                                            </div>
-                                                        </a>
-                                                    </li>
+                                                    @can('Ver formulario')
+                                                        <li>
+                                                            <a href="{{ route('formulario', ['id_candidato' => $req->candidatos_id, 'id_requisito' => $req->id]) }}"
+                                                                type="button"
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600">
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                            d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                                                    </svg>
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Formulario
+                                                                    </h6>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    @endcan
                                                 </ul>
                                             @else
                                                 <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
                                                     aria-labelledby="dropdownMenuButton{{ $req->id }}"
                                                     data-te-dropdown-menu-ref>
-                                                    <li>
-                                                        <button type="button"
-                                                            wire:click='verificarRequisito({{ $req->id }})'
-                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                            data-te-dropdown-item-ref>
-                                                            <div class="flex items-end space-x-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="w-5 h-5">
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                        d="M4.5 12.75l6 6 9-13.5" />
-                                                                </svg>
-                                                                <h6 class="text-sm font-normal text-neutral-700">
-                                                                    Verificar
-                                                                </h6>
-                                                            </div>
-                                                        </button>
-                                                    </li>
+                                                    @can('Verificar requisitos')
+                                                        <li>
+                                                            <button type="button"
+                                                                wire:click='verificarRequisito({{ $req->id }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M4.5 12.75l6 6 9-13.5" />
+                                                                    </svg>
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Verificar
+                                                                    </h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
                                                 </ul>
                                             @endif
                                         </div>

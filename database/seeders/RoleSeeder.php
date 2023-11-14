@@ -23,6 +23,9 @@ class RoleSeeder extends Seeder
 
         /* Permiso para ver la ruta /usuarios */
         Permission::create(['name' => 'Ver usuarios'])->syncRoles([$administrador]);
+        Permission::create(['name' => 'Crear usuarios'])->syncRoles([$administrador]);
+        Permission::create(['name' => 'Editar usuarios'])->syncRoles([$administrador]);
+        Permission::create(['name' => 'Eliminar usuarios'])->syncRoles([$super]);
 
         /* Permiso para ver la ruta /roles */
         Permission::create(['name' => 'Ver roles'])->syncRoles([$administrador]);
@@ -33,6 +36,12 @@ class RoleSeeder extends Seeder
 
         /* Permiso para ver la ruta /dashboard */
         Permission::create(['name' => 'Ver dashboard'])->syncRoles([$administrador, $operativo]);
+
+        /* Permisos para la ruta de requisitos */
+        Permission::create(['name' => 'Ver requisitos'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /requisitos */
+        Permission::create(['name' => 'Crear requisitos'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Editar requisitos'])->syncRoles([$administrador, $operativo]);
 
         /* Permiso para ver la ruta /puestos */
         Permission::create(['name' => 'Ver puestos'])->syncRoles([$administrador, $operativo]);
@@ -48,7 +57,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Editar candidatos'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Registrar entrevista'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Ver expediente'])->syncRoles([$administrador, $operativo]);
+
+        /* Permisos CRUD para la vista /expediente_candidato */
         Permission::create(['name' => 'Verificar requisitos'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Ver formulario'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Notificar requisitos'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Ver etapas'])->syncRoles([$administrador, $operativo]);
 
         if ($super) {
             $super->syncPermissions(Permission::all());

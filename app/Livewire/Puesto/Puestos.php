@@ -162,12 +162,7 @@ class Puestos extends Component
             $this->modo_edicion = false;
             $this->limpiarModal();
             return redirect()->route('puestos');
-        }/* catch (QueryException $ex) {
-            $errorInfo = $ex->errorInfo;
-            session()->flash('error', implode($errorInfo));
-            $this->cerrarModal();
-            return redirect()->route('puestos');
-        } */
+        }
         $this->resetPage();
     }
 

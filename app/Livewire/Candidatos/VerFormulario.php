@@ -355,15 +355,16 @@ class VerFormulario extends Component
         try {
             DB::transaction(function () {
 
-                $documento = new FormularioController;
-                $ubicacion = $documento->generarDoc($this->id_empleado, auth()->user()->name);
                 $requisito = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
-
-                $requisito->ubicacion = $ubicacion;
                 $requisito->valido = 1;
                 $requisito->revisado = 1;
                 $requisito->fecha_revision = date("Y-m-d H:i:s");
+                $requisito->save();
 
+                $requisito = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
+                $documento = new FormularioController;
+                $ubicacion = $documento->generarDoc($this->id_empleado, auth()->user()->name);
+                $requisito->ubicacion = $ubicacion;
                 $requisito->save();
             });
             $log = DB::table('requisitos_candidatos')
