@@ -6,6 +6,7 @@ use App\Models\AplicacionCandidato;
 use App\Models\Candidato;
 use App\Models\ColegioCandidato;
 use App\Models\Entrevista;
+use App\Models\EtapaAplicacion;
 use App\Models\RegistroAcademicoCandidato;
 use App\Models\TelefonoCandidato;
 use App\Notifications\AvisoRequisitos;
@@ -332,6 +333,12 @@ class Candidatos extends Component
                 $candidato->aprobado = $this->aprobado;
 
                 $candidato->save();
+
+                $aplicacion = AplicacionCandidato::where('candidatos_id', $this->id)->first();
+
+                EtapaAplicacion::create([
+                    'aplicaciones_candidatos_id' => $aplicacion->id
+                ]);
 
                 $this->showLoading = true;
                 $candidato->notify(new AvisoRequisitos);

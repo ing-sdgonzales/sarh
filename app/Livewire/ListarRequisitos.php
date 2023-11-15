@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\AplicacionCandidato;
+use App\Models\EtapaAplicacion;
 use App\Models\RequisitoCandidato;
 use App\Models\RequisitoPuesto;
 use App\Notifications\NotificacionCargaRequisitos;
@@ -81,7 +83,7 @@ class ListarRequisitos extends Component
             ->where('valido', '=', 1)
             ->count();
         $this->puesto = $this->puestos[0]->id;
-        if($this->total_requisitos_aprobados > 0){
+        if ($this->total_requisitos_aprobados > 0) {
             session()->flash('requisito', 'requisitos_aprobados');
         }
         $this->porcentaje_requisitos_presentados = ($this->total_requisitos_cargados / $this->total_requisitos) * 100;
@@ -94,56 +96,18 @@ class ListarRequisitos extends Component
     public function guardar()
     {
         try {
-            foreach ($this->requisito as $requisito_id => $archivo) {
-                $this->validate([
-                    "requisito.{$requisito_id}" => [
-                        'required',
-                        'file',
-                        'mimes:pdf,doc,docx',
-                        'max:5120',
-                    ],
-                ]);
-
-                $requisito = RequisitoCandidato::where([
-                    'candidatos_id' => $this->id_candidato,
-                    'puestos_nominales_id' => $this->puesto,
-                    'requisitos_id' => $requisito_id
-                ])
-                    ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
-                    ->select('requisitos.requisito as requisito', 'requisitos_candidatos.id as id_requisito_candidato')
-                    ->first();
-
-                if ($requisito) {
-                    if (Storage::disk('public')->exists($requisito->ubicacion)) {
-                        Storage::disk('public')->delete($requisito->ubicacion);
-                    }
-                }
-                $path = $archivo->store('requisitos', 'public');
-
-                if ($requisito) {
-                    $req = RequisitoCandidato::findOrFail($requisito->id_requisito_candidato);
-
-                    $req->ubicacion = $path;
-                    $req->observacion = '';
-                    $req->fecha_carga = date("Y-m-d H:i:s");
-                    $req->valido = 0;
-                    $req->fecha_revision = null;
-                    $requisito->revisado = 0;
-
-                    $requisito->save();
-                    
-                    $this->requisitos_cargados[] = [
-                        'requisito' => $requisito->requisito
-                    ];
-                } else {
-                    RequisitoCandidato::create([
-                        'candidatos_id' => $this->id_candidato,
-                        'puestos_nominales_id' => $this->puesto,
-                        'requisitos_id' => $requisito_id,
-                        'ubicacion' => $path
+            DB::transaction(function () {
+                foreach ($this->requisito as $requisito_id => $archivo) {
+                    $this->validate([
+                        "requisito.{$requisito_id}" => [
+                            'required',
+                            'file',
+                            'mimes:pdf,doc,docx',
+                            'max:5120',
+                        ],
                     ]);
 
-                    $req = RequisitoCandidato::where([
+                    $requisito = RequisitoCandidato::where([
                         'candidatos_id' => $this->id_candidato,
                         'puestos_nominales_id' => $this->puesto,
                         'requisitos_id' => $requisito_id
@@ -152,15 +116,83 @@ class ListarRequisitos extends Component
                         ->select('requisitos.requisito as requisito', 'requisitos_candidatos.id as id_requisito_candidato')
                         ->first();
 
-                    $this->requisitos_cargados[] = [
-                        'requisito' => $req->requisito
-                    ];
-                }
+                    if ($requisito) {
+                        if (Storage::disk('public')->exists($requisito->ubicacion)) {
+                            Storage::disk('public')->delete($requisito->ubicacion);
+                        }
+                    }
+                    $path = $archivo->store('requisitos', 'public');
 
-                /* $this->requisitos_cargados[$requisito_id] = $archivo->getClientOriginalName(); */
-            }
-            Notification::route('mail', 'ing.sergiodaniel@gmail.com')
-                ->notify(new NotificacionCargaRequisitos($this->requisitos_cargados, $this->nombre_candidato, $this->id_candidato));
+                    if ($requisito) {
+                        $req = RequisitoCandidato::findOrFail($requisito->id_requisito_candidato);
+
+                        $req->ubicacion = $path;
+                        $req->observacion = '';
+                        $req->fecha_carga = date("Y-m-d H:i:s");
+                        $req->valido = 0;
+                        $req->fecha_revision = null;
+                        $requisito->revisado = 0;
+
+                        $requisito->save();
+
+                        $this->requisitos_cargados[] = [
+                            'requisito' => $requisito->requisito
+                        ];
+                    } else {
+                        RequisitoCandidato::create([
+                            'candidatos_id' => $this->id_candidato,
+                            'puestos_nominales_id' => $this->puesto,
+                            'requisitos_id' => $requisito_id,
+                            'ubicacion' => $path
+                        ]);
+
+                        $req = RequisitoCandidato::where([
+                            'candidatos_id' => $this->id_candidato,
+                            'puestos_nominales_id' => $this->puesto,
+                            'requisitos_id' => $requisito_id
+                        ])
+                            ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                            ->select('requisitos.requisito as requisito', 'requisitos_candidatos.id as id_requisito_candidato')
+                            ->first();
+
+                        $this->requisitos_cargados[] = [
+                            'requisito' => $req->requisito
+                        ];
+                    }
+
+                    /* $this->requisitos_cargados[$requisito_id] = $archivo->getClientOriginalName(); */
+                }
+                Notification::route('mail', 'ing.sergiodaniel@gmail.com')
+                    ->notify(new NotificacionCargaRequisitos($this->requisitos_cargados, $this->nombre_candidato, $this->id_candidato));
+
+                $reqs_puesto = RequisitoPuesto::select('requisitos_id')->where('puestos_nominales_id', $this->puesto)
+                    ->orderBy('requisitos_id', 'asc')->pluck('requisitos_id')->toArray();
+                $reqs_candidato = RequisitoCandidato::select('requisitos_id')->where('candidatos_id', $this->id_candidato)
+                    ->orderBy('requisitos_id', 'asc')
+                    ->pluck('requisitos_id')
+                    ->toArray();
+
+                $dif_reqs = array_diff($reqs_puesto, $reqs_candidato);
+                if (count($dif_reqs) == 0) {
+                    $aplicacion = AplicacionCandidato::select('id')->where('candidatos_id', $this->id_candidato)
+                        ->where('puestos_nominales_id', $this->puesto)
+                        ->first();
+                    $id_aplicacion = $aplicacion->id;
+                    DB::transaction(function () use ($id_aplicacion){
+                        EtapaAplicacion::where('etapas_procesos_id', 1)
+                            ->where('aplicaciones_candidatos_id', $id_aplicacion)
+                            ->update([
+                                'fecha_fin' => date('Y-m-d H:i:s')
+                            ]);
+                        
+                        EtapaAplicacion::create([
+                            'fecha_inicio' => date('Y-m-d H:i:s'),
+                            'etapas_procesos_id' => 2,
+                            'aplicaciones_candidatos_id' => $id_aplicacion
+                        ]);
+                    });
+                }
+            });
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();
             session()->flash('error', $errorMessages);
@@ -192,7 +224,6 @@ class ListarRequisitos extends Component
         $this->id_candidato = $id_candidato;
         $nombre_candidato = DB::table('candidatos')->select('nombre')->where('id', '=', $id_candidato)->first();
         $this->nombre_candidato = $nombre_candidato->nombre;
-
     }
 
     public function getRequisitosByPuesto()

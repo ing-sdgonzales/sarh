@@ -21,12 +21,10 @@ return new class extends Migration
             /* fks */
             $table->unsignedInteger('candidatos_id');
             $table->unsignedInteger('puestos_nominales_id');
-            $table->unsignedTinyInteger('etapas_aplicaciones_id')->default(1);
 
             /* references */
             $table->foreign('candidatos_id')->references('id')->on('candidatos')->onUpdate('cascade');
             $table->foreign('puestos_nominales_id')->references('id')->on('puestos_nominales')->onUpdate('cascade');
-            $table->foreign('etapas_aplicaciones_id')->references('id')->on('etapas_aplicaciones')->onUpdate('cascade');
 
             $table->timestamps();
         });

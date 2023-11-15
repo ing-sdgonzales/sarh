@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\EtapaAplicacion;
+use App\Models\EtapaProceso;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class EtapaAplicacionSeeder extends Seeder
+class EtapaProcesoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -24,7 +24,7 @@ class EtapaAplicacionSeeder extends Seeder
         ];
 
         foreach ($etapas_aplicaciones as $etapa_aplicacion) {
-            EtapaAplicacion::create([
+            EtapaProceso::create([
                 'etapa' => $etapa_aplicacion
             ]);
         }

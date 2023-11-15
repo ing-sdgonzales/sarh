@@ -2,19 +2,24 @@
 
 namespace App\Livewire\Candidatos;
 
+use App\Models\AplicacionCandidato;
 use App\Models\Candidato;
+use App\Models\EtapaAplicacion;
+use App\Models\Requisito;
 use App\Models\RequisitoCandidato;
+use App\Models\RequisitoPuesto;
 use App\Notifications\AvisoRequisitosRechazados;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use setasign\Fpdi\Fpdi;
 
 class Expediente extends Component
 {
-    public $id_candidato, $id_requisito_candidato;
+    public $id_candidato, $id_requisito_candidato, $estado;
     public $requisitos, $puestos, $pdf, $candidato;
     public $control_requisito = [['val' => 0, 'res' => 'No aprobado'], ['val' => 1, 'res' => 'Aprobado']];
-    public $puesto = 1, $aprobado, $observacion;
+    public $puesto, $aprobado, $observacion;
     public $modal = false;
 
     /* variables de progreso */
@@ -47,7 +52,6 @@ class Expediente extends Component
             ->where('candidatos_id', '=', $this->id_candidato)
             ->count();
 
-
         $this->total_requisitos_aprobados = DB::table('requisitos_candidatos')
             ->select('id')
             ->where('candidatos_id', '=', $this->id_candidato)
@@ -66,58 +70,98 @@ class Expediente extends Component
 
     public function guardar()
     {
-        $validated = $this->validate([
-            'aprobado' => 'required|integer|min:0',
-        ]);
-
-        if ($validated['aprobado'] == 1) {
+        try {
             $validated = $this->validate([
                 'aprobado' => 'required|integer|min:0',
-                'observacion' => 'nullable|string'
             ]);
-        } else {
-            $validated = $this->validate([
-                'aprobado' => 'required|integer|min:0',
-                'observacion' => 'required|filled'
-            ]);
+
+            if ($validated['aprobado'] == 1) {
+                $validated = $this->validate([
+                    'aprobado' => 'required|integer|min:0',
+                    'observacion' => 'nullable|string'
+                ]);
+            } else {
+                $validated = $this->validate([
+                    'aprobado' => 'required|integer|min:0',
+                    'observacion' => 'required|filled'
+                ]);
+            }
+
+            DB::transaction(function () use ($validated) {
+                $req = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
+
+                $req->observacion = $validated['observacion'];
+                $req->valido = $validated['aprobado'];
+                $req->revisado = 1;
+                $req->fecha_revision = date("Y-m-d H:i:s");
+
+                $this->estado = 'rechazó';
+                if ($this->aprobado == 1) {
+                    $this->estado = 'aprobó';
+                    $this->addWaterMark($req->ubicacion);
+                }
+
+                $req->save();
+
+                $reqs_puesto = RequisitoPuesto::select('requisitos_id')->where('puestos_nominales_id', $this->puesto)
+                    ->orderBy('requisitos_id', 'asc')->pluck('requisitos_id')->toArray();
+
+                $reqs_candidato = RequisitoCandidato::select('requisitos_id')->where('candidatos_id', $this->id_candidato)
+                    ->where('fecha_revision', '!=', null)
+                    ->where('revisado', 1)
+                    ->orderBy('requisitos_id', 'asc')
+                    ->pluck('requisitos_id')
+                    ->toArray();
+
+                $dif_reqs = array_diff($reqs_puesto, $reqs_candidato);
+                if (count($dif_reqs) == 0) {
+                    $aplicacion = AplicacionCandidato::select('id')->where('candidatos_id', $this->id_candidato)
+                        ->where('puestos_nominales_id', $this->puesto)
+                        ->first();
+                    $id_aplicacion = $aplicacion->id;
+                    EtapaAplicacion::where('etapas_procesos_id', 2)
+                        ->where('aplicaciones_candidatos_id', $id_aplicacion)
+                        ->update([
+                            'fecha_fin' => date('Y-m-d H:i:s')
+                        ]);
+
+                    EtapaAplicacion::create([
+                        'fecha_inicio' => date('Y-m-d H:i:s'),
+                        'etapas_procesos_id' => 3,
+                        'aplicaciones_candidatos_id' => $id_aplicacion
+                    ]);
+                }
+            });
+
+
+            $log = DB::table('requisitos_candidatos')
+                ->join('candidatos', 'requisitos_candidatos.candidatos_id', '=', 'candidatos.id')
+                ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
+                ->select(
+                    'candidatos.nombre as nombre',
+                    'requisitos.requisito as requisito',
+                )
+                ->where('requisitos_candidatos.candidatos_id', '=', $this->id_candidato)
+                ->where('requisitos_candidatos.puestos_nominales_id', '=', $this->puesto)
+                ->where('requisitos_candidatos.id', '=', $this->id_requisito_candidato)
+                ->first();
+
+            session()->flash('message');
+            $this->cerrarModal();
+            $this->limpiarModal();
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name . " " . $this->estado . " el requisito: " . $log->requisito . " del candidato " . $log->nombre);
+            session()->flash('message');
+            return redirect()->route('expedientes', ['candidato_id' => $this->id_candidato]);
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarModal();
+            $this->limpiarModal();
+            return redirect()->route('expedientes', ['candidato_id' => $this->id_candidato]);
         }
-
-        $req = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
-
-        $req->observacion = $validated['observacion'];
-        $req->valido = $validated['aprobado'];
-        $req->revisado = 1;
-        $req->fecha_revision = date("Y-m-d H:i:s");
-
-        $estado = 'rechazó';
-        if ($this->aprobado == 1) {
-            $estado = 'aprobó';
-            $this->addWaterMark($req->ubicacion);
-        }
-
-        $req->save();
-
-        $log = DB::table('requisitos_candidatos')
-            ->join('candidatos', 'requisitos_candidatos.candidatos_id', '=', 'candidatos.id')
-            ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
-            ->select(
-                'candidatos.nombre as nombre',
-                'requisitos.requisito as requisito',
-            )
-            ->where('requisitos_candidatos.candidatos_id', '=', $this->id_candidato)
-            ->where('requisitos_candidatos.puestos_nominales_id', '=', $this->puesto)
-            ->where('requisitos_candidatos.id', '=', $this->id_requisito_candidato)
-            ->first();
-
-        session()->flash('message');
-        $this->cerrarModal();
-        $this->limpiarModal();
-        activity()
-            ->causedBy(auth()->user())
-            ->withProperties(['user_id' => auth()->id()])
-            ->log("El usuario " . auth()->user()->name . " " . $estado . " el requisito: " . $log->requisito . " del candidato " . $log->nombre);
-        session()->flash('message');
-        return redirect()->route('expedientes', ['candidato_id' => $this->id_candidato]);
     }
 
     public function notificar()

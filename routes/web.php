@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BuscarAplicacionController;
 use App\Livewire\Candidatos\Candidatos;
+use App\Livewire\Candidatos\EtapasProcesos;
 use App\Livewire\Candidatos\Expediente;
 use App\Livewire\Candidatos\VerFormulario;
 use App\Livewire\Formularios\Formulario;
@@ -55,14 +56,13 @@ Route::middleware([
     Route::get('/usuarios', Usuarios::class)->middleware('can:Ver usuarios')->name('usuarios');
     Route::get('/roles', Rol::class)->middleware('can:Ver roles')->name('roles');
     Route::get('/permisos', Permiso::class)->middleware('can:Ver permisos')->name('permisos');
-    /* Route::get('/getUsers', [UsuariosTable::class])->middleware('can:Ver usuarios')->name('listarUsuarios'); */
 
     Route::get('/puestos', Puestos::class)->middleware('can:Ver puestos')->name('puestos');
     Route::get('/candidatos', Candidatos::class)->middleware('can:Ver candidatos')->name('candidatos');
     Route::get('/requisitos', Requisitos::class)->middleware('can:Ver requisitos')->name('requisitos');
     Route::get('/expediente_candidato/{candidato_id}', Expediente::class)->middleware('can:Ver expediente')->name('expedientes');
     Route::get('/ver_formulario/{id_candidato}/{id_requisito}', VerFormulario::class)->middleware('can:Ver formulario')->name('formulario');
-
+    Route::get('/proceso_candidato/{id_candidato}', EtapasProcesos::class)->middleware('can:Ver etapas')->name('proceso');
     Route::get('/bitacora_usuarios', BitacoraUsuario::class)->middleware('can:Ver bitácora')->name('bitacora');
 
     Route::get('/dashboard', function () {

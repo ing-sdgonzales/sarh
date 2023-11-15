@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\CentroCosto;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -43,7 +42,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TipoVehiculoSeeder::class);
         $this->call(TipoDeudaSeeder::class);
         $this->call(TipoViviendaSeeder::class);
-        $this->call(EtapaAplicacionSeeder::class);
+        $this->call(EtapaProcesoSeeder::class);
         /* $this->call(BonoRenglonSeeder::class); */
         /* $this->call(CatalogoPuestoSeeder::class); */
 

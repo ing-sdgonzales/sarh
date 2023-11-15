@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('etapas_aplicaciones', function (Blueprint $table) {
+        Schema::create('etapas_procesos', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->tinyIncrements('id');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('etapas_aplicaciones');
+        Schema::dropIfExists('etapas_procesos');
     }
 };

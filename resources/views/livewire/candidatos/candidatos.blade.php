@@ -30,8 +30,8 @@
                 @endcan
 
             </div>
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                <table class="min-w-full bg-white rounded-lg overflow-hidden text-center">
+            <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
+                <table class="min-w-full bg-white rounded-lg text-center">
                     <thead class="bg-gray-100 text-center">
                         <tr>
                             <th class="w-1/12 py-2 px-4">Renglón</th>
@@ -88,7 +88,7 @@
                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
                                         </button>
-                                        <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
+                                        <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block overflow-y-auto"
                                             aria-labelledby="dropdownMenuButton{{ $candidato->id }}"
                                             data-te-dropdown-menu-ref>
                                             @can('Editar candidatos')
@@ -128,8 +128,8 @@
                                                     </button>
                                                 </li>
                                             @endcan
-                                            @can('Ver expediente')
-                                                @if ($candidato->estado == 1)
+                                            @if ($candidato->estado == 1)
+                                                @can('Ver expediente')
                                                     <li>
                                                         <a type="button"
                                                             href="{{ route('expedientes', ['candidato_id' => $candidato->id]) }}"
@@ -148,8 +148,48 @@
                                                             </div>
                                                         </a>
                                                     </li>
-                                                @endif
-                                            @endcan
+                                                @endcan
+                                                @can('Crear pruebas técnicas')
+                                                    <li>
+                                                        <a type="button"
+                                                            href="{{ route('expedientes', ['candidato_id' => $candidato->id]) }}"
+                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                            data-te-dropdown-item-ref>
+                                                            <div class="flex items-end space-x-2">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="1.5"
+                                                                    stroke="currentColor" class="w-5 h-5">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
+                                                                </svg>
+                                                                <h6 class="text-sm font-normal text-neutral-700">Pruebas
+                                                                    técnicas
+                                                                </h6>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                                @can('Crear pruebas psicométricas')
+                                                    <li>
+                                                        <a type="button"
+                                                            href="{{ route('expedientes', ['candidato_id' => $candidato->id]) }}"
+                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                            data-te-dropdown-item-ref>
+                                                            <div class="flex items-end space-x-2">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="1.5"
+                                                                    stroke="currentColor" class="w-5 h-5">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
+                                                                </svg>
+                                                                <h6 class="text-sm font-normal text-neutral-700">Pruebas
+                                                                    psicométricas
+                                                                </h6>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                @endcan
+                                            @endif
                                         </ul>
                                     </div>
                                 </td>
