@@ -7,6 +7,8 @@ use App\Models\Candidato;
 use App\Models\ColegioCandidato;
 use App\Models\Entrevista;
 use App\Models\EtapaAplicacion;
+use App\Models\PruebaPsicometrica;
+use App\Models\PruebaTecnica;
 use App\Models\RegistroAcademicoCandidato;
 use App\Models\TelefonoCandidato;
 use App\Notifications\AvisoRequisitos;
@@ -33,9 +35,24 @@ class Candidatos extends Component
         $registro_academico_estado, $titulo, $colegio, $colegiado, $dependencia, $puesto, $tipo_contratacion,
         $tipo_servicio, $observacion, $fecha_aplicacion, $aprobado;
 
-    public $entrevista;
+    public $entrevista, $id_puesto;
     public $control_entrevista = [['val' => 0, 'res' => 'No aprobado'], ['val' => 1, 'res' => 'Aprobado']];
     public $modal = false;
+    /* Modal Expediente */
+    public $modal_aprobar_expediente = false;
+
+    /* Modal Pruebas Técnicas */
+    public $modal_prueba_tecnica = false;
+    public $prueba_tecnica_nombre = 'Prueba técnica', $prueba_tecnica_nota, $prueba_tecnica_fecha;
+
+    /* Modal Pruebas Psicométricas */
+    public $modal_prueba_psicometrica = false;
+    public $prueba_psicometrica_nombre = 'Pruebas psicométricas', $prueba_psicometrica_fecha;
+
+    /* Modal Informe de Evaluación */
+    public $modal_informe_evaluacion = false;
+    public $informe_fecha_carga, $informe_ubicacion;
+
     public $showLoading = false;
     public $entrevista_modal = false;
     public $imagen_control = false, $imagen_actual;
@@ -49,10 +66,10 @@ class Candidatos extends Component
         $this->dependencias = DB::table('dependencias_nominales')->select('id', 'dependencia')->get();
         $this->tipos_contrataciones = DB::table('tipos_contrataciones')->select('id', 'tipo')->get();
         $this->tipos_servicios = DB::table('tipos_servicios')->select('id', 'tipo_servicio')->get();
-        $this->fecha_registro =  date('Y-m-d');
+        $this->fecha_registro = date('Y-m-d');
         $this->fecha_aplicacion = date('Y-m-d');
         $candidatos = DB::table('candidatos')
-            ->join('aplicaciones_candidatos', 'candidatos.id', '=', 'aplicaciones_candidatos.candidatos_id')
+            ->join('aplicaciones_candidatos', 'candidatos_id', '=', 'aplicaciones_candidatos.candidatos_id')
             ->join('puestos_nominales', 'aplicaciones_candidatos.puestos_nominales_id', '=', 'puestos_nominales.id')
             ->join('renglones', 'puestos_nominales.renglones_id', '=', 'renglones.id')
             ->join('tipos_servicios', 'puestos_nominales.tipos_servicios_id', '=', 'tipos_servicios.id')
@@ -63,8 +80,10 @@ class Candidatos extends Component
             ->join('registros_academicos_candidatos', 'candidatos.id', '=', 'registros_academicos_candidatos.candidatos_id')
             ->join('tipos_contrataciones', 'candidatos.tipos_contrataciones_id', '=', 'tipos_contrataciones.id')
             ->join('telefonos_candidatos', 'candidatos.id', '=', 'telefonos_candidatos.candidatos_id')
+            ->leftjoin('etapas_aplicaciones', 'aplicaciones_candidatos.id', '=', 'etapas_aplicaciones.aplicaciones_candidatos_id')
             ->select(
                 'candidatos.id as id',
+                'puestos_nominales.id as id_puesto',
                 'candidatos.imagen as imagen',
                 'candidatos.nombre as nombre',
                 'candidatos.estado as estado',
@@ -73,9 +92,9 @@ class Candidatos extends Component
                 'tipos_servicios.tipo_servicio as tipo_servicio',
                 'registros_academicos_candidatos.profesion as profesion',
                 'regiones.region as region',
-                'tipos_contrataciones.tipo as tipo_contratacion'
-            );
-
+                'tipos_contrataciones.tipo as tipo_contratacion',
+                DB::raw('COUNT(CASE WHEN etapas_aplicaciones.fecha_fin IS NOT NULL THEN 1 END) AS conteo_etapas')
+            )->groupBy('candidatos.id');
         $candidatos = $candidatos->paginate(10);
         activity()
             ->causedBy(auth()->user())
@@ -293,6 +312,237 @@ class Candidatos extends Component
         $this->observacion = $candidato->observacion;
 
         $this->abrirModal();
+    }
+
+    public function aprobarExpediente()
+    {
+        try {
+            $aplicacion = AplicacionCandidato::select(
+                'aplicaciones_candidatos.id as id_aplicacion',
+                'candidatos.nombre as nombre_candidato'
+            )
+                ->join('candidatos', 'aplicaciones_candidatos.candidatos_id', '=', 'candidatos.id')
+                ->where('candidatos_id', $this->id)
+                ->where('puestos_nominales_id', $this->id_puesto)
+                ->first();
+            DB::transaction(function () use ($aplicacion) {
+                EtapaAplicacion::where('etapas_procesos_id', 3)->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)
+                    ->update([
+                        'fecha_fin' => date('Y-m-d')
+                    ]);
+
+                EtapaAplicacion::create([
+                    'fecha_inicio' => date('Y-m-d'),
+                    'etapas_procesos_id' => 4,
+                    'aplicaciones_candidatos_id' => $aplicacion->id_aplicacion
+                ]);
+            });
+            session()->flash('message');
+            $this->cerrarExpedienteModal();
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name . " recibió el expediente del candidato: " . $aplicacion->nombre_candidato);
+            return redirect()->route('candidatos');
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarExpedienteModal();
+            return redirect()->route('candidatos');
+        }
+    }
+
+    public function entregaExpediente($candidato_id, $id_puesto)
+    {
+        $this->id = $candidato_id;
+        $this->id_puesto = $id_puesto;
+        $this->modal_aprobar_expediente = true;
+    }
+
+    public function cerrarExpedienteModal()
+    {
+        $this->modal_aprobar_expediente = false;
+    }
+
+    public function informeEvaluacion($id_candidato, $id_puesto)
+    {
+        $this->modal_informe_evaluacion = true;
+    }
+
+    public function cerrarModalInformeEvaluacion()
+    {
+        $this->informe_fecha_carga = '';
+        $this->informe_ubicacion = '';
+        $this->modal_informe_evaluacion = false;
+    }
+
+    public function guardarPruebaPsicometrica()
+    {
+        try {
+            $validated = $this->validate([
+                'prueba_psicometrica_nombre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+                'prueba_psicometrica_fecha' => 'required|date'
+            ]);
+            $aplicacion = AplicacionCandidato::select(
+                'aplicaciones_candidatos.id as id_aplicacion',
+                'candidatos.nombre as nombre_candidato'
+            )
+                ->join('candidatos', 'aplicaciones_candidatos.candidatos_id', '=', 'candidatos.id')
+                ->where('candidatos_id', $this->id)
+                ->where('puestos_nominales_id', $this->id_puesto)
+                ->first();
+
+            DB::transaction(function () use ($validated, $aplicacion) {
+                $prueba = PruebaPsicometrica::select('id', 'prueba', 'fecha')->where('candidatos_id', $this->id)->first();
+                if ($prueba) {
+                    PruebaPsicometrica::where('id', $prueba->id)
+                        ->update([
+                            'prueba' => $validated['prueba_psicometrica_nombre'],
+                            'fecha' => $validated['prueba_psicometrica_fecha']
+                        ]);
+                } else {
+                    DB::transaction(function () use ($validated, $aplicacion) {
+                        PruebaPsicometrica::create([
+                            'prueba' => $validated['prueba_psicometrica_nombre'],
+                            'fecha' => $validated['prueba_psicometrica_fecha'],
+                            'candidatos_id' => $this->id
+                        ]);
+
+                        EtapaAplicacion::where('etapas_procesos_id', 5)->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)
+                            ->update([
+                                'fecha_fin' => date('Y-m-d')
+                            ]);
+
+                        EtapaAplicacion::create([
+                            'fecha_inicio' => date('Y-m-d'),
+                            'etapas_procesos_id' => 6,
+                            'aplicaciones_candidatos_id' => $aplicacion->id_aplicacion
+                        ]);
+                    });
+                }
+            });
+            session()->flash('message');
+            $this->cerrarModalPruebaPsicometrica();
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name . " guardó la prueba psicométrica del candidato: " . $this->nombre);
+            return redirect()->route('candidatos');
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarModalPruebaPsicometrica();
+            return redirect()->route('candidatos');
+        }
+    }
+
+    public function pruebasPsicometricas($id_candidato, $id_puesto)
+    {
+        $this->id = $id_candidato;
+        $this->id_puesto = $id_puesto;
+        $prueba = PruebaPsicometrica::select('id', 'prueba', 'fecha')->where('candidatos_id', $id_candidato)->first();
+        if ($prueba) {
+            $this->prueba_psicometrica_nombre = $prueba->prueba;
+            $this->prueba_psicometrica_fecha = $prueba->fecha;
+        } else {
+            $this->prueba_psicometrica_nombre = 'Pruebas psicométricas';
+            $this->prueba_psicometrica_fecha = date('Y-m-d');
+        }
+        $this->modal_prueba_psicometrica = true;
+    }
+
+    public function cerrarModalPruebaPsicometrica()
+    {
+        $this->modal_prueba_psicometrica = false;
+        $this->prueba_psicometrica_nombre = '';
+        $this->prueba_psicometrica_fecha = '';
+    }
+
+    public function pruebasTecnicas($id_candidato, $id_puesto)
+    {
+        $this->id = $id_candidato;
+        $this->id_puesto = $id_puesto;
+        $prueba = PruebaTecnica::select('id', 'prueba', 'nota', 'fecha')->where('candidatos_id', $id_candidato)->first();
+        if ($prueba) {
+            $this->prueba_tecnica_nombre = $prueba->prueba;
+            $this->prueba_tecnica_nota = $prueba->nota;
+            $this->prueba_tecnica_fecha = $prueba->fecha;
+        } else {
+            $this->prueba_tecnica_nombre = 'Prueba técnica';
+            $this->prueba_tecnica_fecha = date('Y-m-d');
+        }
+        $this->modal_prueba_tecnica = true;
+    }
+
+    public function guardarPrubaTecnica()
+    {
+        try {
+            $validated = $this->validate([
+                'prueba_tecnica_nombre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+                'prueba_tecnica_nota' => 'required|integer|min:0|max:100',
+                'prueba_tecnica_fecha' => 'required|date'
+            ]);
+            $aplicacion = AplicacionCandidato::select(
+                'aplicaciones_candidatos.id as id_aplicacion',
+                'candidatos.nombre as nombre_candidato'
+            )
+                ->join('candidatos', 'aplicaciones_candidatos.candidatos_id', '=', 'candidatos.id')
+                ->where('candidatos_id', $this->id)
+                ->where('puestos_nominales_id', $this->id_puesto)
+                ->first();
+
+            DB::transaction(function () use ($validated, $aplicacion) {
+                $prueba = PruebaTecnica::select('id', 'prueba', 'nota', 'fecha')->where('candidatos_id', $this->id)->first();
+                if ($prueba) {
+                    PruebaTecnica::where('id', $prueba->id)
+                        ->update([
+                            'prueba' => $validated['prueba_tecnica_nombre'],
+                            'nota' => $validated['prueba_tecnica_nota'],
+                            'fecha' => $validated['prueba_tecnica_fecha']
+                        ]);
+                } else {
+                    DB::transaction(function () use ($validated, $aplicacion) {
+                        PruebaTecnica::create([
+                            'prueba' => $validated['prueba_tecnica_nombre'],
+                            'nota' => $validated['prueba_tecnica_nota'],
+                            'fecha' => $validated['prueba_tecnica_fecha'],
+                            'candidatos_id' => $this->id
+                        ]);
+
+                        EtapaAplicacion::where('etapas_procesos_id', 4)->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)
+                            ->update([
+                                'fecha_fin' => date('Y-m-d')
+                            ]);
+
+                        EtapaAplicacion::create([
+                            'fecha_inicio' => date('Y-m-d'),
+                            'etapas_procesos_id' => 5,
+                            'aplicaciones_candidatos_id' => $aplicacion->id_aplicacion
+                        ]);
+                    });
+                }
+            });
+            session()->flash('message');
+            $this->cerrarModalPruebaTecnica();
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name . " guardó la prueba técnica del candidato: " . $this->nombre);
+            return redirect()->route('candidatos');
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarModalPruebaTecnica();
+            return redirect()->route('candidatos');
+        }
+    }
+
+    public function cerrarModalPruebaTecnica()
+    {
+        $this->modal_prueba_tecnica = false;
+        $this->prueba_tecnica_nombre = '';
+        $this->prueba_tecnica_nota = '';
+        $this->prueba_tecnica_fecha = '';
     }
 
     public function crearEntrevista($candidato_id)

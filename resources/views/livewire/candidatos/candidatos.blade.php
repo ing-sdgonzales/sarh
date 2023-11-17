@@ -29,10 +29,34 @@
                     @endif
                 @endcan
 
+                @can('Aprobar expedientes')
+                    @if ($modal_aprobar_expediente)
+                        @include('livewire.etapas.entrega_expediente')
+                    @endif
+                @endcan
+
+                @can('Crear pruebas técnicas')
+                    @if ($modal_prueba_tecnica)
+                        @include('livewire.etapas.prueba_tecnica')
+                    @endif
+                @endcan
+
+                @can('Crear pruebas técnicas')
+                    @if ($modal_prueba_psicometrica)
+                        @include('livewire.etapas.prueba_psicometrica')
+                    @endif
+                @endcan
+
+                @can('Crear informes de evaluación')
+                    @if ($modal_informe_evaluacion)
+                        @include('livewire.etapas.informe_evaluacion')
+                    @endif
+                @endcan
+
             </div>
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
                 <table class="min-w-full bg-white rounded-lg text-center">
-                    <thead class="bg-gray-100 text-center">
+                    <thead class="bg-gray-100 rounded-lg text-center">
                         <tr>
                             <th class="w-1/12 py-2 px-4">Renglón</th>
                             <th class="w-1/12 py-2 px-4">Foto</th>
@@ -149,46 +173,102 @@
                                                         </a>
                                                     </li>
                                                 @endcan
-                                                @can('Crear pruebas técnicas')
-                                                    <li>
-                                                        <a type="button"
-                                                            href="{{ route('expedientes', ['candidato_id' => $candidato->id]) }}"
-                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                            data-te-dropdown-item-ref>
-                                                            <div class="flex items-end space-x-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="w-5 h-5">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
-                                                                </svg>
-                                                                <h6 class="text-sm font-normal text-neutral-700">Pruebas
-                                                                    técnicas
-                                                                </h6>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                                @can('Crear pruebas psicométricas')
-                                                    <li>
-                                                        <a type="button"
-                                                            href="{{ route('expedientes', ['candidato_id' => $candidato->id]) }}"
-                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                            data-te-dropdown-item-ref>
-                                                            <div class="flex items-end space-x-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="w-5 h-5">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
-                                                                </svg>
-                                                                <h6 class="text-sm font-normal text-neutral-700">Pruebas
-                                                                    psicométricas
-                                                                </h6>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                @endcan
+                                                @if ($candidato->conteo_etapas == 2)
+                                                    @can('Aprobar expedientes')
+                                                        <li>
+                                                            <button type="button"
+                                                                wire:click='entregaExpediente({{ $candidato->id }}, {{ $candidato->id_puesto }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+                                                                    </svg>
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Aprobar
+                                                                        expediente
+                                                                    </h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                @endif
+                                                @if ($candidato->conteo_etapas >= 3)
+                                                    @can('Crear pruebas técnicas')
+                                                        <li>
+                                                            <button type="button"
+                                                                wire:click='pruebasTecnicas({{ $candidato->id }}, {{ $candidato->id_puesto }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
+                                                                    </svg>
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Pruebas
+                                                                        técnicas
+                                                                    </h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                @endif
+                                                @if ($candidato->conteo_etapas >= 4)
+                                                    @can('Crear pruebas psicométricas')
+                                                        <li>
+                                                            <button type="button"
+                                                                wire:click='pruebasPsicometricas({{ $candidato->id }}, {{ $candidato->id_puesto }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
+                                                                    </svg>
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Pruebas
+                                                                        psicométricas
+                                                                    </h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                @endif
+                                                @if ($candidato->conteo_etapas >= 5)
+                                                    @can('Crear informes de evaluación')
+                                                        <li>
+                                                            <button type="button"
+                                                                wire:click='informeEvaluacion({{ $candidato->id }}, {{ $candidato->id_puesto }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
+                                                                    </svg>
+
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Informe de evaluación
+                                                                    </h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                @endif
                                             @endif
                                         </ul>
                                     </div>

@@ -31,7 +31,7 @@
             <form method="POST" wire:submit='guardar'>
                 @method('POST')
                 @csrf
-                <div class="relativa p-4">
+                <div class="relative p-4">
                     <div class="space-y-12">
                         <div class="border-b border-gray-900/10 pb-6">
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

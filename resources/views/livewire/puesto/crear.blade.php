@@ -32,7 +32,7 @@
             </div>
 
             <!--Modal body-->
-            <div class="relativa p-4">
+            <div class="relative p-4">
                 <form method="POST">
                     @csrf
                     <div class="space-y-12">

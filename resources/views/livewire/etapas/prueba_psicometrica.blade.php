@@ -14,10 +14,10 @@
                 <!--Modal title-->
                 <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
-                    Rechazar formulario
+                    Nuevo registro
                 </h5>
                 <!--Close button-->
-                <button type="button" wire:click='cerrarModal()'
+                <button type="button" wire:click='cerrarModalPruebaPsicometrica()'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -28,42 +28,52 @@
             </div>
 
             <!--Modal body-->
-            <form method="POST" wire:submit='rechazarFormulario'>
+            <form method="POST" wire:submit='guardarPruebaPsicometrica'>
                 @method('POST')
                 @csrf
                 <div class="relative p-4">
                     <div class="space-y-12">
-                        <div class="border-b border-gray-900/10 pb-6">
+                        <div class="pb-6">
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-full">
-                                    <label for="observacion"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Observación</label>
+                                    <label for="prueba_psicometrica_nombre"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Prueba</label>
                                     <div class="mt-2">
-                                        <textarea wire:model='observacion' id="observacion" name="observacion" rows="3"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                                        <input wire:model='prueba_psicometrica_nombre' type="text"
+                                            name="prueba_psicometrica_nombre" id="prueba_psicometrica_nombre" required
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('prueba_psicometrica_nombre')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
                                     </div>
-                                    <p class="mt-3 text-sm leading-6 text-gray-600">Breve descripción de la observación.
-                                    </p>
-                                    <div>
-                                        <span class="text-red-600 text-sm">
-                                            @error('observacion')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
+                                </div>
+
+                                <div class="sm:col-span-full">
+                                    <label for="prueba_psicometrica_fecha"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Fecha de
+                                        elaboración</label>
+                                    <div class="mt-2">
+                                        <input wire:model='prueba_psicometrica_fecha' type="date"
+                                            name="prueba_psicometrica_fecha" id="prueba_psicometrica_fecha" required
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('prueba_psicometrica_fecha')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="mt-6 flex items-center justify-end gap-x-6">
-                            <button type="button"
-                                class="text-sm font-semibold leading-6 text-gray-900">{{ __('Cancel') }}</button>
-                            <button type="submit"
-                                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{{ __('Save') }}</button>
-                        </div> --}}
-
                 </div>
-                <div wire:loading.flex wire:target="rechazarFormulario"
+                <div wire:loading.flex wire:target="guardarPrubaPsicometrica"
                     class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                     <div
                         class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
@@ -73,7 +83,7 @@
                 <!--Modal footer-->
                 <div
                     class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
-                    <button type="button" wire:click='cerrarModal()'
+                    <button type="button" wire:click='cerrarModalPruebaPsicometrica()'
                         class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                         data-te-ripple-init data-te-ripple-color="light">
                         {{ __('Cancel') }}

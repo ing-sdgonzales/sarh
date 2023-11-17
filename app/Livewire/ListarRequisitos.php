@@ -182,11 +182,11 @@ class ListarRequisitos extends Component
                         EtapaAplicacion::where('etapas_procesos_id', 1)
                             ->where('aplicaciones_candidatos_id', $id_aplicacion)
                             ->update([
-                                'fecha_fin' => date('Y-m-d H:i:s')
+                                'fecha_fin' => date('Y-m-d')
                             ]);
                         
                         EtapaAplicacion::create([
-                            'fecha_inicio' => date('Y-m-d H:i:s'),
+                            'fecha_inicio' => date('Y-m-d'),
                             'etapas_procesos_id' => 2,
                             'aplicaciones_candidatos_id' => $id_aplicacion
                         ]);
