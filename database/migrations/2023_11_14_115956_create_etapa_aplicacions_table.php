@@ -15,7 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->bigIncrements('id');
-            $table->date('fecha_inicio')->default(date('Y-m-d H:i:s'));
+            $table->date('fecha_inicio')->default(now());
             $table->date('fecha_fin')->default(null)->nullable();
 
             /* fks */

@@ -53,6 +53,12 @@
                     @endif
                 @endcan
 
+                @can('Asignar fechas de ingresos')
+                    @if ($modal_fecha_ingreso)
+                        @include('livewire.etapas.fecha_ingreso')
+                    @endif
+                @endcan
+
             </div>
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
                 <table class="min-w-full bg-white rounded-lg text-center">
@@ -263,6 +269,30 @@
 
                                                                     <h6 class="text-sm font-normal text-neutral-700">
                                                                         Informe de evaluación
+                                                                    </h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                @endif
+                                                @if ($candidato->conteo_etapas >= 6)
+                                                    @can('Asignar fechas de ingresos')
+                                                        <li>
+                                                            <button type="button"
+                                                                wire:click='fechaIngreso({{ $candidato->id }}, {{ $candidato->id_puesto }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                                                                    </svg>
+
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Fecha de ingreso
                                                                     </h6>
                                                                 </div>
                                                             </button>

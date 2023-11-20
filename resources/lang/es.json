@@ -71,5 +71,6 @@
     "Permissions": "Permisos", 
     "Table": "Tabla",
     "doesn't exist": "no existe",
-    "This action is unauthorized.": "Esta accion no está autorizada."
+    "This action is unauthorized.": "Esta accion no está autorizada.",
+    "today": "hoy"
 }

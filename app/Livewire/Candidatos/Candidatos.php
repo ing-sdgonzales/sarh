@@ -7,6 +7,7 @@ use App\Models\Candidato;
 use App\Models\ColegioCandidato;
 use App\Models\Entrevista;
 use App\Models\EtapaAplicacion;
+use App\Models\InformeEvaluacion;
 use App\Models\PruebaPsicometrica;
 use App\Models\PruebaTecnica;
 use App\Models\RegistroAcademicoCandidato;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Livewire\Component;
-
+use Symfony\Contracts\Service\Attribute\Required;
 
 class Candidatos extends Component
 {
@@ -30,7 +31,7 @@ class Candidatos extends Component
         $tipos_servicios;
 
     /* variables de consulta */
-    public $id, $dpi, $nit, $igss, $nombre, $email, $imagen, $fecha_nacimiento, $fecha_registro,
+    public $id, $dpi, $nit, $igss, $nombre, $email, $imagen, $fecha_nacimiento, $fecha_registro, $fecha_ingreso,
         $direccion, $tipo, $estado_civil, $municipio, $departamento, $telefono, $registro_academico,
         $registro_academico_estado, $titulo, $colegio, $colegiado, $dependencia, $puesto, $tipo_contratacion,
         $tipo_servicio, $observacion, $fecha_aplicacion, $aprobado;
@@ -52,6 +53,9 @@ class Candidatos extends Component
     /* Modal Informe de Evaluación */
     public $modal_informe_evaluacion = false;
     public $informe_fecha_carga, $informe_ubicacion;
+
+    /* Modal Fechas de Ingresos*/
+    public $modal_fecha_ingreso = false;
 
     public $showLoading = false;
     public $entrevista_modal = false;
@@ -364,8 +368,153 @@ class Candidatos extends Component
         $this->modal_aprobar_expediente = false;
     }
 
+    public function guardarFechaIngreso()
+    {
+        try {
+            $validated = $this->validate([
+                'fecha_ingreso' => 'required|date|after_or_equal:today'
+            ]);
+            $aplicacion = AplicacionCandidato::select(
+                'aplicaciones_candidatos.id as id_aplicacion',
+                'candidatos.nombre as nombre_candidato'
+            )
+                ->join('candidatos', 'aplicaciones_candidatos.candidatos_id', '=', 'candidatos.id')
+                ->where('candidatos_id', $this->id)
+                ->where('puestos_nominales_id', $this->id_puesto)
+                ->first();
+
+            DB::transaction(function () use ($validated, $aplicacion) {
+                $can = Candidato::findOrFail($this->id);
+                $can->fecha_ingreso = $validated['fecha_ingreso'];
+                $can->save();
+
+                EtapaAplicacion::where('etapas_procesos_id', 7)->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)
+                    ->update([
+                        'fecha_fin' => date('Y-m-d')
+                    ]);
+            });
+            session()->flash('message');
+            $this->cerrarModalFechaIngreso();
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name . " asignó la fecha de ingreso del candidato: " . $aplicacion->nombre_candidato);
+            return redirect()->route('candidatos');
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarModalFechaIngreso();
+            return redirect()->route('candidatos');
+        }
+    }
+
+    public function fechaIngreso($id_candidato, $id_puesto)
+    {
+        $this->id = $id_candidato;
+        $this->id_puesto = $id_puesto;
+        $this->modal_fecha_ingreso = true;
+    }
+
+    public function cerrarModalFechaIngreso()
+    {
+        $this->fecha_ingreso = '';
+        $this->modal_fecha_ingreso = false;
+    }
+
+    public function guardarInformeEvaluacion()
+    {
+        try {
+            $ubicacion = '';
+            $aplicacion = AplicacionCandidato::select(
+                'aplicaciones_candidatos.id as id_aplicacion',
+                'candidatos.nombre as nombre_candidato'
+            )
+                ->join('candidatos', 'aplicaciones_candidatos.candidatos_id', '=', 'candidatos.id')
+                ->where('candidatos_id', $this->id)
+                ->where('puestos_nominales_id', $this->id_puesto)
+                ->first();
+            $informe = InformeEvaluacion::select('id', 'fecha_carga', 'ubicacion')->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)->first();
+            if ($informe) {
+                $validated = $this->validate([
+                    'informe_fecha_carga' => 'required|date',
+                    'informe_ubicacion' => 'nullable|file|mimes:pdf|max:2048'
+                ]);
+            } else {
+                $validated = $this->validate([
+                    'informe_fecha_carga' => 'required|date',
+                    'informe_ubicacion' => 'required|file|mimes:pdf|max:2048'
+                ]);
+            }
+            if ($validated['informe_ubicacion']) {
+                if ($informe) {
+                    if (Storage::disk('public')->exists($informe->ubicacion)) {
+                        Storage::disk('public')->delete($informe->ubicacion);
+                    }
+                }
+                $ubicacion = $this->informe_ubicacion->store('informes_evaluacion', 'public');
+            } else {
+                $ubicacion = $informe->ubicacion;
+            }
+
+            DB::transaction(function () use ($informe, $aplicacion, $validated, $ubicacion) {
+                if ($informe) {
+                    InformeEvaluacion::where('id', $informe->id)->update([
+                        'fecha_carga' => $validated['informe_fecha_carga'],
+                        'ubicacion' => $ubicacion
+                    ]);
+                } else {
+                    DB::transaction(function () use ($validated, $ubicacion, $aplicacion) {
+                        InformeEvaluacion::create([
+                            'fecha_carga' => $validated['informe_fecha_carga'],
+                            'ubicacion' => $ubicacion,
+                            'aplicaciones_candidatos_id' => $aplicacion->id_aplicacion
+                        ]);
+
+                        EtapaAplicacion::where('etapas_procesos_id', 6)->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)
+                            ->update([
+                                'fecha_fin' => date('Y-m-d')
+                            ]);
+                        EtapaAplicacion::create([
+                            'fecha_inicio' => date('Y-m-d'),
+                            'etapas_procesos_id' => 7,
+                            'aplicaciones_candidatos_id' => $aplicacion->id_aplicacion
+                        ]);
+                    });
+                }
+            });
+            session()->flash('message');
+            $this->cerrarModalInformeEvaluacion();
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name . " guardó el informe de evaluación del candidato: " . $aplicacion->nombre_candidato);
+            return redirect()->route('candidatos');
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarModalInformeEvaluacion();
+            return redirect()->route('candidatos');
+        }
+    }
     public function informeEvaluacion($id_candidato, $id_puesto)
     {
+        $this->id = $id_candidato;
+        $this->id_puesto = $id_puesto;
+        $aplicacion = AplicacionCandidato::select(
+            'id',
+        )
+            ->where('candidatos_id', $this->id)
+            ->where('puestos_nominales_id', $this->id_puesto)
+            ->first();
+        $informe = InformeEvaluacion::select('id', 'fecha_carga', 'ubicacion')->where('aplicaciones_candidatos_id', $aplicacion->id)->first();
+        if ($informe) {
+            $this->informe_fecha_carga = $informe->fecha_carga;
+            $this->informe_ubicacion = $informe->ubicacion;
+        } else {
+            $this->informe_fecha_carga = date('Y-m-d');
+            $this->informe_ubicacion = '';
+        }
+
         $this->modal_informe_evaluacion = true;
     }
 
@@ -426,7 +575,7 @@ class Candidatos extends Component
             activity()
                 ->causedBy(auth()->user())
                 ->withProperties(['user_id' => auth()->id()])
-                ->log("El usuario " . auth()->user()->name . " guardó la prueba psicométrica del candidato: " . $this->nombre);
+                ->log("El usuario " . auth()->user()->name . " guardó la prueba psicométrica del candidato: " . $aplicacion->nombre_candidato);
             return redirect()->route('candidatos');
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();
@@ -527,7 +676,7 @@ class Candidatos extends Component
             activity()
                 ->causedBy(auth()->user())
                 ->withProperties(['user_id' => auth()->id()])
-                ->log("El usuario " . auth()->user()->name . " guardó la prueba técnica del candidato: " . $this->nombre);
+                ->log("El usuario " . auth()->user()->name . " guardó la prueba técnica del candidato: " . $aplicacion->nombre_candidato);
             return redirect()->route('candidatos');
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();
@@ -602,9 +751,15 @@ class Candidatos extends Component
             }
         });
 
+        $ca = Candidato::findOrFail($this->id);
+
         session()->flash('message');
         $this->cerrarEntrevistaModal();
         $this->limpiarEntrevistaModal();
+        activity()
+            ->causedBy(auth()->user())
+            ->withProperties(['user_id' => auth()->id()])
+            ->log("El usuario " . auth()->user()->name . " guardó la entrevista con el candidato: " . $ca->nombre);
         return redirect()->route('candidatos');
     }
 

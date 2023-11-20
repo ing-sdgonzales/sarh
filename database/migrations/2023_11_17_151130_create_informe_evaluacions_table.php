@@ -15,7 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->integerIncrements('id');
-            $table->timestamp('fecha_carga', 0)->default(date('Y-m-d H:i:s'));
+            $table->date('fecha_carga')->default(now());
             $table->text('ubicacion');
 
             /* fks */

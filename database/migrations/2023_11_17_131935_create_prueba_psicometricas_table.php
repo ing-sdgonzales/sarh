@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->integerIncrements('id');
             $table->string('prueba', 50)->default('Pruebas psicometricas');
-            $table->date('fecha')->default(date('Y-m-d'));
+            $table->date('fecha')->default(now());
 
             /* fks */
             $table->unsignedInteger('candidatos_id');

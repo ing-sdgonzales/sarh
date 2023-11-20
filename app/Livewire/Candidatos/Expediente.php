@@ -9,6 +9,7 @@ use App\Models\Requisito;
 use App\Models\RequisitoCandidato;
 use App\Models\RequisitoPuesto;
 use App\Notifications\AvisoRequisitosRechazados;
+use App\Notifications\NotificacionPresentarExpediente;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -130,6 +131,9 @@ class Expediente extends Component
                         'etapas_procesos_id' => 3,
                         'aplicaciones_candidatos_id' => $id_aplicacion
                     ]);
+
+                    $can = Candidato::findOrFail($this->id_candidato);
+                    $can->notify(new NotificacionPresentarExpediente);
                 }
             });
 

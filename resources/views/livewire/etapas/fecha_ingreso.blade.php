@@ -14,10 +14,10 @@
                 <!--Modal title-->
                 <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
-                    Nuevo registro
+                    Asignación de fecha de ingreso
                 </h5>
                 <!--Close button-->
-                <button type="button" wire:click='cerrarModalInformeEvaluacion()'
+                <button type="button" wire:click='cerrarModalFechaIngreso()'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -28,7 +28,7 @@
             </div>
 
             <!--Modal body-->
-            <form method="POST" wire:submit='guardarInformeEvaluacion'>
+            <form method="POST" wire:submit='guardarFechaIngreso'>
                 @method('POST')
                 @csrf
                 <div class="relative p-4">
@@ -36,32 +36,16 @@
                         <div class="pb-6">
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-full">
-                                    <label for="informe_fecha_carga"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Fecha de carga del
-                                        informe</label>
+                                    <label for="fecha_ingreso"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Fecha de
+                                        ingreso</label>
                                     <div class="mt-2">
-                                        <input wire:model='informe_fecha_carga' type="date"
-                                            name="informe_fecha_carga" id="informe_fecha_carga" required
+                                        <input wire:model='fecha_ingreso' type="date" name="fecha_ingreso"
+                                            id="fecha_ingreso" required min="{{now()->format('Y-m-d')}}"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         <div>
                                             <span class="text-red-600 text-sm">
-                                                @error('informe_fecha_carga')
-                                                    {{ $message }}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="sm:col-span-full">
-                                    <label for="informe_ubicacion"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Informe</label>
-                                    <div class="mt-2">
-                                        <input wire:model='informe_ubicacion' type="file" accept=".pdf"
-                                            name="informe_ubicacion" id="informe_ubicacion" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                        <div>
-                                            <span class="text-red-600 text-sm">
-                                                @error('informe_ubicacion')
+                                                @error('fecha_ingreso')
                                                     {{ $message }}
                                                 @enderror
                                             </span>
@@ -72,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <div wire:loading.flex wire:target="guardarInformeEvaluacion"
+                <div wire:loading.flex wire:target="guardarFechaIngreso"
                     class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                     <div
                         class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
@@ -82,7 +66,7 @@
                 <!--Modal footer-->
                 <div
                     class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
-                    <button type="button" wire:click='cerrarModalInformeEvaluacion()'
+                    <button type="button" wire:click='cerrarModalFechaIngreso()'
                         class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                         data-te-ripple-init data-te-ripple-color="light">
                         {{ __('Cancel') }}

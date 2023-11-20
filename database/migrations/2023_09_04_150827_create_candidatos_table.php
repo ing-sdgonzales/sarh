@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('imagen');
             $table->date('fecha_nacimiento');
             $table->date('fecha_registro');
+            $table->date('fecha_ingreso')->default(null)->nullable();
             $table->text('direccion');
             $table->unsignedTinyInteger('estado')->default(0);
             $table->unsignedTinyInteger('aprobado')->default(0);

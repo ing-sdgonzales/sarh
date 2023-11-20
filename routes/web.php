@@ -5,6 +5,7 @@ use App\Livewire\Candidatos\Candidatos;
 use App\Livewire\Candidatos\EtapasProcesos;
 use App\Livewire\Candidatos\Expediente;
 use App\Livewire\Candidatos\VerFormulario;
+use App\Livewire\Empleados\Empleados;
 use App\Livewire\Formularios\Formulario;
 use App\Livewire\Formularios\Formulario029;
 use App\Livewire\ListarRequisitos;
@@ -44,7 +45,7 @@ Route::get('/presentar_requisitos/{id_candidato}', ListarRequisitos::class)
 
 Route::get('/presentar_formulario_029/{id_candidato}', Formulario029::class)
     ->middleware(['CheckEmailSearch', 'guest:' . config('fortify.guard')])->name('presentar_formulario029');
-    
+
 Route::get('/presentar_formulario/{id_candidato}/{id_requisito}', Formulario::class)
     ->middleware(['CheckEmailSearch', 'VerificarEstadoFormulario', 'guest:' . config('fortify.guard')])->name('presentar_formulario');
 
@@ -59,6 +60,7 @@ Route::middleware([
 
     Route::get('/puestos', Puestos::class)->middleware('can:Ver puestos')->name('puestos');
     Route::get('/candidatos', Candidatos::class)->middleware('can:Ver candidatos')->name('candidatos');
+    Route::get('/empleados', Empleados::class)->middleware('can:Ver empleados')->name('empleados');
     Route::get('/requisitos', Requisitos::class)->middleware('can:Ver requisitos')->name('requisitos');
     Route::get('/expediente_candidato/{candidato_id}', Expediente::class)->middleware('can:Ver expediente')->name('expedientes');
     Route::get('/ver_formulario/{id_candidato}/{id_requisito}', VerFormulario::class)->middleware('can:Ver formulario')->name('formulario');

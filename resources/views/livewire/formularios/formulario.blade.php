@@ -30,7 +30,7 @@
                                                         class="mx-auto max-w-full rounded-lg" style="height: 150px"
                                                         alt="imagen" />
                                                 @elseif($imagen_actual)
-                                                    <img src="{{ asset('storage') . '/'. $imagen_actual }}"
+                                                    <img src="{{ asset('storage') . '/' . $imagen_actual }}"
                                                         class="mx-auto max-w-full rounded-lg" style="height: 150px"
                                                         alt="imagen" />
                                                     {{-- @elseif($imagen_control == true && $modo_edicion == true)
@@ -289,8 +289,8 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
                                         <div class="mt-2">
                                             <select wire:model='departamento_residencia'
-                                                wire:change='getMunicipiosByDepartamentoResidencia' id="departamento_residencia"
-                                                name="departamento_residencia" required
+                                                wire:change='getMunicipiosByDepartamentoResidencia'
+                                                id="departamento_residencia" name="departamento_residencia" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($departamentos ?? [] as $departamento)
@@ -313,11 +313,13 @@
                                         <label for="municipio_residencia"
                                             class="block text-sm font-medium leading-6 text-gray-900">Municipio</label>
                                         <div class="mt-2">
-                                            <select wire:model='municipio_residencia' id="municipio_residencia" name="municipio_residencia" required
+                                            <select wire:model='municipio_residencia' id="municipio_residencia"
+                                                name="municipio_residencia" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($municipios_residencia ?? [] as $municipio_residencia)
-                                                    <option value="{{ $municipio_residencia->id }}">{{ $municipio_residencia->nombre }}
+                                                    <option value="{{ $municipio_residencia->id }}">
+                                                        {{ $municipio_residencia->nombre }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -1322,8 +1324,8 @@
                                                         class="block text-sm font-medium leading-6 text-gray-900">Habla
                                                         %</label>
                                                     <input wire:model='idiomas.{{ $index }}.habla'
-                                                        type="number" id="habla_{{ $index }}" step="1"
-                                                        max="100" min="0"
+                                                        type="number" id="habla_{{ $index }}"
+                                                        step="1" max="100" min="0"
                                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                                 </div>
                                                 <div>
@@ -3094,6 +3096,7 @@
                                     {{ __('Save') }}
                                 </button>
                             </div>
+                        </div>
                     </form>
                 </div>
             </div>

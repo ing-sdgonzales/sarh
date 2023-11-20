@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->integerIncrements('id');
             $table->text('observacion');
-            $table->date('fecha_entrevista')->default(date('Y-m-d'));
+            $table->date('fecha_entrevista')->default(now());
 
             /* fks */
             $table->unsignedInteger('candidatos_id');
