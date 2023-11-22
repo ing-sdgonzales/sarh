@@ -11,4 +11,5 @@ class EtapaAplicacion extends Model
 
     protected $table = 'etapas_aplicaciones';
     protected $fillable = ['fecha_inicio', 'fecha_fin', 'etapas_procesos_id', 'aplicaciones_candidatos_id'];
+    protected $casts = ['fecha_inicio' => 'datetime:Y-m-d', 'fecha_fin' => 'datetime:Y-m-d'];
 }

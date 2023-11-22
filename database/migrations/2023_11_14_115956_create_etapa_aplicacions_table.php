@@ -15,8 +15,8 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->bigIncrements('id');
-            $table->date('fecha_inicio')->default(now());
-            $table->date('fecha_fin')->default(null)->nullable();
+            $table->timestamp('fecha_inicio')->useCurrent();
+            $table->timestamp('fecha_fin')->default(null)->nullable();
 
             /* fks */
             $table->unsignedTinyInteger('etapas_procesos_id')->default(1);

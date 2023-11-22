@@ -10,5 +10,6 @@ class Entrevista extends Model
     use HasFactory;
 
     protected $table = 'entrevistas';
-    protected $fillable = ['observacion', 'candidatos_id'];
+    protected $fillable = ['observacion', 'candidatos_id', 'fecha_entrevista'];
+    protected $casts = ['fecha_entrevista' => 'datetime:Y-m-d'];
 }

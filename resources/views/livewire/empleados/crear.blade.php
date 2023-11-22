@@ -35,6 +35,10 @@
                     <div class="space-y-12">
                         <div class="border-b border-gray-900/10 pb-6">
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
+                                <div class="sm:col-span-full rounded-lg bg-primary-100 text-xl text-center">
+                                    <h1 class="p-2 font-semibold leading-7 text-gray-900">Fotografía
+                                    </h1>
+                                </div>
                                 <div class="sm:col-span-6 mx-auto">
                                     <div class="mb-3" x-data="{ isUploading: false, progress: 0 }"
                                         x-on:livewire-upload-start="isUploading = true"
@@ -42,6 +46,7 @@
                                         x-on:livewire-upload-error="isUploading = false"
                                         x-on:livewire-upload-progress="progress = $event.detail.progress">
                                         <div class="mb-4">
+
                                             @if ($imagen && !$imagen_actual)
                                                 <img src="{{ $imagen->temporaryUrl() }}"
                                                     class="mx-auto max-w-full rounded-lg" style="height: 150px"
@@ -123,24 +128,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
-                                    <label for="puesto"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Puesto</label>
-                                    <div class="mt-2">
-                                        <input wire:model='puesto' type="text" name="puesto" id="puesto" required
-                                            readonly disabled
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                    </div>
-                                    <div>
-                                        <span class="text-red-600 text-sm">
-                                            @error('puesto')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="sm:col-span-3">
+                                <div class="sm:col-span-6">
                                     <label for="pretension_salarial"
                                         class="block text-sm font-medium leading-6 text-gray-900">Pretensión
                                         salarial</label>
@@ -258,6 +246,29 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
+                                    <label for="genero"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Género</label>
+                                    <div class="mt-2">
+                                        <select wire:model='genero' id="genero" name="genero" required
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <option value="">Seleccionar...</option>
+                                            @foreach ($generos ?? [] as $genero)
+                                                <option value="{{ $genero->id }}">
+                                                    {{ $genero->genero }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('genero')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
                                     <label for="estado_civil"
                                         class="block text-sm font-medium leading-6 text-gray-900">Estado
                                         civil</label>
@@ -276,6 +287,31 @@
                                     <div>
                                         <span class="text-red-600 text-sm">
                                             @error('estado_civil')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="estado_familiar"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Estado
+                                        familiar</label>
+                                    <div class="mt-2">
+                                        <select wire:model='estado_familiar' id="estado_familiar"
+                                            name="estado_familiar"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <option value="">Seleccionar...</option>
+                                            @foreach ($estados_familiares ?? [] as $ef)
+                                                <option value="{{ $ef['val'] }}">
+                                                    {{ $ef['res'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('estado_familiar')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -416,7 +452,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
+                                <div class="sm:col-span-2">
                                     <label for="igss"
                                         class="block text-sm font-medium leading-6 text-gray-900">Número de
                                         afiliación IGSS</label>
@@ -433,7 +469,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
+                                <div class="sm:col-span-2">
                                     <label for="nit"
                                         class="block text-sm font-medium leading-6 text-gray-900">NIT</label>
                                     <div class="mt-2">
@@ -443,6 +479,24 @@
                                     <div>
                                         <span class="text-red-600 text-sm">
                                             @error('nit')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="cuenta_banco"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Cuenta de
+                                        banco</label>
+                                    <div class="mt-2">
+                                        <input wire:model='cuenta_banco' type="text" name="cuenta_banco"
+                                            id="cuenta_banco"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('cuenta_banco')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -1318,8 +1372,8 @@
                                             <div class="mt-2 mr-2 flex-grow">
                                                 <label for="idioma_{{ $index }}"
                                                     class="block text-sm font-medium leading-6 text-gray-900">Idioma</label>
-                                                <input wire:model='idiomas.{{ $index }}.idioma' type="text"
-                                                    id="idioma_{{ $index }}"
+                                                <input wire:model='idiomas.{{ $index }}.idioma'
+                                                    type="text" id="idioma_{{ $index }}"
                                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             </div>
                                             <div>

@@ -173,6 +173,7 @@
                                         nacimiento</label>
                                     <div class="mt-2">
                                         <input wire:model='fecha_nacimiento' type="date"
+                                            max="{{ now()->subYears(18)->format('Y-m-d') }}"
                                             name="fecha_de_nacimiento" id="fecha_nacimiento" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
@@ -215,7 +216,7 @@
                                         registro</label>
                                     <div class="mt-2">
                                         <input wire:model='fecha_registro' type="date" name="fecha_de_registro"
-                                            id="fecha_registro" readonly
+                                            id="fecha_registro" readonly disabled
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                     <div>
@@ -484,7 +485,7 @@
                                         aplicación</label>
                                     <div class="mt-2">
                                         <input wire:model='fecha_aplicacion' type="date"
-                                            name="fecha_de_aplicación" id="fecha_aplicacion" readonly
+                                            name="fecha_de_aplicación" id="fecha_aplicacion" readonly disabled
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                     <div>

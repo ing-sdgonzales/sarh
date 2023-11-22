@@ -36,23 +36,6 @@
                         <div class="pb-6">
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-full">
-                                    <label for="informe_fecha_carga"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Fecha de carga del
-                                        informe</label>
-                                    <div class="mt-2">
-                                        <input wire:model='informe_fecha_carga' type="date"
-                                            name="informe_fecha_carga" id="informe_fecha_carga" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                        <div>
-                                            <span class="text-red-600 text-sm">
-                                                @error('informe_fecha_carga')
-                                                    {{ $message }}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="sm:col-span-full">
                                     <label for="informe_ubicacion"
                                         class="block text-sm font-medium leading-6 text-gray-900">Informe</label>
                                     <div class="mt-2">

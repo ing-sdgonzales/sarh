@@ -52,7 +52,7 @@ class Candidatos extends Component
 
     /* Modal Informe de Evaluación */
     public $modal_informe_evaluacion = false;
-    public $informe_fecha_carga, $informe_ubicacion;
+    public $informe_ubicacion;
 
     /* Modal Fechas de Ingresos*/
     public $modal_fecha_ingreso = false;
@@ -118,7 +118,7 @@ class Candidatos extends Component
                 'igss' => 'nullable',
                 'nombre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
                 'email' => 'required|filled|email:dns',
-                'fecha_nacimiento' => 'required|date',
+                'fecha_nacimiento' => 'required|date|before_or_equal:' . \Carbon\Carbon::now()->subYears(18)->format('Y-m-d'),
                 'estado_civil' => 'required|integer|min:1',
                 'fecha_registro' => 'required|date',
                 'direccion' => 'required|filled|regex:/[^0-9]/',
@@ -145,7 +145,7 @@ class Candidatos extends Component
                 'igss' => 'nullable',
                 'nombre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
                 'email' => 'required|filled|email:dns',
-                'fecha_nacimiento' => 'required|date',
+                'fecha_nacimiento' => 'required|date|before_or_equal:' . \Carbon\Carbon::now()->subYears(18)->format('Y-m-d'),
                 'estado_civil' => 'required|integer|min:1',
                 'fecha_registro' => 'required|date',
                 'direccion' => 'required|filled|regex:/[^0-9]/',
@@ -436,12 +436,10 @@ class Candidatos extends Component
             $informe = InformeEvaluacion::select('id', 'fecha_carga', 'ubicacion')->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)->first();
             if ($informe) {
                 $validated = $this->validate([
-                    'informe_fecha_carga' => 'required|date',
                     'informe_ubicacion' => 'nullable|file|mimes:pdf|max:2048'
                 ]);
             } else {
                 $validated = $this->validate([
-                    'informe_fecha_carga' => 'required|date',
                     'informe_ubicacion' => 'required|file|mimes:pdf|max:2048'
                 ]);
             }
@@ -459,13 +457,12 @@ class Candidatos extends Component
             DB::transaction(function () use ($informe, $aplicacion, $validated, $ubicacion) {
                 if ($informe) {
                     InformeEvaluacion::where('id', $informe->id)->update([
-                        'fecha_carga' => $validated['informe_fecha_carga'],
+                        'fecha_carga' => now(),
                         'ubicacion' => $ubicacion
                     ]);
                 } else {
                     DB::transaction(function () use ($validated, $ubicacion, $aplicacion) {
                         InformeEvaluacion::create([
-                            'fecha_carga' => $validated['informe_fecha_carga'],
                             'ubicacion' => $ubicacion,
                             'aplicaciones_candidatos_id' => $aplicacion->id_aplicacion
                         ]);
@@ -496,6 +493,7 @@ class Candidatos extends Component
             return redirect()->route('candidatos');
         }
     }
+
     public function informeEvaluacion($id_candidato, $id_puesto)
     {
         $this->id = $id_candidato;
@@ -508,10 +506,8 @@ class Candidatos extends Component
             ->first();
         $informe = InformeEvaluacion::select('id', 'fecha_carga', 'ubicacion')->where('aplicaciones_candidatos_id', $aplicacion->id)->first();
         if ($informe) {
-            $this->informe_fecha_carga = $informe->fecha_carga;
             $this->informe_ubicacion = $informe->ubicacion;
         } else {
-            $this->informe_fecha_carga = date('Y-m-d');
             $this->informe_ubicacion = '';
         }
 
@@ -520,7 +516,6 @@ class Candidatos extends Component
 
     public function cerrarModalInformeEvaluacion()
     {
-        $this->informe_fecha_carga = '';
         $this->informe_ubicacion = '';
         $this->modal_informe_evaluacion = false;
     }

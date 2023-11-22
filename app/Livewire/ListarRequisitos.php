@@ -86,8 +86,9 @@ class ListarRequisitos extends Component
         if ($this->total_requisitos_aprobados > 0) {
             session()->flash('requisito', 'requisitos_aprobados');
         }
-        $this->porcentaje_requisitos_presentados = ($this->total_requisitos_cargados / $this->total_requisitos) * 100;
-        $this->porcentaje_requisitos_aprobados = ($this->total_requisitos_aprobados / $this->total_requisitos) * 100;
+        $this->porcentaje_requisitos_presentados = number_format(($this->total_requisitos_cargados / $this->total_requisitos) * 100, 2);
+
+        $this->porcentaje_requisitos_aprobados = number_format(($this->total_requisitos_aprobados / $this->total_requisitos) * 100, 2);
         return view('livewire.listar-requisitos', [
             'requisitos' => $requisitos->paginate(10)
         ]);
@@ -104,7 +105,7 @@ class ListarRequisitos extends Component
                             'file',
                             'mimes:pdf,doc,docx',
                             'max:5120',
-                        ],
+                        ]
                     ]);
 
                     $requisito = RequisitoCandidato::where([
@@ -113,9 +114,12 @@ class ListarRequisitos extends Component
                         'requisitos_id' => $requisito_id
                     ])
                         ->join('requisitos', 'requisitos_candidatos.requisitos_id', '=', 'requisitos.id')
-                        ->select('requisitos.requisito as requisito', 'requisitos_candidatos.id as id_requisito_candidato')
+                        ->select(
+                            'requisitos.requisito as requisito',
+                            'requisitos_candidatos.id as id_requisito_candidato',
+                            'requisitos_candidatos.ubicacion as ubicacion'
+                        )
                         ->first();
-
                     if ($requisito) {
                         if (Storage::disk('public')->exists($requisito->ubicacion)) {
                             Storage::disk('public')->delete($requisito->ubicacion);
@@ -131,9 +135,9 @@ class ListarRequisitos extends Component
                         $req->fecha_carga = date("Y-m-d H:i:s");
                         $req->valido = 0;
                         $req->fecha_revision = null;
-                        $requisito->revisado = 0;
+                        $req->revisado = 0;
 
-                        $requisito->save();
+                        $req->save();
 
                         $this->requisitos_cargados[] = [
                             'requisito' => $requisito->requisito
@@ -178,15 +182,15 @@ class ListarRequisitos extends Component
                         ->where('puestos_nominales_id', $this->puesto)
                         ->first();
                     $id_aplicacion = $aplicacion->id;
-                    DB::transaction(function () use ($id_aplicacion){
+                    DB::transaction(function () use ($id_aplicacion) {
                         EtapaAplicacion::where('etapas_procesos_id', 1)
                             ->where('aplicaciones_candidatos_id', $id_aplicacion)
                             ->update([
-                                'fecha_fin' => date('Y-m-d')
+                                'fecha_fin' => now()
                             ]);
-                        
+
                         EtapaAplicacion::create([
-                            'fecha_inicio' => date('Y-m-d'),
+                            'fecha_inicio' => now(),
                             'etapas_procesos_id' => 2,
                             'aplicaciones_candidatos_id' => $id_aplicacion
                         ]);

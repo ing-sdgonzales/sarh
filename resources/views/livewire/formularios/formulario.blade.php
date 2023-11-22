@@ -8,8 +8,6 @@
     <div class="py-12 bg-gray-200">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-2">
-                <div class="sm:col-span-6">
-                </div>
             </div>
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="relative p-4">
@@ -205,6 +203,7 @@
                                             nacimiento</label>
                                         <div class="mt-2">
                                             <input wire:model='fecha_nacimiento' type="date"
+                                                max="{{ now()->subYears(18)->format('Y-m-d') }}"
                                                 name="fecha_nacimiento" id="fecha_nacimiento" required
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
@@ -1576,6 +1575,7 @@
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.0.desde' type="date"
                                                 name="desde_0" id="desde_0"
+                                                max="{{ now()->subDay()->format('Y-m-d') }}"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1782,6 +1782,7 @@
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.desde' type="date"
                                                 name="desde_1" id="desde_1"
+                                                max="{{ now()->subDay()->format('Y-m-d') }}"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1798,7 +1799,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Hasta</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.1.hasta' type="date"
-                                                name="hasta_1" id="hasta_1"
+                                                name="hasta_1" id="hasta_1" max="{{ now()->format('Y-m-d') }}"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -1989,6 +1990,7 @@
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.desde' type="date"
                                                 name="desde_2" id="desde_2"
+                                                max="{{ now()->subDay()->format('Y-m-d') }}"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>
@@ -2005,7 +2007,7 @@
                                             class="block text-sm font-medium leading-6 text-gray-900">Hasta</label>
                                         <div class="mt-2">
                                             <input wire:model='historiales_laborales.2.hasta' type="date"
-                                                name="hasta_2" id="hasta_2"
+                                                name="hasta_2" id="hasta_2" max="{{ now()->format('Y-m-d') }}"
                                                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
                                         <div>

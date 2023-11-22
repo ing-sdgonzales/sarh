@@ -110,6 +110,7 @@ class Expediente extends Component
                 $reqs_candidato = RequisitoCandidato::select('requisitos_id')->where('candidatos_id', $this->id_candidato)
                     ->where('fecha_revision', '!=', null)
                     ->where('revisado', 1)
+                    ->where('valido', 1)
                     ->orderBy('requisitos_id', 'asc')
                     ->pluck('requisitos_id')
                     ->toArray();

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integerIncrements('id');
             $table->string('prueba', 50)->default('Prueba técnica');
             $table->unsignedTinyInteger('nota')->min(0)->max(100);
-            $table->date('fecha')->default(now());
+            $table->timestamp('fecha')->useCurrent();
 
             /* fks */
             $table->unsignedInteger('candidatos_id');

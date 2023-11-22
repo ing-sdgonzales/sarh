@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('observacion')->nullable();
             $table->unsignedTinyInteger('valido')->default(0);
             $table->unsignedTinyInteger('revisado')->default(0);
-            $table->timestamp('fecha_carga', 0)->default(now());
+            $table->timestamp('fecha_carga', 0)->useCurrent();
             $table->timestamp('fecha_revision', 0)->nullable();
 
             /* fks */

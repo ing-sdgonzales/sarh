@@ -5,43 +5,30 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gray-200 h-screen">
+    <div class="py-28 bg-gray-200 h-screen">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="mb-2">
-                @can('Crear empleados')
-                    <button type="button" wire:click="crear()"
-                        class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            <div class="dark:bg-gray-800 sm:rounded-lg">
+                <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
+                    <div class="sm:col-span-6 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings-code"
+                            width="200" height="200" viewBox="0 0 24 24" stroke-width="1" stroke="#3B71CA"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path
+                                d="M11.482 20.924a1.666 1.666 0 0 1 -1.157 -1.241a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.312 .318 1.644 1.794 .995 2.697" />
+                            <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                            <path d="M20 21l2 -2l-2 -2" />
+                            <path d="M17 17l-2 2l2 2" />
                         </svg>
-                    </button>
-                @endcan
 
-                @canany(['Crear empleados', 'Editar empleados'])
-                    @if ($modal)
-                        @include('livewire.empleados.crear')
-                    @endif
-                @endcanany
-            </div>
-            <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
-                <table class="min-w-full bg-white rounded-lg text-center">
-                    <thead class="bg-gray-100 rounded-lg text-center">
-                        <tr>
-                            <th class="w-1/12 py-2 px-4">Renglón</th>
-                            <th class="w-1/12 py-2 px-4">Foto</th>
-                            <th class="w-1/6 py-2 px-4">Nombre</th>
-                            <th class="w-1/6 py-2 px-4">Dependencia</th>
-                            <th class="w-1/6 py-2 px-4">Servicio</th>
-                            <th class="w-1/4 py-2 px-4">Profesión</th>
-                            <th class="w-1/4 py-2 px-4">Región</th>
-                            <th class="w-1/12 py-2 px-4">Estado</th>
-                            <th class="w-1/4 py-2 px-4">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+                    </div>
+                    <div class="sm:col-span-6 text-center">
+                        <div class="text-4xl text-center">
+                            <h1 class="p-2 font-semibold leading-7 text-gray-900">Módulo en desarrollo...
+                            </h1>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

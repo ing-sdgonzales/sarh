@@ -11,4 +11,5 @@ class PruebaTecnica extends Model
 
     protected $table = 'pruebas_tecnicas';
     protected $fillable = ['prueba', 'nota', 'fecha', 'candidatos_id'];
+    protected $casts = ['fecha' => 'datetime:Y-m-d'];
 }
