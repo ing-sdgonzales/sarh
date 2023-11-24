@@ -15,6 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->integerIncrements('id');
+            $table->string('codigo', 25)->unique()->min(9)->nullable();
             $table->string('nit', 25)->unique();
             $table->string('igss', 25)->unique()->nullable();
             $table->text('imagen');
@@ -49,7 +50,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('generos_id')->nullable();
             $table->unsignedTinyInteger('etnias_id');
             $table->unsignedTinyInteger('grupos_sanguineos_id');
-            $table->unsignedTinyInteger('dependencias_funcionales_id')->nullable();
             $table->unsignedSmallInteger('municipios_id');
             $table->unsignedTinyInteger('nacionalidades_id');
             $table->unsignedTinyInteger('tipos_viviendas_id');
@@ -61,7 +61,6 @@ return new class extends Migration
             $table->foreign('generos_id')->references('id')->on('generos')->onUpdate('cascade');
             $table->foreign('etnias_id')->references('id')->on('etnias')->onUpdate('cascade');
             $table->foreign('grupos_sanguineos_id')->references('id')->on('grupos_sanguineos')->onUpdate('cascade');
-            $table->foreign('dependencias_funcionales_id')->references('id')->on('dependencias_funcionales')->onUpdate('cascade');
             $table->foreign('municipios_id')->references('id')->on('municipios')->onUpdate('cascade');
             $table->foreign('nacionalidades_id')->references('id')->on('nacionalidades')->onUpdate('cascade');
             $table->foreign('tipos_viviendas_id')->references('id')->on('tipos_viviendas')->onUpdate('cascade');

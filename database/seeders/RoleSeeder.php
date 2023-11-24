@@ -62,6 +62,13 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Crear informes de evaluación'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Asignar fechas de ingresos'])->syncRoles([$administrador, $operativo]);
 
+        /* Permisos para ver la ruta de /empleados */
+        Permission::create(['name' => 'Ver empleados'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /empleados */
+        Permission::create(['name' => 'Crear empleados'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Editar empleados'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Asignar puestos'])->syncRoles([$administrador, $operativo]);
+
         /* Permisos CRUD para la vista /expediente_candidato */
         Permission::create(['name' => 'Verificar requisitos'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Ver formulario'])->syncRoles([$administrador, $operativo]);

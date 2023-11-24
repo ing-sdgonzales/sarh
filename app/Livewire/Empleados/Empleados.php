@@ -3,41 +3,53 @@
 namespace App\Livewire\Empleados;
 
 use App\Models\Departamento;
+use App\Models\DependenciaNominal;
+use App\Models\Dpi;
 use App\Models\Empleado;
 use App\Models\EstadoCivil;
 use App\Models\Etnia;
 use App\Models\Genero;
 use App\Models\GrupoSanguineo;
 use App\Models\Nacionalidad;
+use App\Models\PuestoNominal;
+use App\Models\RegistroAcademicoEmpleado;
 use App\Models\TipoDeuda;
 use App\Models\TipoLicencia;
+use App\Models\TipoServicio;
 use App\Models\TipoVehiculo;
 use App\Models\TipoVivienda;
 use Exception;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class Empleados extends Component
 {
+    use WithFileUploads;
+    use WithPagination;
+
     /* Colecciones */
     public $generos, $etnias, $grupos_sanguineos, $dependencias_nominales, $dependencias_funcionales, $departamentos,
-        $municipios, $municipios_emision, $municipios_residencia, $nacionalidades, $tipos_viviendas, $estados_civiles, $tipos_licencias, $tipos_vehiculos,
-        $tipos_deudas;
+        $municipios, $municipios_emision, $municipios_residencia, $nacionalidades, $tipos_viviendas, $estados_civiles,
+        $tipos_licencias, $tipos_vehiculos, $tipos_deudas, $puestos_nominales, $puestos_funcionales, $tipos_servicios;
 
     /* Variables de formulario */
-    public $empleado, $id_candidato, $id_empleado, $dpi, $nit, $cuenta_banco, $igss, $imagen, $nombres, $apellidos, $puesto, $email, $pretension_salarial, $departamento,
-        $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion, $departamento_residencia, $municipio_residencia, $departamento_emision, $municipio_emision, $licencia,
+    public $empleado, $id_candidato, $id_empleado, $codigo, $dpi, $nit, $cuenta_banco, $igss, $imagen, $nombres, $apellidos,
+        $email, $pretension_salarial, $departamento, $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion,
+        $departamento_residencia, $municipio_residencia, $departamento_emision, $municipio_emision, $licencia,
         $tipo_licencia, $tipo_vehiculo, $placa, $telefono_casa, $telefono_movil, $familiar_conred, $nombre_familiar_conred, $genero,
         $cargo_familiar_conred, $conocido_conred, $nombre_conocido_conred, $cargo_conocido_conred, $telefono_padre, $nombre_padre,
-        $ocupacion_padre, $telefono_madre, $nombre_madre, $ocupacion_madre, $telefono_conviviente, $nombre_conviviente, $ocupacion_conviviente,
-        $establecimiento_primaria, $titulo_primaria, $establecimiento_secundaria, $titulo_secundaria, $establecimiento_diversificado,
-        $titulo_diversificado, $establecimiento_universitario, $titulo_universitario, $establecimiento_maestria_postgrado,
-        $titulo_maestria_postgrado, $establecimiento_otra_especialidad, $titulo_otra_especialidad, $estudia_actualmente, $estudio_actual,
-        $horario_estudio_actual, $establecimiento_estudio_actual, $etnia, $otro_etnia, $tipo_vivienda, $pago_vivienda, $cantidad_personas_dependientes,
-        $ingresos_adicionales, $fuente_ingresos_adicionales, $personas_aportan_ingresos, $monto_ingreso_total, $posee_deudas, $tipo_deuda,
-        $monto_deuda, $trabajo_conred, $trabajo_estado, $jubilado_estado, $institucion_jubilacion, $padecimiento_salud, $tipo_enfermedad, $intervencion_quirurgica,
-        $tipo_intervencion, $sufrido_accidente, $tipo_accidente, $alergia_medicamento, $tipo_medicamento, $tipo_sangre, $nombre_contacto_emergencia,
+        $ocupacion_padre, $telefono_madre, $nombre_madre, $ocupacion_madre, $telefono_conviviente, $nombre_conviviente,
+        $ocupacion_conviviente, $establecimiento_primaria, $titulo_primaria, $establecimiento_secundaria, $titulo_secundaria,
+        $establecimiento_diversificado, $titulo_diversificado, $establecimiento_universitario, $titulo_universitario,
+        $establecimiento_maestria_postgrado, $titulo_maestria_postgrado, $establecimiento_otra_especialidad, $titulo_otra_especialidad,
+        $estudia_actualmente, $estudio_actual, $horario_estudio_actual, $establecimiento_estudio_actual, $etnia, $otro_etnia,
+        $tipo_vivienda, $pago_vivienda, $cantidad_personas_dependientes, $ingresos_adicionales, $fuente_ingresos_adicionales,
+        $personas_aportan_ingresos, $monto_ingreso_total, $posee_deudas, $tipo_deuda, $monto_deuda, $trabajo_conred, $trabajo_estado,
+        $jubilado_estado, $institucion_jubilacion, $padecimiento_salud, $tipo_enfermedad, $intervencion_quirurgica, $tipo_intervencion,
+        $sufrido_accidente, $tipo_accidente, $alergia_medicamento, $tipo_medicamento, $tipo_sangre, $nombre_contacto_emergencia,
         $telefono_contacto_emergencia, $direccion_contacto_emergencia, $estado_familiar;
 
     /* Arrays de formulario */
@@ -69,8 +81,14 @@ class Empleados extends Component
     /* Variables de edición */
     public $imagen_actual;
 
-    /* Modal Crear  y Editar*/
+    /* Modal Crear y Editar*/
     public $modal = false;
+
+    /* Modal Crear y Editar Contrato */
+    public $modal_asignar_puesto = false;
+    public $id_puesto, $puesto_nominal, $puesto_funcional,  $dependencia_nominal, $dependencia_funcional, $region, $fecha_inicio,
+        $fecha_fin, $observacion, $salario, $tipo_servicio, $tipo_contratacion;
+
     public function render()
     {
         $this->departamentos = Departamento::select('id', 'nombre')->get();
@@ -83,11 +101,31 @@ class Empleados extends Component
         $this->tipos_viviendas = TipoVivienda::select('id', 'tipo_vivienda')->get();
         $this->tipos_deudas = TipoDeuda::select('id', 'tipo_deuda')->get();
         $this->grupos_sanguineos = GrupoSanguineo::select('id', 'grupo')->get();
+        $this->dependencias_nominales = DependenciaNominal::select('id', 'dependencia')->get();
+        $this->tipos_servicios = TipoServicio::select('id', 'tipo_servicio')->get();
+
+        $empleados = Empleado::select(
+            'empleados.id as id',
+            'empleados.imagen as imagen',
+            'empleados.codigo as codigo',
+            'empleados.nombres as nombres',
+            'empleados.apellidos as apellidos',
+            'empleados.nit as nit',
+            'empleados.estado as estado',
+            'dpis.dpi as dpi',
+            DB::raw('(SELECT titulo FROM registros_academicos_empleados 
+            WHERE empleados_id = empleados.id 
+            AND registros_academicos_id != 10
+            ORDER BY registros_academicos_id DESC LIMIT 1) as profesion')
+        )->join('dpis', 'empleados.id', '=', 'dpis.empleados_id');
+        $empleados = $empleados->paginate(10);
         activity()
             ->causedBy(auth()->user())
             ->withProperties(['user_id' => auth()->id()])
             ->log("El usuario " . auth()->user()->name .  " visitó la página: " . request()->path());
-        return view('livewire.empleados.empleados');
+        return view('livewire.empleados.empleados', [
+            'empleados' => $empleados
+        ]);
     }
 
     public function guardar()
@@ -100,8 +138,9 @@ class Empleados extends Component
                 ]);
             }
             $validated = $this->validate([
-                'nombre' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+                'nombres' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
                 'apellidos' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+                'codigo' => 'required|filled|string|min:9|regex:/^9[1-9]\d{7,}$/',
                 'pretension_salarial' => 'required|decimal:2',
                 'departamento' => 'required|integer|min:1',
                 'municipio' => 'required|integer|min:1',
@@ -165,7 +204,7 @@ class Empleados extends Component
                 'idiomas.*.lee' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
                 'idiomas.*.escribe' => ['required_with:idiomas.*.idioma', 'nullable', 'integer', 'min:0', 'max:100'],
                 'programas.*.programa' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
-                'programas.*.valoracion' => ['required_with:programas.*.nombre', 'integer', 'min:1', 'max:5'],
+                'programas.*.valoracion' => ['required_with:programas.*.programa', 'integer', 'min:1', 'max:5'],
                 'historiales_laborales.*.empresa' => ['nullable', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'],
                 'historiales_laborales.*.direccion' => ['required_with:historiales_laborales.*.empresa'],
                 'historiales_laborales.*.telefono' => ['required_with:historiales_laborales.*.empresa', 'regex:/^(2|3|4|5|7)\d{3}-\d{4}$/'],
@@ -215,12 +254,13 @@ class Empleados extends Component
             if ($this->imagen == $this->imagen_actual) {
                 $img = $this->imagen;
             } else {
-                $img = $this->imagen->store('candidatos', 'public');
+                $img = $this->imagen->store('empleados', 'public');
                 Storage::delete('public/' . $this->imagen_actual);
             }
 
             DB::transaction(function () use ($validated, $img) {
                 $this->empleado = Empleado::updateOrCreate(['id' => $this->id_empleado], [
+                    'codigo' => $validated['codigo'],
                     'nit' => $validated['nit'],
                     'igss' => $validated['igss'],
                     'imagen' => $img,
@@ -254,6 +294,58 @@ class Empleados extends Component
                     'tipos_viviendas_id' => $validated['tipo_vivienda'],
                     'estados_civiles_id' => $validated['estado_civil'],
                 ]);
+
+                Dpi::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                    'dpi' => $validated['dpi'],
+                    'municipios_id' => $validated['municipio_emision']
+                ]);
+
+
+                RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_primaria], [
+                    'establecimiento' => $validated['establecimiento_primaria'],
+                    'titulo' => $validated['titulo_primaria'],
+                    'registros_academicos_id' => 1
+                ]);
+
+                if (!empty($this->titulo_secundaria)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_secundaria], [
+                        'establecimiento' => $validated['establecimiento_secundaria'],
+                        'titulo' => $validated['titulo_secundaria'],
+                        'registros_academicos_id' => 2
+                    ]);
+                }
+
+                if (!empty($this->titulo_diversificado)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_diversificado], [
+                        'establecimiento' => $validated['establecimiento_diversificado'],
+                        'titulo' => $validated['titulo_diversificado'],
+                        'registros_academicos_id' => 3
+                    ]);
+                }
+
+                if (!empty($this->titulo_universitario)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_universitario], [
+                        'establecimiento' => $validated['establecimiento_universitario'],
+                        'titulo' => $validated['titulo_universitario'],
+                        'registros_academicos_id' => 6
+                    ]);
+                }
+
+                if (!empty($this->titulo_maestria_postgrado)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_maestria_postgrado], [
+                        'establecimiento' => $validated['establecimiento_maestria_postgrado'],
+                        'titulo' => $validated['titulo_maestria_postgrado'],
+                        'registros_academicos_id' => 8
+                    ]);
+                }
+
+                if (!empty($this->titulo_otra_especialidad)) {
+                    RegistroAcademicoEmpleado::updateOrCreate(['empleados_id' => $this->empleado->id, 'titulo' => $this->titulo_otra_especialidad], [
+                        'establecimiento' => $validated['establecimiento_otra_especialidad'],
+                        'titulo' => $validated['titulo_otra_especialidad'],
+                        'registros_academicos_id' => 10
+                    ]);
+                }
             });
 
             session()->flash('message');
@@ -261,13 +353,91 @@ class Empleados extends Component
             activity()
                 ->causedBy(auth()->user())
                 ->withProperties(['user_id' => auth()->id()])
-                ->log("El usuario " . auth()->user()->name . " guardó el empleado: " . $this->nombre);
-            return redirect()->route('candidatos');
+                ->log("El usuario " . auth()->user()->name . " guardó el empleado: " . $this->nombres . ' ' . $this->apellidos);
+            return redirect()->route('empleados');
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();
             session()->flash('error', $errorMessages);
             $this->cerrarModal();
-            return redirect()->route('candidatos');
+            return redirect()->route('empleados');
+        }
+    }
+
+    public function guardarPuesto()
+    {
+    }
+
+    public function asignarPuesto()
+    {
+        $this->modal_asignar_puesto = true;
+    }
+
+    public function cerrarModalAsignarPuesto()
+    {
+        $this->modal_asignar_puesto = false;
+    }
+
+    public function getPuestosByDependencia()
+    {
+        $this->puesto_nominal = '';
+        if ($this->dependencia_nominal) {
+            $this->puestos_nominales = DB::table('puestos_nominales')
+                ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', '=', 'catalogo_puestos.id')
+                ->select(
+                    'puestos_nominales.id as id',
+                    'puestos_nominales.codigo as codigo',
+                    'catalogo_puestos.puesto as puesto'
+                )
+                ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia_nominal)
+                ->where('puestos_nominales.estado', '=', 1)
+                ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('requisitos_puestos')
+                        ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
+                })
+                ->get();
+            $this->salario = '';
+        } else {
+            $this->puestos_nominales = [];
+            $this->puesto_nominal = '';
+        }
+    }
+
+    public function getSalarioByPuesto()
+    {
+        $this->salario = 0;
+        if ($this->puesto_nominal) {
+            $salario = PuestoNominal::select('salario')->where('id', $this->puesto_nominal)->first();
+            $this->salario = $salario->salario;
+        } else {
+            $this->salario = '';
+        }
+    }
+
+    public function getPuestosByTipoServicio()
+    {
+        $this->puesto_nominal = '';
+        $this->puestos_nominales = '';
+        if ($this->tipo_servicio) {
+            $this->puestos_nominales = DB::table('puestos_nominales')
+                ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', '=', 'catalogo_puestos.id')
+                ->select(
+                    'puestos_nominales.id as id',
+                    'puestos_nominales.codigo as codigo',
+                    'catalogo_puestos.puesto as puesto'
+                )
+                ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia_nominal)
+                ->where('puestos_nominales.estado', '=', 1)
+                ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('requisitos_puestos')
+                        ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
+                })
+                ->get();
+        } else {
+            $this->puestos_nominales = [];
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DependenciaFuncional;
 use App\Models\DependenciaNominal;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -41,7 +42,10 @@ class ControlSeeder extends Seeder
 
         foreach ($controlesData as $control) {
             DependenciaNominal::create([
-                'dependencia' => $control,
+                'dependencia' => $control
+            ]);
+            DependenciaFuncional::create([
+                'dependencia' => $control
             ]);
         }
     }

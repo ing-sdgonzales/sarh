@@ -34,8 +34,8 @@
             @endcan
 
 
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                <table class="min-w-full bg-white rounded-lg overflow-hidden text-center">
+            <div class="bg-white dark:bg-gray-800 overflow-x-hidden shadow-xl sm:rounded-lg">
+                <table class="min-w-full bg-white rounded-lg overflow-x-hidden text-center">
                     <thead class="bg-gray-100 text-center">
                         <tr>
                             <th class="w-1/12 py-2 px-4">Código</th>
