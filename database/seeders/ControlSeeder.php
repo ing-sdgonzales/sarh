@@ -36,7 +36,7 @@ class ControlSeeder extends Seeder
             'Dirección de Respuesta',
             'Dirección de Recuperación',
             'Dirección de Sistema de Comando de Incidentes - SCI',
-            'Dirección de Comunicacion ocial'
+            'Dirección de Comunicacion Social'
         ];
 
 

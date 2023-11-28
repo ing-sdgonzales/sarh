@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Empleados;
 
+use App\Models\Contrato;
 use App\Models\Departamento;
+use App\Models\DependenciaFuncional;
 use App\Models\DependenciaNominal;
 use App\Models\Dpi;
 use App\Models\Empleado;
@@ -12,7 +14,11 @@ use App\Models\Genero;
 use App\Models\GrupoSanguineo;
 use App\Models\Nacionalidad;
 use App\Models\PuestoNominal;
+use App\Models\Region;
 use App\Models\RegistroAcademicoEmpleado;
+use App\Models\RegistroPuesto;
+use App\Models\Renglon;
+use App\Models\TipoContratacion;
 use App\Models\TipoDeuda;
 use App\Models\TipoLicencia;
 use App\Models\TipoServicio;
@@ -33,7 +39,8 @@ class Empleados extends Component
     /* Colecciones */
     public $generos, $etnias, $grupos_sanguineos, $dependencias_nominales, $dependencias_funcionales, $departamentos,
         $municipios, $municipios_emision, $municipios_residencia, $nacionalidades, $tipos_viviendas, $estados_civiles,
-        $tipos_licencias, $tipos_vehiculos, $tipos_deudas, $puestos_nominales, $puestos_funcionales, $tipos_servicios;
+        $tipos_licencias, $tipos_vehiculos, $tipos_deudas, $puestos_nominales, $puestos_funcionales, $tipos_servicios,
+        $tipos_contrataciones, $regiones;
 
     /* Variables de formulario */
     public $empleado, $id_candidato, $id_empleado, $codigo, $dpi, $nit, $cuenta_banco, $igss, $imagen, $nombres, $apellidos,
@@ -85,9 +92,10 @@ class Empleados extends Component
     public $modal = false;
 
     /* Modal Crear y Editar Contrato */
-    public $modal_asignar_puesto = false;
-    public $id_puesto, $puesto_nominal, $puesto_funcional,  $dependencia_nominal, $dependencia_funcional, $region, $fecha_inicio,
-        $fecha_fin, $observacion, $salario, $tipo_servicio, $tipo_contratacion;
+    public $modal_crear_contrato = false;
+    public $puesto_nominal, $puesto_funcional, $dependencia_nominal, $dependencia_funcional, $region, $fecha_inicio,
+        $fecha_fin, $observacion, $salario, $tipo_servicio, $tipo_contratacion, $contrato_correlativo, $contrato_renglon,
+        $contrato_year, $numero_contrato;
 
     public function render()
     {
@@ -103,6 +111,9 @@ class Empleados extends Component
         $this->grupos_sanguineos = GrupoSanguineo::select('id', 'grupo')->get();
         $this->dependencias_nominales = DependenciaNominal::select('id', 'dependencia')->get();
         $this->tipos_servicios = TipoServicio::select('id', 'tipo_servicio')->get();
+        $this->tipos_contrataciones = TipoContratacion::select('id', 'tipo')->get();
+        $this->dependencias_funcionales = DependenciaFuncional::select('id', 'dependencia')->get();
+        $this->regiones = Region::select('id', 'region', 'nombre')->get();
 
         $empleados = Empleado::select(
             'empleados.id as id',
@@ -116,7 +127,9 @@ class Empleados extends Component
             DB::raw('(SELECT titulo FROM registros_academicos_empleados 
             WHERE empleados_id = empleados.id 
             AND registros_academicos_id != 10
-            ORDER BY registros_academicos_id DESC LIMIT 1) as profesion')
+            ORDER BY registros_academicos_id DESC LIMIT 1) as profesion'),
+            DB::raw('(SELECT COUNT(*) FROM contratos 
+            WHERE empleados_id = empleados.id) as total_contratos')
         )->join('dpis', 'empleados.id', '=', 'dpis.empleados_id');
         $empleados = $empleados->paginate(10);
         activity()
@@ -363,18 +376,109 @@ class Empleados extends Component
         }
     }
 
-    public function guardarPuesto()
+    public function guardarContrato()
     {
+        try {
+            $validated = $this->validate([
+                'tipo_contratacion' => 'required|integer|min:1',
+                'tipo_servicio' => 'required|integer|min:1',
+                'dependencia_nominal' => 'required|integer|min:1',
+                'puesto_nominal' => 'required|integer|min:1',
+                'fecha_inicio' => 'required|date|after_or_equal:1996-11-11',
+                'fecha_fin' => 'required|date|after:fecha_inicio',
+                'salario' => 'required|decimal:2',
+                'contrato_correlativo' => 'required|integer|min:1|regex:/^[1-9]\d*$/',
+                'contrato_renglon' => 'required|filled',
+                'contrato_year' => ['required', 'regex:/^(19[9][6-9]|[2-9][0-9]{3})$/'],
+                'region' => 'required|integer|min:1',
+                'dependencia_funcional' => 'required|integer|min:1',
+                'puesto_funcional' => 'nullable|integer|min:1',
+                'observacion' => 'nullable|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'
+            ]);
+            $this->numero_contrato = $validated['contrato_correlativo'] . '-' . $validated['contrato_renglon'] . '-' . $validated['contrato_year'];
+            DB::transaction(function () use ($validated) {
+                $contrato = Contrato::create([
+                    'numero' => $this->numero_contrato,
+                    'fecha_inicio' => $validated['fecha_inicio'],
+                    'fecha_fin' => $validated['fecha_fin'],
+                    'salario' => $validated['salario'],
+                    'tipos_contrataciones_id' => $validated['tipo_contratacion'],
+                    'puestos_nominales_id' => $validated['puesto_nominal'],
+                    'empleados_id' => $this->id_empleado
+                ]);
+
+                $pst = PuestoNominal::findOrFail($this->puesto_nominal);
+                $pst->estado = 0;
+                $pst->save();
+
+                $emp = Empleado::findOrFail($this->id_empleado);
+                $emp->estado = 1;
+                $emp->fecha_ingreso = $validated['fecha_inicio'];
+                $emp->save();
+
+                RegistroPuesto::create([
+                    'fecha_inicio' => $validated['fecha_inicio'],
+                    'fecha_fin' => $validated['fecha_fin'],
+                    'observacion' => $validated['observacion'],
+                    'contratos_id' => $contrato->id,
+                    'puestos_funcionales_id' => $validated['puesto_funcional'],
+                    'dependencias_funcionales_id' => $validated['dependencia_funcional'],
+                    'regiones_id' => $validated['region']
+                ]);
+            });
+            $empleado = Empleado::findOrFail($this->id_empleado);
+            $puesto = PuestoNominal::select(
+                'puestos_nominales.codigo as codigo',
+                'catalogo_puestos.puesto as puesto'
+            )
+                ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', 'catalogo_puestos.id')
+                ->where('puestos_nominales.id', $this->puesto_nominal)
+                ->first();
+
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name .  " creó el contrato número: " . $this->numero_contrato . " para el empleado: " . $empleado->nombres . " " . $empleado->apellidos);
+
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name .  " guardó el puesto: " . $puesto->codigo . '-' . $puesto->puesto . " para el empleado: " . $empleado->nombres . " " . $empleado->apellidos);
+            session()->flash('message');
+            $this->cerrarModalCrearContrato();
+            return redirect()->route('empleados');
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarModalCrearContrato();
+            return redirect()->route('empleados');
+        }
     }
 
-    public function asignarPuesto()
+    public function crearContrato($id_empleado)
     {
-        $this->modal_asignar_puesto = true;
+        $this->id_empleado = $id_empleado;
+        $this->modal_crear_contrato = true;
     }
 
-    public function cerrarModalAsignarPuesto()
+    public function cerrarModalCrearContrato()
     {
-        $this->modal_asignar_puesto = false;
+        $this->puesto_nominal = '';
+        $this->puesto_funcional = '';
+        $this->dependencia_nominal = '';
+        $this->dependencia_funcional = '';
+        $this->region = '';
+        $this->fecha_inicio = '';
+        $this->fecha_fin = '';
+        $this->observacion = '';
+        $this->salario = '';
+        $this->tipo_servicio = '';
+        $this->tipo_contratacion = '';
+        $this->contrato_correlativo = '';
+        $this->contrato_renglon = '';
+        $this->contrato_year = '';
+        $this->numero_contrato = '';
+        $this->modal_crear_contrato = false;
     }
 
     public function getPuestosByDependencia()
@@ -400,7 +504,6 @@ class Empleados extends Component
             $this->salario = '';
         } else {
             $this->puestos_nominales = [];
-            $this->puesto_nominal = '';
         }
     }
 
@@ -408,8 +511,15 @@ class Empleados extends Component
     {
         $this->salario = 0;
         if ($this->puesto_nominal) {
-            $salario = PuestoNominal::select('salario')->where('id', $this->puesto_nominal)->first();
+            $salario = PuestoNominal::select(
+                'puestos_nominales.salario as salario',
+                'renglones.renglon as renglon'
+            )
+                ->join('renglones', 'puestos_nominales.renglones_id', '=', 'renglones.id')
+                ->where('puestos_nominales.id', $this->puesto_nominal)
+                ->first();
             $this->salario = $salario->salario;
+            $this->contrato_renglon = $salario->renglon;
         } else {
             $this->salario = '';
         }
@@ -438,6 +548,15 @@ class Empleados extends Component
                 ->get();
         } else {
             $this->puestos_nominales = [];
+        }
+    }
+
+    public function getYearByFechaInicio()
+    {
+        if ($this->fecha_inicio) {
+            $this->contrato_year = date('Y', strtotime($this->fecha_inicio));
+        } else {
+            $this->contrato_year = '';
         }
     }
 

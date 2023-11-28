@@ -14,10 +14,10 @@
                 <!--Modal title-->
                 <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
-                    Nuevo registro
+                    Editar registro
                 </h5>
                 <!--Close button-->
-                <button type="button" wire:click='cerrarModalCrearContrato()'
+                <button type="button" wire:click='cerrarModalEditarContrato()'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -28,7 +28,7 @@
             </div>
 
             <!--Modal body-->
-            <form method="POST" wire:submit='guardarContrato'>
+            <form method="POST" wire:submit='editarContrato'>
                 @method('POST')
                 @csrf
                 <div class="relative p-4">
@@ -194,7 +194,7 @@
                                     <hr>
                                 </div>
 
-                                <div class="sm:col-span-1">
+                                <div class="sm:col-span-2">
                                     <label for="contrato_correlativo"
                                         class="block text-sm font-medium leading-6 text-gray-900">Correlativo</label>
                                     <div class="mt-2">
@@ -212,7 +212,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-1">
+                                <div class="sm:col-span-2">
                                     <label for="contrato_renglon"
                                         class="block text-sm font-medium leading-6 text-gray-900">Renglón</label>
                                     <div class="mt-2">
@@ -229,7 +229,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-1">
+                                <div class="sm:col-span-2">
                                     <label for="contrato_year"
                                         class="block text-sm font-medium leading-6 text-gray-900">Año</label>
                                     <div class="mt-2">
@@ -245,118 +245,11 @@
                                         </span>
                                     </div>
                                 </div>
-
-                                <div class="sm:col-span-3">
-                                    <label for="region"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Región</label>
-                                    <div class="mt-2">
-                                        <select wire:model='region' id="region" name="region" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($regiones ?? [] as $region)
-                                                <option value="{{ $region->id }}">
-                                                    {{ $region->region }} - {{ $region->nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <span class="text-red-600 text-sm">
-                                            @error('region')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="sm:col-span-3">
-                                    <label for="dependencia_funcional"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Dependencia
-                                        funcional</label>
-                                    <div class="mt-2">
-                                        <select wire:model='dependencia_funcional' id="dependencia_funcional"
-                                            name="dependencia_funcional" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($dependencias_funcionales ?? [] as $dependencia_funcional)
-                                                <option value="{{ $dependencia_funcional->id }}">
-                                                    {{ $dependencia_funcional->dependencia }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <span class="text-red-600 text-sm">
-                                            @error('dependencia_funcional')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="sm:col-span-3">
-                                    <label for="puesto_funcional"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Puesto
-                                        funcional</label>
-                                    <div class="mt-2">
-                                        <select wire:model='puesto_funcional' id="puesto_funcional"
-                                            name="puesto_funcional"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">No aplica</option>
-                                            @foreach ($puestos_funcionales ?? [] as $puesto_funcional)
-                                                <option value="{{ $puesto_funcional->id }}">
-                                                    {{ $puesto_funcional->puesto }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <span class="text-red-600 text-sm">
-                                            @error('puesto_funcional')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="col-span-full">
-                                    <label for="observacion"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Observación</label>
-                                    <div class="mt-2">
-                                        <textarea wire:model='observacion' id="observacion" name="observación" rows="3"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
-                                    </div>
-                                    <p class="mt-3 text-sm leading-6 text-gray-600">Breve descripción para la
-                                        contratación.</p>
-                                    <div>
-                                        <span class="text-red-600 text-sm">
-                                            @error('observacion')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="col-span-full">
-                                    <div class="mt-8 mb-3 inline-flex w-full items-center rounded-lg bg-warning-300 px-6 py-5 text-base text-warning-800"
-                                        role="alert">
-                                        <span class="mr-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="w-5 h-5">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                                            </svg>
-                                        </span>
-                                        <p><b>Importante: </b>Al realizar este registro, el estado del puesto nominal
-                                            cambiará a ocupado. Este registro no se puede eliminar.</p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div wire:loading.flex wire:target="guardarContrato"
+                <div wire:loading.flex wire:target="editarContrato"
                     class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                     <div
                         class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
@@ -366,7 +259,7 @@
                 <!--Modal footer-->
                 <div
                     class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
-                    <button type="button" wire:click='cerrarModalCrearContrato()'
+                    <button type="button" wire:click='cerrarModalEditarContrato()'
                         class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                         data-te-ripple-init data-te-ripple-color="light">
                         {{ __('Cancel') }}

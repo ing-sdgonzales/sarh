@@ -82,7 +82,7 @@
                                 <tr>
                                     <td class="py-2 px-4">{{ $candidato->renglon }}</td>
                                     <td class="py-2 px-4"><img src="{{ asset('storage') . '/' . $candidato->imagen }}"
-                                            class="mx-auto max-w-full rounded-lg" style="height: 60px;"
+                                            class="mx-auto max-w-full rounded-lg" style="height: 60px; width: 60px"
                                             alt="imagen" />
                                     </td>
                                     <td class="py-2 px-4">{{ $candidato->nombre }}</td>

@@ -24,8 +24,8 @@
                     @endif
                 @endcanany
 
-                @can('Asignar puestos')
-                    @if ($modal_asignar_puesto)
+                @can('Crear contratos')
+                    @if ($modal_crear_contrato)
                         @include('livewire.contratos.crear')
                     @endif
                 @endcan
@@ -48,7 +48,8 @@
                         @foreach ($empleados as $empleado)
                             <tr>
                                 <td class="py-2 px-4"><img src="{{ asset('storage') . '/' . $empleado->imagen }}"
-                                        class="mx-auto max-w-full rounded-lg" style="height: 80px;"alt="imagen" /></td>
+                                        class="mx-auto max-w-full rounded-lg" style="height: 70px; width: 70px"
+                                        alt="imagen" /></td>
                                 <td class="py-2 px-4">{{ $empleado->codigo }}</td>
                                 <td class="py-2 px-4">{{ $empleado->dpi }}</td>
                                 <td class="py-2 px-4">{{ $empleado->nombres }} {{ $empleado->apellidos }} </td>
@@ -101,31 +102,11 @@
                                                     </button>
                                                 </li>
                                             @endcan
-                                            @can('Asignar puestos')
-                                                <li>
-                                                    <button type="button" wire:click='asignarPuesto({{ $empleado->id }})'
-                                                        class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                        data-te-dropdown-item-ref>
-                                                        <div class="flex items-end space-x-2">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                class="w-5 h-5">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z" />
-                                                            </svg>
-
-
-                                                            <h6 class="text-sm font-normal text-neutral-700">Asignar puesto
-                                                            </h6>
-                                                        </div>
-                                                    </button>
-                                                </li>
-                                            @endcan
-                                            @if ($empleado->estado == 1)
-                                                @can('Ver expediente')
+                                            @if ($empleado->total_contratos == 0)
+                                                @can('Crear contrato')
                                                     <li>
-                                                        <a type="button"
-                                                            href="{{ route('expedientes', ['candidato_id' => $empleado->id]) }}"
+                                                        <button type="button"
+                                                            wire:click='crearContrato({{ $empleado->id }})'
                                                             class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                                                             data-te-dropdown-item-ref>
                                                             <div class="flex items-end space-x-2">
@@ -133,10 +114,33 @@
                                                                     viewBox="0 0 24 24" stroke-width="1.5"
                                                                     stroke="currentColor" class="w-5 h-5">
                                                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                                                                        d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z" />
                                                                 </svg>
 
-                                                                <h6 class="text-sm font-normal text-neutral-700">Expediente
+                                                                <h6 class="text-sm font-normal text-neutral-700">Crear
+                                                                    contrato
+                                                                </h6>
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                @endcan
+                                            @endif
+                                            @if ($empleado->estado == 1)
+                                                @can('Ver contratos')
+                                                    <li>
+                                                        <a type="button"
+                                                            href="{{ route('contratos', ['id_empleado' => $empleado->id]) }}"
+                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                            data-te-dropdown-item-ref>
+                                                            <div class="flex items-end space-x-2">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="1.5"
+                                                                    stroke="currentColor" class="w-5 h-5">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
+                                                                </svg>
+
+                                                                <h6 class="text-sm font-normal text-neutral-700">Contratos
                                                                 </h6>
                                                             </div>
                                                         </a>

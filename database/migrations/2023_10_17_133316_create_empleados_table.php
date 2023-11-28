@@ -54,7 +54,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('nacionalidades_id');
             $table->unsignedTinyInteger('tipos_viviendas_id');
             $table->unsignedTinyInteger('estados_civiles_id');
-            $table->unsignedTinyInteger('regiones_id')->nullable();
             $table->unsignedInteger('candidatos_id')->nullable();
 
             /* references */
@@ -65,7 +64,6 @@ return new class extends Migration
             $table->foreign('nacionalidades_id')->references('id')->on('nacionalidades')->onUpdate('cascade');
             $table->foreign('tipos_viviendas_id')->references('id')->on('tipos_viviendas')->onUpdate('cascade');
             $table->foreign('estados_civiles_id')->references('id')->on('estados_civiles')->onUpdate('cascade');
-            $table->foreign('regiones_id')->references('id')->on('regiones')->onUpdate('cascade');
             $table->foreign('candidatos_id')->references('id')->on('candidatos')->onUpdate('cascade');
 
             $table->timestamps();

@@ -5,6 +5,7 @@ use App\Livewire\Candidatos\Candidatos;
 use App\Livewire\Candidatos\EtapasProcesos;
 use App\Livewire\Candidatos\Expediente;
 use App\Livewire\Candidatos\VerFormulario;
+use App\Livewire\Contratos\Contratos;
 use App\Livewire\Empleados\Empleados;
 use App\Livewire\Formularios\Formulario;
 use App\Livewire\Formularios\Formulario029;
@@ -63,6 +64,8 @@ Route::middleware([
     Route::get('/empleados', Empleados::class)->middleware('can:Ver empleados')->name('empleados');
     Route::get('/requisitos', Requisitos::class)->middleware('can:Ver requisitos')->name('requisitos');
     Route::get('/expediente_candidato/{candidato_id}', Expediente::class)->middleware('can:Ver expediente')->name('expedientes');
+    Route::get('/contratos/{id_empleado}', Contratos::class)->middleware('can:Ver contratos')->name('contratos');
+    /* Route::get('/contratos/{id_empleado}', Contratos::class)->middleware('can:Ver contratos')->name('contratos'); */
     Route::get('/ver_formulario/{id_candidato}/{id_requisito}', VerFormulario::class)->middleware('can:Ver formulario')->name('formulario');
     Route::get('/proceso_candidato/{id_candidato}', EtapasProcesos::class)->middleware('can:Ver etapas')->name('proceso');
     Route::get('/bitacora_usuarios', BitacoraUsuario::class)->middleware('can:Ver bitácora')->name('bitacora');
