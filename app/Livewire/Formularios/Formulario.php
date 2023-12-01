@@ -264,6 +264,7 @@ class Formulario extends Component
                     'tipos_viviendas_id' => $validated['tipo_vivienda'],
                     'estados_civiles_id' => $validated['estado_civil'],
                     'candidatos_id' => $this->id_candidato,
+                    'relaciones_laborales_id' => 4
                 ]);
 
                 Direccion::updateOrCreate(['empleados_id' => $this->empleado->id], [

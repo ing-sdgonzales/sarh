@@ -128,7 +128,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
+                                <div class="sm:col-span-2">
                                     <label for="codigo"
                                         class="block text-sm font-medium leading-6 text-gray-900">Código de
                                         empleado</label>
@@ -146,7 +146,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
+                                <div class="sm:col-span-2">
                                     <label for="pretension_salarial"
                                         class="block text-sm font-medium leading-6 text-gray-900">Pretensión
                                         salarial</label>
@@ -164,6 +164,38 @@
                                         </span>
                                     </div>
                                 </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="relacion_laboral"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Tipo de
+                                        empleado</label>
+                                    <div class="mt-2">
+                                        <select wire:model='relacion_laboral' id="relacion_laboral"
+                                            name="relacion_laboral" required
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <option value="">Seleccionar...</option>
+                                            @foreach ($relaciones_laborales ?? [] as $relacion_laboral)
+                                                @if ($relacion_laboral->id == 4)
+                                                    <option value="{{ $relacion_laboral->id }}" disabled>
+                                                        {{ $relacion_laboral->relacion_laboral }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $relacion_laboral->id }}">
+                                                        {{ $relacion_laboral->relacion_laboral }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('relacion_laboral')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -175,6 +207,11 @@
                             </div>
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
+                                <div class="sm:col-span-6">
+                                    <p class="mt-3 text-sm leading-6 text-gray-600"><strong>Lugar y fecha de
+                                            nacimiento</strong></p>
+                                    <hr>
+                                </div>
                                 <div class="sm:col-span-2">
                                     <label for="departamento"
                                         class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>

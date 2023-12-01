@@ -99,7 +99,7 @@ class Candidatos extends Component
                 'tipos_contrataciones.tipo as tipo_contratacion',
                 DB::raw('COUNT(CASE WHEN etapas_aplicaciones.fecha_fin IS NOT NULL THEN 1 END) AS conteo_etapas')
             )->groupBy('candidatos.id');
-        $candidatos = $candidatos->paginate(10);
+        $candidatos = $candidatos->paginate(5);
         activity()
             ->causedBy(auth()->user())
             ->withProperties(['user_id' => auth()->id()])
@@ -755,6 +755,8 @@ class Candidatos extends Component
             ->causedBy(auth()->user())
             ->withProperties(['user_id' => auth()->id()])
             ->log("El usuario " . auth()->user()->name . " guardó la entrevista con el candidato: " . $ca->nombre);
+        session()->flash('message');
+        $this->cerrarEntrevistaModal();
         return redirect()->route('candidatos');
     }
 
@@ -770,7 +772,8 @@ class Candidatos extends Component
                     'catalogo_puestos.puesto as puesto'
                 )
                 ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia)
-                ->where('puestos_nominales.estado', '=', 1)
+                ->where('puestos_nominales.activo', '=', 1)
+                ->where('puestos_nominales.eliminado', '=', 0)
                 ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
                 ->whereExists(function ($query) {
                     $query->select(DB::raw(1))
@@ -796,7 +799,8 @@ class Candidatos extends Component
                     'catalogo_puestos.puesto as puesto'
                 )
                 ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia)
-                ->where('puestos_nominales.estado', '=', 1)
+                ->where('puestos_nominales.activo', '=', 1)
+                ->where('puestos_nominales.eliminado', '=', 1)
                 ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
                 ->whereExists(function ($query) {
                     $query->select(DB::raw(1))

@@ -49,13 +49,13 @@ class Puestos extends Component
                 'puestos_nominales.codigo as codigo',
                 'catalogo_puestos.puesto as puesto',
                 'dependencias_nominales.dependencia as dependencia',
-                'puestos_nominales.estado',
+                'puestos_nominales.activo',
                 'renglones.renglon'
             );
 
         $requisitos = DB::table('requisitos')->select('id', 'requisito', 'especificacion');
 
-        $puestos = $puestos->paginate(10, pageName: 'puestos-page');
+        $puestos = $puestos->paginate(5, pageName: 'puestos-page');
         $requisitos =  $requisitos->paginate(7, pageName: 'requisitos-page');
 
         activity()
@@ -100,7 +100,6 @@ class Puestos extends Component
                     'renglones_id' => $validated['renglon'],
                     'plazas_id' => $validated['plaza'],
                     'salario' => $validated['salario'],
-                    'estado' => 1,
                     'fuentes_financiamientos_id' => $validated['fuentes_financiamientos'],
                     'dependencias_nominales_id' => $validated['dependencias_nominales'],
                     'municipios_id' => $validated['municipio'],
@@ -184,7 +183,6 @@ class Puestos extends Component
         $this->renglon = $puesto->renglones_id;
         $this->updatedRenglon();
         $this->plaza = $puesto->plazas_id;
-        /* agregar variable estado */
         $this->fuentes_financiamientos = $puesto->fuentes_financiamientos_id;
         $this->dependencias_nominales = $puesto->dependencias_nominales_id;
         $this->getSubproductosByDependencia();
@@ -424,7 +422,6 @@ class Puestos extends Component
         $this->especialidad = '';
         $this->renglon = '';
         $this->plaza = '';
-        /* agregar variable estado */
         $this->fuentes_financiamientos = '';
         $this->dependencias_nominales = '';
         $this->region = '';
@@ -437,15 +434,16 @@ class Puestos extends Component
     public function cerrarModal()
     {
         $this->modal = false;
+        $this->id = '';
         $this->resetPage(pageName: 'requisitos-page');
         return redirect()->route('puestos');
     }
 
     public function abrirModalAsignar()
     {
-
         $this->requisitos_modal = true;
     }
+
     public function cerrarModalAsignar()
     {
         $this->requisitos_modal = false;

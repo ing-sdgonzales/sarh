@@ -21,12 +21,14 @@ return new class extends Migration
 
             /* fks */
             $table->unsignedBigInteger('contratos_id');
+            $table->unsignedInteger('primer_puesto_id')->nullable();
             $table->unsignedInteger('puestos_funcionales_id')->nullable();
             $table->unsignedTinyInteger('dependencias_funcionales_id');
             $table->unsignedTinyInteger('regiones_id');
 
             /* references */
             $table->foreign('contratos_id')->references('id')->on('contratos')->onUpdate('cascade');
+            $table->foreign('primer_puesto_id')->references('puestos_nominales_id')->on('contratos')->onUpdate('cascade');
             $table->foreign('puestos_funcionales_id')->references('id')->on('puestos_funcionales')->onUpdate('cascade');
             $table->foreign('dependencias_funcionales_id')->references('id')->on('dependencias_funcionales')->onUpdate('cascade');
             $table->foreign('regiones_id')->references('id')->on('regiones')->onUpdate('cascade');

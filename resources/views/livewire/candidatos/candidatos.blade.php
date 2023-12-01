@@ -4,7 +4,7 @@
             {{ __('Candidatos') }}
         </h2>
     </x-slot>
-    <div class="py-12 bg-gray-200 h-screen">
+    <div class="py-12 bg-gray-200 h-auto">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-2">
                 @can('Crear candidatos')
@@ -319,7 +319,9 @@
                         </tbody>
                     </table>
                 </div>
-
+                <div class="mt-2">
+                    {{ $candidatos->links('pagination::tailwind') }}
+                </div>
             </div>
         </div>
     </div>

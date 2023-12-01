@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gray-200 h-screen">
+    <div class="py-12 bg-gray-200 h-auto">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-10">
 
             <!--Button trigger extra large modal-->
@@ -54,7 +54,7 @@
                                 <td class="py-2 px-4">{{ $puesto->dependencia }}</td>
                                 <td class="py-2 px-4">{{ $puesto->renglon }}</td>
                                 <td class="py-2 px-4">
-                                    @if ($puesto->estado == 1)
+                                    @if ($puesto->activo == 1)
                                         <span
                                             class="inline-block whitespace-nowrap rounded-[0.27rem] bg-success-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-success-800">Desocupado</span>
                                     @else

@@ -16,6 +16,10 @@
                         <div class="space-y-12">
                             <div class="border-b border-gray-900/10 pb-6">
                                 <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
+                                    <div class="sm:col-span-full rounded-lg bg-primary-100 text-xl text-center">
+                                        <h1 class="p-2 font-semibold leading-7 text-gray-900">Fotografía
+                                        </h1>
+                                    </div>
                                     <div class="sm:col-span-6 mx-auto">
                                         <div class="mb-3" x-data="{ isUploading: false, progress: 0 }"
                                             x-on:livewire-upload-start="isUploading = true"
@@ -149,7 +153,11 @@
                                     </h1>
                                 </div>
                                 <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
+                                    <div class="sm:col-span-6">
+                                        <p class="mt-3 text-sm leading-6 text-gray-600"><strong>Lugar y fecha de
+                                                nacimiento</strong></p>
+                                        <hr>
+                                    </div>
                                     <div class="sm:col-span-2">
                                         <label for="departamento"
                                             class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
@@ -3085,6 +3093,12 @@
                                         </div>
                                     </div>
 
+                                </div>
+                            </div>
+                            <div wire:loading.flex wire:target="guardar"
+                                class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                                <div
+                                    class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
                                 </div>
                             </div>
 

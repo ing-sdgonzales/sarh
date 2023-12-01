@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RequisitoSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(DependenciaSubproductoSeeder::class);
+        $this->call(RelacionLaboralSeeder::class);
         $this->call(TipoLicenciaSeeder::class);
         $this->call(TipoVehiculoSeeder::class);
         $this->call(TipoDeudaSeeder::class);

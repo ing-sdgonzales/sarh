@@ -17,12 +17,12 @@ return new class extends Migration
             $table->integerIncrements('id');
             $table->string('codigo', 50)->unique();
             $table->text('partida_presupuestaria');
-            $table->unsignedTinyInteger('estado');
             $table->string('cod_unidad_ejecutora')->default('1114-0029-000-00');
-            /* $table->string('codigo_geografico', 5); */
             $table->unsignedTinyInteger('financiado');
             $table->unsignedDecimal('salario', 9, 2);
             $table->date('fecha_registro');
+            $table->unsignedTinyInteger('activo')->min(0)->max(1)->default(1);
+            $table->unsignedTinyInteger('eliminado')->min(0)->max(1)->default(0);
 
             /* fks */
             $table->unsignedSmallInteger('especialidades_id');
