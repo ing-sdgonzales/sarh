@@ -87,25 +87,49 @@
                                             <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block overflow-y-auto"
                                                 aria-labelledby="dropdownMenuButton{{ $empleado->id }}"
                                                 data-te-dropdown-menu-ref>
-                                                @can('Editar empleados')
-                                                    <li>
-                                                        <button type="button" wire:click='editar({{ $empleado->id }})'
-                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                            data-te-dropdown-item-ref>
-                                                            <div class="flex items-end space-x-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="w-5 h-5">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                                                </svg>
-                                                                <h6 class="text-sm font-normal text-neutral-700">Editar</h6>
-                                                            </div>
-                                                        </button>
-                                                    </li>
-                                                @endcan
+                                                @if ($empleado->id_candidato != null && $empleado->etapas_completas == $total_etapas)
+                                                    @can('Editar empleados')
+                                                        <li>
+                                                            <button type="button" wire:click='editar({{ $empleado->id }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                                                    </svg>
+                                                                    <h6 class="text-sm font-normal text-neutral-700">Editar
+                                                                    </h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                @endif
+                                                @if ($empleado->id_candidato == null)
+                                                    @can('Editar empleados')
+                                                        <li>
+                                                            <button type="button" wire:click='editar({{ $empleado->id }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                                                    </svg>
+                                                                    <h6 class="text-sm font-normal text-neutral-700">Editar
+                                                                    </h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                @endif
+
                                                 @if ($empleado->total_contratos == 0 && ($empleado->id_relacion_laboral == 2 || $empleado->id_relacion_laboral == 3))
-                                                    @can('Crear contrato')
+                                                    @can('Crear contratos')
                                                         <li>
                                                             <button type="button"
                                                                 wire:click='crearContrato({{ $empleado->id }})'
@@ -119,7 +143,8 @@
                                                                             d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z" />
                                                                     </svg>
 
-                                                                    <h6 class="text-sm font-normal text-neutral-700">Crear
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Crear
                                                                         contrato
                                                                     </h6>
                                                                 </div>
@@ -127,7 +152,7 @@
                                                         </li>
                                                     @endcan
                                                 @endif
-                                                @if (($empleado->estado == 1 || $empleado->estado == 0) && $empleado->id_relacion_laboral == 1)
+                                                @if ((($empleado->estado == 1 || $empleado->estado == 0) && $empleado->id_relacion_laboral == 1) || $empleado->total_contratos > 0)
                                                     @can('Ver contratos')
                                                         <li>
                                                             <a type="button"
@@ -138,7 +163,8 @@
                                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24" stroke-width="1.5"
                                                                         stroke="currentColor" class="w-5 h-5">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
                                                                             d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
                                                                     </svg>
 
@@ -149,131 +175,6 @@
                                                             </a>
                                                         </li>
                                                     @endcan
-                                                    @if ($empleado->conteo_etapas == 2)
-                                                        @can('Aprobar expedientes')
-                                                            <li>
-                                                                <button type="button"
-                                                                    wire:click='entregaExpediente({{ $empleado->id }}, {{ $empleado->id_puesto }})'
-                                                                    class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                                    data-te-dropdown-item-ref>
-                                                                    <div class="flex items-end space-x-2">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                                            fill="none" viewBox="0 0 24 24"
-                                                                            stroke-width="1.5" stroke="currentColor"
-                                                                            class="w-5 h-5">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                                d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
-                                                                        </svg>
-                                                                        <h6 class="text-sm font-normal text-neutral-700">
-                                                                            Aprobar
-                                                                            expediente
-                                                                        </h6>
-                                                                    </div>
-                                                                </button>
-                                                            </li>
-                                                        @endcan
-                                                    @endif
-                                                    @if ($empleado->conteo_etapas >= 3)
-                                                        @can('Crear pruebas técnicas')
-                                                            <li>
-                                                                <button type="button"
-                                                                    wire:click='pruebasTecnicas({{ $empleado->id }}, {{ $empleado->id_puesto }})'
-                                                                    class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                                    data-te-dropdown-item-ref>
-                                                                    <div class="flex items-end space-x-2">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                                            fill="none" viewBox="0 0 24 24"
-                                                                            stroke-width="1.5" stroke="currentColor"
-                                                                            class="w-5 h-5">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                                d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z" />
-                                                                        </svg>
-                                                                        <h6 class="text-sm font-normal text-neutral-700">
-                                                                            Pruebas
-                                                                            técnicas
-                                                                        </h6>
-                                                                    </div>
-                                                                </button>
-                                                            </li>
-                                                        @endcan
-                                                    @endif
-                                                    @if ($empleado->conteo_etapas >= 4)
-                                                        @can('Crear pruebas psicométricas')
-                                                            <li>
-                                                                <button type="button"
-                                                                    wire:click='pruebasPsicometricas({{ $empleado->id }}, {{ $empleado->id_puesto }})'
-                                                                    class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                                    data-te-dropdown-item-ref>
-                                                                    <div class="flex items-end space-x-2">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                                            fill="none" viewBox="0 0 24 24"
-                                                                            stroke-width="1.5" stroke="currentColor"
-                                                                            class="w-5 h-5">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                                d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
-                                                                        </svg>
-                                                                        <h6 class="text-sm font-normal text-neutral-700">
-                                                                            Pruebas
-                                                                            psicométricas
-                                                                        </h6>
-                                                                    </div>
-                                                                </button>
-                                                            </li>
-                                                        @endcan
-                                                    @endif
-                                                    @if ($empleado->conteo_etapas >= 5)
-                                                        @can('Crear informes de evaluación')
-                                                            <li>
-                                                                <button type="button"
-                                                                    wire:click='informeEvaluacion({{ $empleado->id }}, {{ $empleado->id_puesto }})'
-                                                                    class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                                    data-te-dropdown-item-ref>
-                                                                    <div class="flex items-end space-x-2">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                                            fill="none" viewBox="0 0 24 24"
-                                                                            stroke-width="1.5" stroke="currentColor"
-                                                                            class="w-5 h-5">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                                d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
-                                                                        </svg>
-
-                                                                        <h6 class="text-sm font-normal text-neutral-700">
-                                                                            Informe de evaluación
-                                                                        </h6>
-                                                                    </div>
-                                                                </button>
-                                                            </li>
-                                                        @endcan
-                                                    @endif
-                                                    @if ($empleado->conteo_etapas >= 6)
-                                                        @can('Asignar fechas de ingresos')
-                                                            <li>
-                                                                <button type="button"
-                                                                    wire:click='fechaIngreso({{ $empleado->id }}, {{ $empleado->id_puesto }})'
-                                                                    class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                                    data-te-dropdown-item-ref>
-                                                                    <div class="flex items-end space-x-2">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                                            fill="none" viewBox="0 0 24 24"
-                                                                            stroke-width="1.5" stroke="currentColor"
-                                                                            class="w-5 h-5">
-                                                                            <path stroke-linecap="round"
-                                                                                stroke-linejoin="round"
-                                                                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                                                                        </svg>
-
-                                                                        <h6 class="text-sm font-normal text-neutral-700">
-                                                                            Fecha de ingreso
-                                                                        </h6>
-                                                                    </div>
-                                                                </button>
-                                                            </li>
-                                                        @endcan
-                                                    @endif
                                                 @endif
                                             </ul>
                                         </div>

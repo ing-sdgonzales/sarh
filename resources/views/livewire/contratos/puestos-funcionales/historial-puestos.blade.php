@@ -1,7 +1,7 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Historial de contratos') }}
+            {{ __('Historial de puestos') }}
         </h2>
     </x-slot>
 
@@ -29,40 +29,14 @@
                             </button>
                         @endcan
 
-                        @can('Crear contratos')
-                            @if ($modal)
-                                @include('livewire.contratos.crear')
-                            @endif
-                        @endcan
-
-                        @can('Editar contratos')
-                            @if ($modal_editar)
-                                @include('livewire.contratos.editar')
-                            @endif
-                        @endcan
-
                         @can('Crear puestos en contrato')
-                            @if ($modal_crear_puestos)
+                            @if ($modal)
                                 @include('livewire.contratos.puestos-funcionales.crear')
                             @endif
-                        @endcan
-
-                    </div>
-                </div>
-                <div class="sm:col-span-4">
-                    <div class="mt-2 w-full text-right items-baseline">
-                        @can('Ver etapas')
-                            <a type="button" href="{{ route('historial_puestos', ['id_empleado' => $id_empleado]) }}">
-                                <div
-                                    class="inline-block rounded-lg bg-success px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
-                                    {{ __('Puestos') }}
-                                </div>
-                            </a>
                         @endcan
                     </div>
                 </div>
             </div>
-
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg w-auto">
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white rounded-lg overflow-hidden text-center table-auto">
@@ -70,28 +44,27 @@
                             <tr>
                                 <th class="w-1/12 py-2 px-4">No.</th>
                                 <th class="w-1/12 py-2 px-4">Contrato</th>
-                                <th class="w-1/6 py-2 px-4">Puesto Nominal</th>
-                                <th class="w-1/6 py-2 px-4">Dependencia Nominal</th>
-                                <th class="w-1/12 py-2 px-4">Salario</th>
+                                <th class="w-1/6 py-2 px-4">Puesto Funcional</th>
+                                <th class="w-1/6 py-2 px-4">Dependencia Funcional</th>
                                 <th class="w-1/6 py-2 px-4">Plazo</th>
                                 <th class="w-1/12 py-2 px-4">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($contratos as $contrato)
+                            @foreach ($registros_puestos as $registro)
                                 <tr>
                                     <td class="py-2 px-4">{{ $loop->iteration }}.</td>
-                                    <td class="py-2 px-4">{{ $contrato->numero }}</td>
-                                    <td class="py-2 px-4">{{ $contrato->codigo }} - {{ $contrato->puesto }}</td>
-                                    <td class="py-2 px-4">{{ $contrato->dependencia }}</td>
-                                    <td class="py-2 px-4">Q {{ number_format($contrato->salario, 2, '.', ',') }}</td>
-                                    <td class="py-2 px-4">{{ date('d/m/Y', strtotime($contrato->fecha_inicio)) }} -
-                                        {{ date('d/m/Y', strtotime($contrato->fecha_fin)) }}</td>
+                                    <td class="py-2 px-4">{{ $registro->numero_contrato }}</td>
+                                    <td class="py-2 px-4">{{ $registro->puesto_funcional }}</td>
+                                    <td class="py-2 px-4">{{ $registro->dependencia_funcional }}</td>
+                                    <td class="py-2 px-4">{{ date('d/m/Y', strtotime($registro->fecha_inicio)) }} -
+                                        {{ date('d/m/Y', strtotime($registro->fecha_fin)) }}
+                                    </td>
                                     <td class="py-2 px-1">
                                         <div class="relative" data-te-dropdown-position="dropstart">
                                             <button
                                                 class="flex items-center mx-auto whitespace-nowrap rounded bg-gray-400 px-2 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-gray-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-gray-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-gray-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                                                type="button" id="dropdownMenuButton{{ $contrato->id }}"
+                                                type="button" id="dropdownMenuButton{{ $registro->id }}"
                                                 data-te-dropdown-toggle-ref aria-expanded="false" data-te-ripple-init
                                                 data-te-ripple-color="light">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -104,11 +77,11 @@
                                                 </svg>
                                             </button>
                                             <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block overflow-y-auto"
-                                                aria-labelledby="dropdownMenuButton{{ $contrato->id }}"
+                                                aria-labelledby="dropdownMenuButton{{ $registro->id }}"
                                                 data-te-dropdown-menu-ref>
-                                                @can('Editar contratos')
+                                                @can('Editar registro de puestos')
                                                     <li>
-                                                        <button type="button" wire:click='editar({{ $contrato->id }})'
+                                                        <button type="button" wire:click='editar({{ $registro->id }})'
                                                             class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                                                             data-te-dropdown-item-ref>
                                                             <div class="flex items-end space-x-2">
@@ -123,28 +96,6 @@
                                                         </button>
                                                     </li>
                                                 @endcan
-                                                @can('Crear puestos en contrato')
-                                                    <li>
-                                                        <button type="button"
-                                                            wire:click='crearPuestoContrato({{ $contrato->id }})'
-                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                            data-te-dropdown-item-ref>
-                                                            <div class="flex items-end space-x-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="w-5 h-5">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-                                                                </svg>
-
-                                                                <h6 class="text-sm font-normal text-neutral-700">Agregar
-                                                                    puesto</h6>
-                                                            </div>
-                                                        </button>
-                                                    </li>
-                                                @endcan
                                             </ul>
                                         </div>
                                     </td>
@@ -154,24 +105,12 @@
                     </table>
                 </div>
                 <div class="mt-2">
-                    {{ $contratos->links('pagination::tailwind') }}
+                    {{ $registros_puestos->links('pagination::tailwind') }}
                 </div>
             </div>
         </div>
     </div>
     @push('js')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Livewire.on('showSweetAlert', data => {
-                    Swal.fire({
-                        title: '¡Ups!',
-                        text: data[0].message,
-                        icon: 'warning',
-                        confirmButtonText: 'Aceptar'
-                    });
-                });
-            });
-        </script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 Livewire.on('fechasOcupadasAlert', data => {
@@ -184,18 +123,7 @@
                 });
             });
         </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Livewire.on('errorUltimoPuesto', data => {
-                    Swal.fire({
-                        title: '¡Ups!',
-                        text: data[0].message,
-                        icon: 'error',
-                        confirmButtonText: 'Aceptar'
-                    });
-                });
-            });
-        </script>
+
         @if (session()->has('message'))
             <script>
                 Swal.fire({
@@ -216,6 +144,7 @@
                 })
             </script>
         @endif
+
         {{-- Validación de campos --}}
         @if ($errors->any())
             <script>

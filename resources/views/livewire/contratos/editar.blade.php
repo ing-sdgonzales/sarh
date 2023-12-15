@@ -160,6 +160,8 @@
                                     <div class="mt-2">
                                         <input wire:model='fecha_fin' type="date" name="fecha_fin" id="fecha_fin"
                                             min="1996-11-11"
+                                            @if (method_exists($this, 'verificarFechaFin')) wire:change='verificarFechaFin' @endif
+                                            @if (method_exists($this, 'getDisponibilidadPuesto')) wire:change='getDisponibilidadPuesto' @endif
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                     <div>
@@ -189,12 +191,29 @@
                                 </div>
 
                                 <div class="sm:col-span-6">
+                                    <label for="fianza"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Número de
+                                        fianza</label>
+                                    <div class="mt-2">
+                                        <input wire:model='fianza' type="text" name="fianza" id="fianza"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('fianza')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-6">
                                     <p class="mt-2 text-sm leading-6 text-gray-600"><strong>Número de contrato</strong>
                                     </p>
                                     <hr>
                                 </div>
 
-                                <div class="sm:col-span-2">
+                                <div class="sm:col-span-1">
                                     <label for="contrato_correlativo"
                                         class="block text-sm font-medium leading-6 text-gray-900">Correlativo</label>
                                     <div class="mt-2">
@@ -212,7 +231,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-2">
+                                <div class="sm:col-span-1">
                                     <label for="contrato_renglon"
                                         class="block text-sm font-medium leading-6 text-gray-900">Renglón</label>
                                     <div class="mt-2">
@@ -229,7 +248,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-2">
+                                <div class="sm:col-span-1">
                                     <label for="contrato_year"
                                         class="block text-sm font-medium leading-6 text-gray-900">Año</label>
                                     <div class="mt-2">
@@ -240,6 +259,235 @@
                                     <div>
                                         <span class="text-red-600 text-sm">
                                             @error('contrato_year')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="region"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Región</label>
+                                    <div class="mt-2">
+                                        <select wire:model='region' id="region" name="region" required
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <option value="">Seleccionar...</option>
+                                            @foreach ($regiones ?? [] as $region)
+                                                <option value="{{ $region->id }}">
+                                                    {{ $region->region }} - {{ $region->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('region')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="dependencia_funcional"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Dependencia
+                                        funcional</label>
+                                    <div class="mt-2">
+                                        <select wire:model='dependencia_funcional' id="dependencia_funcional"
+                                            name="dependencia_funcional" required
+                                            wire:change='getPuestosFuncionalesByDependenciaFuncional'
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <option value="">Seleccionar...</option>
+                                            @foreach ($dependencias_funcionales ?? [] as $dependencia_funcional)
+                                                <option value="{{ $dependencia_funcional->id }}">
+                                                    {{ $dependencia_funcional->dependencia }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('dependencia_funcional')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="puesto_funcional"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Puesto
+                                        funcional</label>
+                                    <div class="mt-2">
+                                        <select wire:model='puesto_funcional' id="puesto_funcional"
+                                            name="puesto_funcional"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <option value="">No aplica</option>
+                                            @foreach ($puestos_funcionales ?? [] as $puesto_funcional)
+                                                <option value="{{ $puesto_funcional->id }}">
+                                                    {{ $puesto_funcional->puesto }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('puesto_funcional')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-6">
+                                    <p class="mt-2 text-sm leading-6 text-gray-600"><strong>Acuerdo de
+                                            aprobación</strong>
+                                    </p>
+                                    <hr>
+                                </div>
+
+                                <div class="sm:col-span-1">
+                                    <label for="aprobacion_correlativo"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Correlativo</label>
+                                    <div class="mt-2">
+                                        <input wire:model='aprobacion_correlativo' type="number"
+                                            name="aprobacion_correlativo" id="aprobacion_correlativo" required
+                                            min="1" step="1"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('aprobacion_correlativo')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-1">
+                                    <label for="aprobacion_renglon"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Renglón</label>
+                                    <div class="mt-2">
+                                        <input wire:model='aprobacion_renglon' type="text"
+                                            name="aprobacion_renglon" id="aprobacion_renglon" required disabled
+                                            readonly
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('aprobacion_renglon')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-1">
+                                    <label for="aprobacion_year"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Año</label>
+                                    <div class="mt-2">
+                                        <input wire:model='aprobacion_year' type="text" name="aprobacion_year"
+                                            id="aprobacion_year" required disabled readonly
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('aprobacion_year')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="nit_autorizacion"
+                                        class="block text-sm font-medium leading-6 text-gray-900">NIT de
+                                        autorización</label>
+                                    <div class="mt-2">
+                                        <input wire:model='nit_autorizacion' type="text" name="nit_autorizacion"
+                                            id="nit_autorizacion" required
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('nit_autorizacion')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-6">
+                                    <p class="mt-2 text-sm leading-6 text-gray-600"><strong>Acuerdo de
+                                            rescisión</strong>
+                                    </p>
+                                    <hr>
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="rescision_correlativo"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Correlativo</label>
+                                    <div class="mt-2">
+                                        <input wire:model='rescision_correlativo' type="number"
+                                            name="rescision_correlativo" id="rescision_correlativo" min="1"
+                                            step="1"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('rescision_correlativo')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="rescision_renglon"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Renglón</label>
+                                    <div class="mt-2">
+                                        <input wire:model='rescision_renglon' type="text" name="rescision_renglon"
+                                            id="rescision_renglon" disabled readonly
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('rescision_renglon')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="rescision_year"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Año</label>
+                                    <div class="mt-2">
+                                        <input wire:model='rescision_year' type="text" name="rescision_year"
+                                            id="rescision_year"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('rescision_year')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-full">
+                                    <label for="observacion"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Observación</label>
+                                    <div class="mt-2">
+                                        <textarea wire:model='observacion' id="observacion" name="observación" rows="3"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                                    </div>
+                                    <p class="mt-3 text-sm leading-6 text-gray-600">Breve descripción para la
+                                        contratación.</p>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('observacion')
                                                 {{ $message }}
                                             @enderror
                                         </span>

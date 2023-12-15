@@ -10,6 +10,8 @@ class Contrato extends Model
     use HasFactory;
 
     protected $table = 'contratos';
-    protected $fillable = ['numero', 'fecha_inicio', 'fecha_fin', 'salario', 'puestos_nominales_id', 'empleados_id', 
-        'tipos_contrataciones_id'];
+    protected $fillable = [
+        'numero', 'fecha_inicio', 'fecha_fin', 'salario', 'acuerdo_aprobacion', 'acuerdo_rescicion', 'nit_autorizacion',
+        'fianza', 'vigente', 'puestos_nominales_id', 'empleados_id', 'tipos_contrataciones_id'
+    ];
 }

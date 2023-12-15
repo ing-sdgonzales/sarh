@@ -19,6 +19,11 @@ return new class extends Migration
             $table->date('fecha_inicio')->min('1996-11-11');
             $table->date('fecha_fin');
             $table->unsignedDecimal('salario', 9, 2);
+            $table->string('acuerdo_aprobacion', 15);
+            $table->string('acuerdo_rescision', 15)->unique()->nullable();
+            $table->string('nit_autorizacion', 25);
+            $table->string('fianza', 50)->nullable();
+            $table->unsignedTinyInteger('vigente')->min(0)->max(1);
 
             /* fks */
             $table->unsignedInteger('puestos_nominales_id');
@@ -29,7 +34,7 @@ return new class extends Migration
             $table->foreign('puestos_nominales_id')->references('id')->on('puestos_nominales')->onUpdate('cascade');
             $table->foreign('empleados_id')->references('id')->on('empleados')->onUpdate('cascade');
             $table->foreign('tipos_contrataciones_id')->references('id')->on('tipos_contrataciones')->onUpdate('cascade');
-            
+
             $table->timestamps();
         });
     }

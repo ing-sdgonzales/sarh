@@ -15,6 +15,7 @@ use App\Models\Dpi;
 use App\Models\Empleado;
 use App\Models\EstadoCivil;
 use App\Models\EstudioActualEmpleado;
+use App\Models\EtapaProceso;
 use App\Models\Etnia;
 use App\Models\FamiliarConred;
 use App\Models\Genero;
@@ -62,7 +63,7 @@ class Empleados extends Component
     public $generos, $etnias, $grupos_sanguineos, $dependencias_nominales, $dependencias_funcionales, $departamentos,
         $municipios, $municipios_emision, $municipios_residencia, $nacionalidades, $tipos_viviendas, $estados_civiles,
         $tipos_licencias, $tipos_vehiculos, $tipos_deudas, $puestos_nominales, $puestos_funcionales, $tipos_servicios,
-        $tipos_contrataciones, $regiones, $relaciones_laborales;
+        $tipos_contrataciones, $regiones, $relaciones_laborales, $total_etapas;
 
     /* Variables de formulario */
     public $empleado, $id_candidato, $id_empleado, $codigo, $dpi, $nit, $cuenta_banco, $igss, $imagen, $nombres, $apellidos,
@@ -117,7 +118,8 @@ class Empleados extends Component
     public $modal_crear_contrato = false;
     public $puesto_nominal, $puesto_funcional, $dependencia_nominal, $dependencia_funcional, $region, $fecha_inicio,
         $fecha_fin, $observacion, $salario, $tipo_servicio, $tipo_contratacion, $contrato_correlativo, $contrato_renglon,
-        $contrato_year, $numero_contrato;
+        $contrato_year, $numero_contrato, $aprobacion_correlativo, $aprobacion_renglon, $aprobacion_year, $acuerdo_aprobacion,
+        $nit_autorizacion, $fianza, $rescision_form = false;
 
     public function render()
     {
@@ -137,6 +139,7 @@ class Empleados extends Component
         $this->dependencias_funcionales = DependenciaFuncional::select('id', 'dependencia')->get();
         $this->regiones = Region::select('id', 'region', 'nombre')->get();
         $this->relaciones_laborales = RelacionLaboral::select('id', 'relacion_laboral')->get();
+        $this->total_etapas = count(EtapaProceso::all());
 
         $empleados = Empleado::select(
             'empleados.id as id',
@@ -154,8 +157,17 @@ class Empleados extends Component
             AND registros_academicos_id != 10
             ORDER BY registros_academicos_id DESC LIMIT 1) as profesion'),
             DB::raw('(SELECT COUNT(*) FROM contratos 
-            WHERE empleados_id = empleados.id) as total_contratos')
-        )->join('dpis', 'empleados.id', '=', 'dpis.empleados_id');
+            WHERE empleados_id = empleados.id) as total_contratos'),
+            DB::raw('COUNT(etapas_aplicaciones.id) as etapas_completas')
+        )
+            ->join('dpis', 'empleados.id', '=', 'dpis.empleados_id')
+            ->leftjoin('candidatos', 'empleados.candidatos_id', '=', 'candidatos.id')
+            ->leftjoin('aplicaciones_candidatos', 'candidatos.id', '=', 'aplicaciones_candidatos.candidatos_id')
+            ->leftjoin('etapas_aplicaciones', function ($join) {
+                $join->on('aplicaciones_candidatos.id', '=', 'etapas_aplicaciones.aplicaciones_candidatos_id')
+                    ->whereNotNull('etapas_aplicaciones.fecha_fin');
+            })
+            ->groupBy('empleados.id');
         $empleados = $empleados->paginate(5);
         activity()
             ->causedBy(auth()->user())
@@ -770,9 +782,9 @@ class Empleados extends Component
             ->join('municipios as mun_emision', 'dpis.municipios_id', '=', 'mun_emision.id')
             ->join('departamentos as dep_emision', 'mun_emision.departamentos_id', '=', 'dep_emision.id')
             ->leftjoin('vehiculos', 'empleados.id', '=', 'vehiculos.empleados_id')
-            ->join('tipos_vehiculos', 'vehiculos.tipos_vehiculos_id', '=', 'tipos_vehiculos.id')
+            ->leftjoin('tipos_vehiculos', 'vehiculos.tipos_vehiculos_id', '=', 'tipos_vehiculos.id')
             ->leftjoin('licencias_conducir', 'empleados.id', '=', 'licencias_conducir.empleados_id')
-            ->join('tipos_licencias', 'licencias_conducir.tipos_licencias_id', '=', 'tipos_licencias.id')
+            ->leftjoin('tipos_licencias', 'licencias_conducir.tipos_licencias_id', '=', 'tipos_licencias.id')
             ->join('telefonos_empleados', 'empleados.id', '=', 'telefonos_empleados.empleados_id')
             ->leftjoin('familiares_conred', 'empleados.id', '=', 'familiares_conred.empleados_id')
             ->leftjoin('conocidos_conred', 'empleados.id', '=', 'conocidos_conred.empleados_id')
@@ -783,7 +795,7 @@ class Empleados extends Component
             ->join('etnias', 'empleados.etnias_id', '=', 'etnias.id')
             ->join('tipos_viviendas', 'empleados.tipos_viviendas_id', '=', 'tipos_viviendas.id')
             ->leftjoin('deudas', 'empleados.id', '=', 'deudas.empleados_id')
-            ->join('tipos_deudas', 'deudas.tipos_deudas_id', '=', 'tipos_deudas.id')
+            ->leftjoin('tipos_deudas', 'deudas.tipos_deudas_id', '=', 'tipos_deudas.id')
             ->join('historias_clinicas', 'empleados.id', '=', 'historias_clinicas.empleados_id')
             ->join('grupos_sanguineos', 'empleados.grupos_sanguineos_id', '=', 'grupos_sanguineos.id')
             ->join('contactos_emergencias', 'empleados.id', '=', 'contactos_emergencias.empleados_id')
@@ -861,7 +873,7 @@ class Empleados extends Component
                     $this->titulo_maestria_postgrado = $es->titulo;
                 } elseif ($es->registros_academicos_id == 10) {
                     $this->establecimiento_otra_especialidad = $es->establecimiento;
-                    $this->titulo_otra_especialidad;
+                    $this->titulo_otra_especialidad = $es->titulo;
                 }
             }
             $this->estudia_actualmente = $empleado->estudia_actualmente;
@@ -916,6 +928,11 @@ class Empleados extends Component
             'fecha_inicio' => 'required|date|after_or_equal:1996-11-11',
             'fecha_fin' => 'required|date|after:fecha_inicio',
             'salario' => 'required|decimal:2',
+            'fianza' => 'nullable',
+            'aprobacion_correlativo' => ['required', 'filled', 'string', 'regex:/^(00\d|[0-9]{3})$/'],
+            'aprobacion_renglon' => 'required|filled',
+            'aprobacion_year' => ['required', 'regex:/^(19[9][6-9]|[2-9][0-9]{3})$/'],
+            'nit_autorizacion' => 'required|filled',
             'contrato_correlativo' => 'required|integer|min:1|regex:/^[1-9]\d*$/',
             'contrato_renglon' => 'required|filled',
             'contrato_year' => ['required', 'regex:/^(19[9][6-9]|[2-9][0-9]{3})$/'],
@@ -926,12 +943,17 @@ class Empleados extends Component
         ]);
         try {
             $this->numero_contrato = $validated['contrato_correlativo'] . '-' . $validated['contrato_renglon'] . '-' . $validated['contrato_year'];
+            $this->acuerdo_aprobacion = $validated['aprobacion_correlativo'] . '-' . $validated['aprobacion_renglon'] . '-' . $validated['aprobacion_year'];
             DB::transaction(function () use ($validated) {
                 $contrato = Contrato::create([
                     'numero' => $this->numero_contrato,
                     'fecha_inicio' => $validated['fecha_inicio'],
                     'fecha_fin' => $validated['fecha_fin'],
                     'salario' => $validated['salario'],
+                    'acuerdo_aprobacion' => $this->acuerdo_aprobacion,
+                    'nit_autorizacion' => $validated['nit_autorizacion'],
+                    'fianza' => $validated['fianza'],
+                    'vigente' => 1,
                     'tipos_contrataciones_id' => $validated['tipo_contratacion'],
                     'puestos_nominales_id' => $validated['puesto_nominal'],
                     'empleados_id' => $this->id_empleado
@@ -1052,6 +1074,7 @@ class Empleados extends Component
                 ->first();
             $this->salario = $salario->salario;
             $this->contrato_renglon = $salario->renglon;
+            $this->aprobacion_renglon = $salario->renglon;
         } else {
             $this->salario = '';
         }
@@ -1088,8 +1111,10 @@ class Empleados extends Component
     {
         if ($this->fecha_inicio) {
             $this->contrato_year = date('Y', strtotime($this->fecha_inicio));
+            $this->aprobacion_year = date('Y', strtotime($this->fecha_inicio));
         } else {
             $this->contrato_year = '';
+            $this->aprobacion_year = '';
         }
     }
 
@@ -1139,10 +1164,107 @@ class Empleados extends Component
 
     public function limpiarModal()
     {
+        $this->imagen = '';
+        $this->imagen_actual = '';
+        $this->codigo = '';
+        $this->nombres = '';
+        $this->apellidos = '';
+        $this->pretension_salarial = '';
+        $this->departamento = '';
+        $this->municipio = '';
+        $this->relacion_laboral = '';
+        $this->genero = '';
+        $this->fecha_nacimiento = '';
+        $this->cuenta_banco = '';
+        $this->nacionalidad = '';
+        $this->estado_civil = '';
+        $this->direccion = '';
+        $this->estado_familiar = '';
+        $this->departamento_residencia = '';
+        $this->municipio_residencia = '';
+        $this->dpi = '';
+        $this->departamento_emision = '';
+        $this->municipio_emision = '';
+        $this->igss = '';
+        $this->nit = '';
+        $this->licencia = '';
+        $this->tipo_licencia = '';
+        $this->tipo_vehiculo = '';
+        $this->placa = '';
+        $this->telefono_casa = '';
+        $this->telefono_movil = '';
+        $this->email = '';
+        $this->familiar_conred = '';
+        $this->nombre_familiar_conred = '';
+        $this->cargo_familiar_conred = '';
+        $this->conocido_conred = '';
+        $this->nombre_conocido_conred = '';
+        $this->cargo_conocido_conred = '';
+        $this->telefono_padre = '';
+        $this->nombre_padre = '';
+        $this->ocupacion_padre = '';
+        $this->telefono_madre = '';
+        $this->nombre_madre = '';
+        $this->ocupacion_madre = '';
+        $this->telefono_conviviente = '';
+        $this->nombre_conviviente = '';
+        $this->ocupacion_conviviente = '';
+        $this->hijos = [];
+        $this->establecimiento_primaria = '';
+        $this->titulo_primaria = '';
+        $this->establecimiento_secundaria = '';
+        $this->titulo_secundaria = '';
+        $this->establecimiento_diversificado = '';
+        $this->titulo_diversificado = '';
+        $this->establecimiento_universitario = '';
+        $this->titulo_universitario = '';
+        $this->establecimiento_maestria_postgrado = '';
+        $this->titulo_maestria_postgrado = '';
+        $this->establecimiento_otra_especialidad = '';
+        $this->titulo_otra_especialidad = '';
+        $this->estudia_actualmente = '';
+        $this->estudio_actual = '';
+        $this->horario_estudio_actual = '';
+        $this->establecimiento_estudio_actual = '';
+        $this->etnia = '';
+        $this->otro_etnia = '';
+        $this->idiomas = [];
+        $this->programas = [];
+        $this->historiales_laborales = [];
+        $this->referencias_personales = [];
+        $this->referencias_laborales = [];
+        $this->tipo_vivienda = '';
+        $this->pago_vivienda = '';
+        $this->cantidad_personas_dependientes = '';
+        $this->personas_dependientes = [];
+        $this->ingresos_adicionales = '';
+        $this->fuente_ingresos_adicionales = '';
+        $this->personas_aportan_ingresos = '';
+        $this->monto_ingreso_total = '';
+        $this->posee_deudas = '';
+        $this->tipo_deuda = '';
+        $this->monto_deuda = '';
+        $this->trabajo_conred = '';
+        $this->trabajo_estado = '';
+        $this->jubilado_estado = '';
+        $this->institucion_jubilacion = '';
+        $this->padecimiento_salud = '';
+        $this->tipo_enfermedad = '';
+        $this->intervencion_quirurgica = '';
+        $this->tipo_intervencion = '';
+        $this->sufrido_accidente = '';
+        $this->tipo_accidente = '';
+        $this->alergia_medicamento = '';
+        $this->tipo_medicamento = '';
+        $this->tipo_sangre = '';
+        $this->nombre_contacto_emergencia = '';
+        $this->telefono_contacto_emergencia = '';
+        $this->direccion_contacto_emergencia = '';
     }
 
     public function cerrarModal()
     {
+        $this->limpiarModal();
         $this->modal = false;
     }
 

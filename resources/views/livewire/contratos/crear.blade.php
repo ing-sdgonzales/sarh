@@ -160,6 +160,7 @@
                                     <div class="mt-2">
                                         <input wire:model='fecha_fin' type="date" name="fecha_fin" id="fecha_fin"
                                             min="1996-11-11"
+                                            @if (method_exists($this, 'getDisponibilidadPuesto')) wire:change='getDisponibilidadPuesto' @endif
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                     <div>
@@ -182,6 +183,23 @@
                                     <div>
                                         <span class="text-red-600 text-sm">
                                             @error('salario')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-6">
+                                    <label for="fianza"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Número de
+                                        fianza</label>
+                                    <div class="mt-2">
+                                        <input wire:model='fianza' type="text" name="fianza" id="fianza"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('fianza')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -319,6 +337,145 @@
                                     </div>
                                 </div>
 
+                                <div class="sm:col-span-6">
+                                    <p class="mt-2 text-sm leading-6 text-gray-600"><strong>Acuerdo de
+                                            aprobación</strong>
+                                    </p>
+                                    <hr>
+                                </div>
+
+                                <div class="sm:col-span-1">
+                                    <label for="aprobacion_correlativo"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Correlativo</label>
+                                    <div class="mt-2">
+                                        <input wire:model='aprobacion_correlativo' type="number"
+                                            name="aprobacion_correlativo" id="aprobacion_correlativo" required
+                                            min="1" step="1"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('aprobacion_correlativo')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-1">
+                                    <label for="aprobacion_renglon"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Renglón</label>
+                                    <div class="mt-2">
+                                        <input wire:model='aprobacion_renglon' type="text"
+                                            name="aprobacion_renglon" id="aprobacion_renglon" required disabled
+                                            readonly
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('aprobacion_renglon')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-1">
+                                    <label for="aprobacion_year"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Año</label>
+                                    <div class="mt-2">
+                                        <input wire:model='aprobacion_year' type="text" name="aprobacion_year"
+                                            id="aprobacion_year" required disabled readonly
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('aprobacion_year')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="nit_autorizacion"
+                                        class="block text-sm font-medium leading-6 text-gray-900">NIT de
+                                        autorización</label>
+                                    <div class="mt-2">
+                                        <input wire:model='nit_autorizacion' type="text" name="nit_autorizacion"
+                                            id="nit_autorizacion" required
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('nit_autorizacion')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                @if ($rescision_form)
+                                    <div class="sm:col-span-6">
+                                        <p class="mt-2 text-sm leading-6 text-gray-600"><strong>Acuerdo de
+                                                rescisión</strong>
+                                        </p>
+                                        <hr>
+                                    </div>
+
+                                    <div class="sm:col-span-2">
+                                        <label for="rescision_correlativo"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Correlativo</label>
+                                        <div class="mt-2">
+                                            <input wire:model='rescision_correlativo' type="number"
+                                                name="rescision_correlativo" id="rescision_correlativo"
+                                                min="1" step="1"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('rescision_correlativo')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-2">
+                                        <label for="rescision_renglon"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Renglón</label>
+                                        <div class="mt-2">
+                                            <input wire:model='rescision_renglon' type="text"
+                                                name="rescision_renglon" id="rescision_renglon" disabled readonly
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('rescision_renglon')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-2">
+                                        <label for="rescision_year"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Año</label>
+                                        <div class="mt-2">
+                                            <input wire:model='rescision_year' type="text" name="rescision_year"
+                                                id="rescision_year"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('rescision_year')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="col-span-full">
                                     <label for="observacion"
                                         class="block text-sm font-medium leading-6 text-gray-900">Observación</label>
@@ -337,21 +494,24 @@
                                     </div>
                                 </div>
 
-                                <div class="col-span-full">
-                                    <div class="mt-8 mb-3 inline-flex w-full items-center rounded-lg bg-warning-300 px-6 py-5 text-base text-warning-800"
-                                        role="alert">
-                                        <span class="mr-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="w-5 h-5">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                                            </svg>
-                                        </span>
-                                        <p><b>Importante: </b>Al realizar este registro, el estado del puesto nominal
-                                            cambiará a ocupado. Este registro no se puede eliminar.</p>
+                                @if ($rescision_form == false)
+                                    <div class="col-span-full">
+                                        <div class="mt-8 mb-3 inline-flex w-full items-center rounded-lg bg-warning-300 px-6 py-5 text-base text-warning-800"
+                                            role="alert">
+                                            <span class="mr-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-5 h-5">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                                                </svg>
+                                            </span>
+                                            <p><b>Importante: </b>Al realizar este registro, el estado del puesto
+                                                nominal
+                                                cambiará a ocupado. Este registro no se puede eliminar.</p>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

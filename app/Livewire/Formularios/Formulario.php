@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Formularios;
 
+use App\Models\AplicacionCandidato;
 use App\Models\ConocidoConred;
 use App\Models\ContactoEmergencia;
 use App\Models\Conviviente;
@@ -10,6 +11,7 @@ use App\Models\Direccion;
 use App\Models\Dpi;
 use App\Models\Empleado;
 use App\Models\EstudioActualEmpleado;
+use App\Models\EtapaAplicacion;
 use App\Models\FamiliarConred;
 use App\Models\HijoEmpleado;
 use App\Models\HistoriaClinica;
@@ -24,6 +26,7 @@ use App\Models\ReferenciaLaboral;
 use App\Models\ReferenciaPersonal;
 use App\Models\RegistroAcademicoEmpleado;
 use App\Models\RequisitoCandidato;
+use App\Models\RequisitoPuesto;
 use App\Models\TelefonoEmpleado;
 use App\Models\Vehiculo;
 use App\Notifications\NotificacionCargaRequisitos;
@@ -585,6 +588,35 @@ class Formulario extends Component
                         'ubicacion' => ''
                     ]);
 
+                    $reqs_puesto = RequisitoPuesto::select('requisitos_id')->where('puestos_nominales_id', $this->id_puesto)
+                        ->orderBy('requisitos_id', 'asc')->pluck('requisitos_id')->toArray();
+
+                    $reqs_candidato = RequisitoCandidato::select('requisitos_id')->where('candidatos_id', $this->id_candidato)
+                        ->orderBy('requisitos_id', 'asc')
+                        ->pluck('requisitos_id')
+                        ->toArray();
+
+                    $dif_reqs = array_diff($reqs_puesto, $reqs_candidato);
+                    if (count($dif_reqs) == 0) {
+                        $aplicacion = AplicacionCandidato::select('id')->where('candidatos_id', $this->id_candidato)
+                            ->where('puestos_nominales_id', $this->id_puesto)
+                            ->first();
+                        $id_aplicacion = $aplicacion->id;
+                        DB::transaction(function () use ($id_aplicacion) {
+                            EtapaAplicacion::where('etapas_procesos_id', 1)
+                                ->where('aplicaciones_candidatos_id', $id_aplicacion)
+                                ->update([
+                                    'fecha_fin' => now()
+                                ]);
+
+                            EtapaAplicacion::create([
+                                'fecha_inicio' => now(),
+                                'etapas_procesos_id' => 2,
+                                'aplicaciones_candidatos_id' => $id_aplicacion
+                            ]);
+                        });
+                    }
+
                     $nuevo_requisito = RequisitoCandidato::where('candidatos_id', $this->id_candidato)
                         ->where('puestos_nominales_id', $this->id_puesto)
                         ->where('requisitos_id', $this->id_requisito)
@@ -728,7 +760,7 @@ class Formulario extends Component
             ->leftjoin('vehiculos', 'empleados.id', '=', 'vehiculos.empleados_id')
             ->join('tipos_vehiculos', 'vehiculos.tipos_vehiculos_id', '=', 'tipos_vehiculos.id')
             ->leftjoin('licencias_conducir', 'empleados.id', '=', 'licencias_conducir.empleados_id')
-            ->join('tipos_licencias', 'licencias_conducir.tipos_licencias_id', '=', 'tipos_licencias.id')
+            ->leftjoin('tipos_licencias', 'licencias_conducir.tipos_licencias_id', '=', 'tipos_licencias.id')
             ->join('telefonos_empleados', 'empleados.id', '=', 'telefonos_empleados.empleados_id')
             ->leftjoin('familiares_conred', 'empleados.id', '=', 'familiares_conred.empleados_id')
             ->leftjoin('conocidos_conred', 'empleados.id', '=', 'conocidos_conred.empleados_id')
@@ -739,7 +771,7 @@ class Formulario extends Component
             ->join('etnias', 'empleados.etnias_id', '=', 'etnias.id')
             ->join('tipos_viviendas', 'empleados.tipos_viviendas_id', '=', 'tipos_viviendas.id')
             ->leftjoin('deudas', 'empleados.id', '=', 'deudas.empleados_id')
-            ->join('tipos_deudas', 'deudas.tipos_deudas_id', '=', 'tipos_deudas.id')
+            ->leftjoin('tipos_deudas', 'deudas.tipos_deudas_id', '=', 'tipos_deudas.id')
             ->join('historias_clinicas', 'empleados.id', '=', 'historias_clinicas.empleados_id')
             ->join('grupos_sanguineos', 'empleados.grupos_sanguineos_id', '=', 'grupos_sanguineos.id')
             ->join('contactos_emergencias', 'empleados.id', '=', 'contactos_emergencias.empleados_id')
