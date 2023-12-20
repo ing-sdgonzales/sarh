@@ -12,6 +12,7 @@ use App\Livewire\Formularios\Formulario;
 use App\Livewire\Formularios\Formulario029;
 use App\Livewire\ListarRequisitos;
 use App\Livewire\Permisos\Permiso;
+use App\Livewire\Puesto\Catalogo\CatalogoPuestos;
 use App\Livewire\Puesto\Puestos;
 use App\Livewire\Requisitos\Requisitos;
 use App\Livewire\Roles\Rol;
@@ -61,12 +62,13 @@ Route::middleware([
     Route::get('/permisos', Permiso::class)->middleware('can:Ver permisos')->name('permisos');
 
     Route::get('/puestos', Puestos::class)->middleware('can:Ver puestos')->name('puestos');
+    Route::get('/catalogo_puestos', CatalogoPuestos::class)->middleware('can:Ver catálogo de puestos')->name('catalogo_puestos');
     Route::get('/candidatos', Candidatos::class)->middleware('can:Ver candidatos')->name('candidatos');
     Route::get('/empleados', Empleados::class)->middleware('can:Ver empleados')->name('empleados');
     Route::get('/requisitos', Requisitos::class)->middleware('can:Ver requisitos')->name('requisitos');
     Route::get('/expediente_candidato/{candidato_id}', Expediente::class)->middleware('can:Ver expediente')->name('expedientes');
     Route::get('/contratos/{id_empleado}', Contratos::class)->middleware(['can:Ver contratos', 'verificar.estado.empleado'])->name('contratos');
-    Route::get('/historial_puestos/{id_empleado}', HistorialPuestos::class)->middleware('can:Ver historial puestos')->name('historial_puestos');
+    Route::get('/historial_puestos/{id_empleado}', HistorialPuestos::class)->middleware('can:Ver historial de puestos')->name('historial_puestos');
     Route::get('/ver_formulario/{id_candidato}/{id_requisito}', VerFormulario::class)->middleware('can:Ver formulario')->name('formulario');
     Route::get('/proceso_candidato/{id_candidato}', EtapasProcesos::class)->middleware('can:Ver etapas')->name('proceso');
     Route::get('/bitacora_usuarios', BitacoraUsuario::class)->middleware('can:Ver bitácora')->name('bitacora');

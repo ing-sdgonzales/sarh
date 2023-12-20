@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CentroCostoSeeder::class);
         $this->call(RegionSeeder::class);
         $this->call(DepartamentoSeeder::class);
+        $this->call(MunicipioSeeder::class);
         $this->call(EtniaSeeder::class);
         $this->call(GrupoSanguineoSeeder::class);
         $this->call(GeneroSeeder::class);
@@ -44,8 +45,9 @@ class DatabaseSeeder extends Seeder
         $this->call(TipoDeudaSeeder::class);
         $this->call(TipoViviendaSeeder::class);
         $this->call(EtapaProcesoSeeder::class);
-        /* $this->call(BonoRenglonSeeder::class); */
-        /* $this->call(CatalogoPuestoSeeder::class); */
+        $this->call(RenglonSeeder::class);
+        $this->call(BonoRenglonSeeder::class);
+        $this->call(CatalogoPuestoSeeder::class);
 
         \App\Models\User::factory()->create([
             'name' => 'Sergio Daniel Gonzáles López',

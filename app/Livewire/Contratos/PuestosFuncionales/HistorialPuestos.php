@@ -127,7 +127,7 @@ class HistorialPuestos extends Component
         $puesto = RegistroPuesto::findOrFail($id_puesto);
         if ($puesto) {
             $this->contrato = $puesto->contratos_id;
-            $this->getDisponibilidadPuesto();
+            $this->getDisponibilidadFechas();
             $this->fecha_inicio = $puesto->fecha_inicio;
             $this->fecha_fin = $puesto->fecha_fin;
             $this->dependencia_funcional = $puesto->dependencias_funcionales_id;

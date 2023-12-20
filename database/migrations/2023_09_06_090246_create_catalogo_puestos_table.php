@@ -17,6 +17,7 @@ return new class extends Migration
             $table->tinyIncrements('id');
             $table->string('codigo', 10);
             $table->text('puesto');
+            $table->unsignedSmallInteger('cantidad')->min(0);
 
             $table->timestamps();
         });

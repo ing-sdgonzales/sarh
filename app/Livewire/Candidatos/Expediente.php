@@ -29,6 +29,8 @@ class Expediente extends Component
     public $total_requisitos;
     public $total_requisitos_cargados = 0;
     public $total_requisitos_aprobados = 0;
+    public $requisitos_no_validos;
+    public $notificar = false;
 
     public function render()
     {
@@ -41,6 +43,7 @@ class Expediente extends Component
             )
             ->where('aplicaciones_candidatos.candidatos_id', '=', $this->id_candidato)
             ->get();
+
         $this->candidato = DB::table('candidatos')
             ->select(
                 'imagen',
@@ -48,6 +51,17 @@ class Expediente extends Component
             )
             ->where('id', '=', $this->id_candidato)
             ->first();
+
+        $this->requisitos_no_validos = RequisitoCandidato::select('id')
+            ->where('valido', 0)
+            ->where('revisado', 1)
+            ->get();
+        if (count($this->requisitos_no_validos) > 0) {
+            $this->notificar = true;
+        } else {
+            $this->notificar = false;
+        }
+
         $this->total_requisitos_cargados = DB::table('requisitos_candidatos')
             ->select('id')
             ->where('candidatos_id', '=', $this->id_candidato)
@@ -58,6 +72,7 @@ class Expediente extends Component
             ->where('candidatos_id', '=', $this->id_candidato)
             ->where('valido', '=', 1)
             ->count();
+
         $this->puesto = $this->puestos[0]->id;
         $this->getRequisitosByPuesto();
         activity()

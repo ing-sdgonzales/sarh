@@ -202,7 +202,6 @@ class ListarRequisitos extends Component
             session()->flash('error', $errorMessages);
             return redirect()->route('presentar_requisitos', ['id_candidato' => $this->id_candidato]);
         }
-        $this->resetPage();
     }
 
     public function descargar($id_requisito)

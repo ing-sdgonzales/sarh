@@ -64,7 +64,6 @@ class Usuarios extends Component
             $this->cerrarModal();
             return redirect()->route('usuarios');
         }
-        $this->resetPage();
     }
 
     public function editar($id_user)

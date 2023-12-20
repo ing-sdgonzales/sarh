@@ -10,8 +10,8 @@
                 <div class="sm:col-span-2">
                     <div class="mt-2">
                         <select wire:model='usuario' id="usuario" name="usuario" wire:change='getActividadesByUsuario'
-                            required
-                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            required style="height: 42px;"
+                            class="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                             <option value="">Seleccionar usuario...</option>
                             @foreach ($usuarios as $usr)
                                 <option value="{{ $usr->id }}">
@@ -23,29 +23,32 @@
                 </div>
             </div>
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                <table class="min-w-full bg-white rounded-lg overflow-hidden text-center">
-                    <thead class="bg-gray-100 text-center">
-                        <tr>
-                            <th class="w-1/12 py-2 px-4">No.</th>
-                            <th class="w-1/12 py-2 px-4">Usuario</th>
-                            <th class="w-1/4 py-2 px-4">Acciones</th>
-                            <th class="w-1/12 py-2 px-4">Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($actividades as $actividad)
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg overflow-hidden text-center">
+                        <thead class="bg-gray-100 text-center">
                             <tr>
-                                <td class="py-2 px-4">{{ $loop->iteration }}.</td>
-                                <td class="py-2 px-4">{{ $actividad->name }}</td>
-                                <td class="py-2 px-4 text-justify">{{ $actividad->description }}</td>
-                                <td class="py-2 px-4">{{ date('d-m-Y H:i:s', strtotime($actividad->updated_at)) }}</td>
+                                <th class="w-1/12 py-2 px-4">No.</th>
+                                <th class="w-1/12 py-2 px-4">Usuario</th>
+                                <th class="w-1/4 py-2 px-4">Acciones</th>
+                                <th class="w-1/12 py-2 px-4">Fecha</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($actividades as $actividad)
+                                <tr>
+                                    <td class="py-2 px-4">{{ $loop->iteration }}.</td>
+                                    <td class="py-2 px-4">{{ $actividad->name }}</td>
+                                    <td class="py-2 px-4 text-justify">{{ $actividad->description }}</td>
+                                    <td class="py-2 px-4">{{ date('d-m-Y H:i:s', strtotime($actividad->updated_at)) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="mt-2 w-full">
-                {{ $actividades->onEachSide(1)->links('pagination::tailwind') }}
+                {{ $actividades->links() }}
             </div>
         </div>
     </div>

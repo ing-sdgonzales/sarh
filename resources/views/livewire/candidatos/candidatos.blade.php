@@ -320,7 +320,7 @@
                     </table>
                 </div>
                 <div class="mt-2">
-                    {{ $candidatos->links('pagination::tailwind') }}
+                    {{ $candidatos->links() }}
                 </div>
             </div>
         </div>

@@ -162,7 +162,6 @@ class Puestos extends Component
             $this->limpiarModal();
             return redirect()->route('puestos');
         }
-        $this->resetPage();
     }
 
     public function editar($id)

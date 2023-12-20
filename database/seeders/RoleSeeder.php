@@ -62,7 +62,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Crear informes de evaluación'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Asignar fechas de ingresos'])->syncRoles([$administrador, $operativo]);
 
-        /* Permisos para ver la ruta de /empleados */
+        /* Permiso para ver la ruta de /empleados */
         Permission::create(['name' => 'Ver empleados'])->syncRoles([$administrador, $operativo]);
         /* Permisos CRUD para la vista /empleados */
         Permission::create(['name' => 'Crear empleados'])->syncRoles([$administrador, $operativo]);
@@ -73,7 +73,15 @@ class RoleSeeder extends Seeder
         /* Permiso para ver la ruta de /contratos */
         Permission::create(['name' => 'Editar contratos'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Crear puestos en contrato'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Ver historial de puestos'])->syncRoles([$administrador, $operativo]);
 
+        Permission::create(['name' => 'Editar puestos en contrato'])->syncRoles([$administrador, $operativo]);
+
+        /* Permiso para ver la ruta de /catalogo_puestos */
+        Permission::create(['name' => 'Ver catálogo de puestos'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /catalogo_puestos */
+        Permission::create(['name' => 'Crear puestos en catálogo'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Editar catálogo de puestos'])->syncRoles([$administrador, $operativo]);
 
         /* Permisos CRUD para la vista /expediente_candidato */
         Permission::create(['name' => 'Verificar requisitos'])->syncRoles([$administrador, $operativo]);

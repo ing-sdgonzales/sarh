@@ -56,7 +56,6 @@ class Permiso extends Component
             $this->cerrarModal();
             return redirect()->route('permisos');
         }
-        $this->resetPage();
     }
 
     public function editar($id)
@@ -82,10 +81,11 @@ class Permiso extends Component
     {
         $this->modal = false;
         $this->limpiarModal();
-        return redirect()->route('permisos');
     }
 
     public function limpiarModal()
     {
+        $this->permiso = '';
+        $this->id = '';
     }
 }

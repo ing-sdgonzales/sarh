@@ -185,7 +185,7 @@
                     </table>
                 </div>
                 <div class="mt-2">
-                    {{ $empleados->links('pagination::tailwind') }}
+                    {{ $empleados->links() }}
                 </div>
             </div>
         </div>

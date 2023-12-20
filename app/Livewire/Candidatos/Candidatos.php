@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Livewire\Component;
-use Symfony\Contracts\Service\Attribute\Required;
 
 class Candidatos extends Component
 {

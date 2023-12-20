@@ -19,7 +19,7 @@
                 </div>
                 <div class="sm:col-span-2">
                     <div class="mt-2">
-                        @can('Crear contratos')
+                        @can('Crear puestos en contrato')
                             <button type="button" wire:click='crear()'
                                 class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -29,11 +29,11 @@
                             </button>
                         @endcan
 
-                        @can('Crear puestos en contrato')
+                        @canany(['Crear puestos en contrato', 'Editar puestos en contrato'])
                             @if ($modal)
                                 @include('livewire.contratos.puestos-funcionales.crear')
                             @endif
-                        @endcan
+                        @endcanany
                     </div>
                 </div>
             </div>
@@ -105,7 +105,7 @@
                     </table>
                 </div>
                 <div class="mt-2">
-                    {{ $registros_puestos->links('pagination::tailwind') }}
+                    {{ $registros_puestos->links() }}
                 </div>
             </div>
         </div>
