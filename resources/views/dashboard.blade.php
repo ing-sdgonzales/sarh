@@ -8,8 +8,57 @@
     <div class="py-12 bg-gray-200 h-full">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                <x-welcome />
+                <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
+                    <div class="sm:col-span-3">
+                        <span
+                            class="block text-sm font-medium leading-6 text-gray-600 text-center">Cantidad de puestos por
+                            renglón</span>
+                        <div class="chart-container">
+                            <canvas id="myChart" name="myChart" class="p-4 mb-2"></canvas>
+                        </div>
+                    </div>
+                </div>
+                {{-- <x-welcome /> --}}
             </div>
         </div>
     </div>
+    @push('js')
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            var puestos_renglon = @json($puestos_renglon)
+
+            // Configurar el gráfico con los datos obtenidos de la base de datos
+            var labels = Object.keys(puestos_renglon);
+            var values = Object.values(puestos_renglon);
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie', // Cambiar el tipo de gráfico a pie
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Cantidad de puestos por renglón',
+                        data: values, // Ejemplo de datos
+                        backgroundColor: [
+                            'rgba(0, 123, 255, 0.5)', // Azul
+                            'rgba(108, 117, 125, 0.5)', // Gris
+                            'rgba(40, 167, 69, 0.5)', // Verde
+                            'rgba(220, 53, 69, 0.5)', // Rojo
+                        ],
+                        hoverOffset: 25,
+                        borderColor: [
+                            'rgba(0, 123, 255, 1)',
+                            'rgba(108, 117, 125, 1)',
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(220, 53, 69, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>

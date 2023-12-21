@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BuscarAplicacionController;
+use App\Http\Controllers\DashboardController;
 use App\Livewire\Candidatos\Candidatos;
 use App\Livewire\Candidatos\EtapasProcesos;
 use App\Livewire\Candidatos\Expediente;
@@ -73,7 +74,5 @@ Route::middleware([
     Route::get('/proceso_candidato/{id_candidato}', EtapasProcesos::class)->middleware('can:Ver etapas')->name('proceso');
     Route::get('/bitacora_usuarios', BitacoraUsuario::class)->middleware('can:Ver bitácora')->name('bitacora');
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
