@@ -6,6 +6,7 @@ use App\Livewire\Candidatos\Candidatos;
 use App\Livewire\Candidatos\EtapasProcesos;
 use App\Livewire\Candidatos\Expediente;
 use App\Livewire\Candidatos\VerFormulario;
+use App\Livewire\Capacitaciones\Capacitaciones;
 use App\Livewire\Contratos\Contratos;
 use App\Livewire\Contratos\PuestosFuncionales\HistorialPuestos;
 use App\Livewire\Empleados\Empleados;
@@ -73,6 +74,8 @@ Route::middleware([
     Route::get('/ver_formulario/{id_candidato}/{id_requisito}', VerFormulario::class)->middleware('can:Ver formulario')->name('formulario');
     Route::get('/proceso_candidato/{id_candidato}', EtapasProcesos::class)->middleware('can:Ver etapas')->name('proceso');
     Route::get('/bitacora_usuarios', BitacoraUsuario::class)->middleware('can:Ver bitácora')->name('bitacora');
+
+    Route::get('/capacitaciones', Capacitaciones::class)->middleware('can:Ver capacitaciones')->name('capacitaciones');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });

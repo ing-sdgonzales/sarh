@@ -68,9 +68,12 @@
     "results": "resultados",
     "Roles and permissions": "Roles y permisos",
     "Roles": "Roles",
-    "Permissions": "Permisos", 
+    "Permissions": "Permisos",
     "Table": "Tabla",
     "doesn't exist": "no existe",
     "This action is unauthorized.": "Esta accion no está autorizada.",
-    "today": "hoy"
+    "today": "hoy",
+    "Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.": "Ingrese su contraseña para confirmar que desea cerrar sesión en sus otras sesiones de navegador en todos sus dispositivos.",
+    "Done.": "Hecho.",
+    "This password does not match our records.": "Esta contraseña no coincide con nuestros registros."
 }

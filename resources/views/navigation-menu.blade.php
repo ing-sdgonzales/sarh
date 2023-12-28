@@ -27,7 +27,7 @@
                         class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out">
                         <div x-data="{ isOpen: false }" @click.away="isOpen = false" class="relative">
                             <button type="button" @click="isOpen = !isOpen"
-                                class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
+                                class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 dark:text-gray-400"
                                 aria-expanded="false">
                                 <span>{{ __('Dotación de personal') }}</span>
                                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -149,11 +149,13 @@
 
                                             </div>
                                             <div>
-                                                <a href="{{ route('catalogo_puestos') }}" class="font-semibold text-gray-900">
+                                                <a href="{{ route('catalogo_puestos') }}"
+                                                    class="font-semibold text-gray-900">
                                                     {{ __('Catálogo de puestos') }}
                                                     <span class="absolute inset-0"></span>
                                                 </a>
-                                                <p class="mt-1 text-gray-600">Denominación general de puestos y su disponibilidad
+                                                <p class="mt-1 text-gray-600">Denominación general de puestos y su
+                                                    disponibilidad
                                                 </p>
                                             </div>
                                         </div>
@@ -192,7 +194,7 @@
                         class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out">
                         <div x-data="{ isOpen: false }" @click.away="isOpen = false" class="relative">
                             <button type="button" @click="isOpen = !isOpen"
-                                class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
+                                class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 dark:text-gray-400"
                                 aria-expanded="false">
                                 <span>{{ __('Acciones de personal') }}</span>
                                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -268,7 +270,7 @@
                         class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out">
                         <div x-data="{ isOpen: false }" @click.away="isOpen = false" class="relative">
                             <button type="button" @click="isOpen = !isOpen"
-                                class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
+                                class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 dark:text-gray-400"
                                 aria-expanded="false">
                                 <span>{{ __('Bienestar laboral') }}</span>
                                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -301,7 +303,7 @@
                                                 </svg>
                                             </div>
                                             <div>
-                                                <a href="{{ route('candidatos') }}"
+                                                <a href="{{ route('capacitaciones') }}"
                                                     class="font-semibold text-gray-900">
                                                     {{ __('Capacitaciones') }}
                                                     <span class="absolute inset-0"></span>
@@ -371,7 +373,7 @@
                         class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out">
                         <div x-data="{ isOpen: false }" @click.away="isOpen = false" class="relative">
                             <button type="button" @click="isOpen = !isOpen"
-                                class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900"
+                                class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 dark:text-gray-400"
                                 aria-expanded="false">
                                 <span>{{ __('Nóminas') }}</span>
                                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -601,6 +603,12 @@
                     <x-dropdown-link href="{{ route('requisitos') }}" :active="request()->routeIs('requisitos')">
                         {{ __('Requisitos') }}
                     </x-dropdown-link>
+                    <x-dropdown-link href="{{ route('puestos') }}" :active="request()->routeIs('puestos')">
+                        {{ __('Administración de puestos') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link href="{{ route('catalogo_puestos') }}" :active="request()->routeIs('catalogo_puestos')">
+                        {{ __('Catálogo de puestos') }}
+                    </x-dropdown-link>
                 </x-slot>
             </x-dropdown>
 
@@ -624,9 +632,12 @@
                     </x-responsive-nav-link>
                 </x-slot>
                 <x-slot name="content">
-                    {{-- <x-dropdown-link href="{{ route('candidatos') }}" :active="request()->routeIs('candidatos')">
-                        {{ __('Reclutamiento') }}
-                    </x-dropdown-link> --}}
+                    <x-dropdown-link href="{{ route('capacitaciones') }}" :active="request()->routeIs('capacitaciones')">
+                        {{ __('Capacitaciones') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link {{-- href="{{ route('capacitaciones') }}" :active="request()->routeIs('capacitaciones')" --}}>
+                        {{ __('Historial médico') }}
+                    </x-dropdown-link>
                 </x-slot>
             </x-dropdown>
 

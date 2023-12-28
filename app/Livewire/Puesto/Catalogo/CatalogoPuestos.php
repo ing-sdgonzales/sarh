@@ -16,7 +16,7 @@ class CatalogoPuestos extends Component
     /* Collecciones */
     public $renglones;
 
-    public $renglon_filtro, $filtro;
+    public $renglon_filtro, $filtro, $query, $busqueda;
 
     /* Variables modal crear y editar */
     public $modal = false;
@@ -33,8 +33,16 @@ class CatalogoPuestos extends Component
             'renglones.renglon as renglon'
         )
             ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id');
+
         if (!empty($this->filtro)) {
-            $puestos->where('catalogo_puestos.renglones_id', '=', $this->filtro);
+            $puestos->where('catalogo_puestos.renglones_id', $this->filtro);
+        }
+
+        if (!empty($this->busqueda)) {
+            $puestos->where(function ($query) {
+                $query->where('codigo', 'LIKE', '%' . $this->query . '%')
+                    ->orWhere('puesto', 'LIKE', '%' . $this->query . '%');
+            });
         }
 
         $puestos = $puestos->paginate(10);
@@ -78,6 +86,11 @@ class CatalogoPuestos extends Component
             $this->cerrarModal();
             return redirect()->route('catalogo_puestos');
         }
+    }
+
+    public function updatedBusqueda()
+    {
+        $this->query =  $this->busqueda;
     }
 
     public function editar($id_puesto)

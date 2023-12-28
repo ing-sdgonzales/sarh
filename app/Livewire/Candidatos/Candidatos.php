@@ -29,6 +29,9 @@ class Candidatos extends Component
     public $estados_civiles, $departamentos, $municipios, $registros_academicos, $colegios, $dependencias, $puestos, $tipos_contrataciones,
         $tipos_servicios;
 
+    /* Filtro y busqueda */
+    public $busqueda, $query;
+
     /* variables de consulta */
     public $id, $dpi, $nit, $igss, $nombre, $email, $imagen, $fecha_nacimiento, $fecha_registro, $fecha_ingreso,
         $direccion, $tipo, $estado_civil, $municipio, $departamento, $telefono, $registro_academico,

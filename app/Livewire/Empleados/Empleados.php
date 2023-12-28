@@ -65,6 +65,9 @@ class Empleados extends Component
         $tipos_licencias, $tipos_vehiculos, $tipos_deudas, $puestos_nominales, $puestos_funcionales, $tipos_servicios,
         $tipos_contrataciones, $regiones, $relaciones_laborales, $total_etapas;
 
+    /* Filtros y busqueda */
+    public $busqueda, $query;
+
     /* Variables de formulario */
     public $empleado, $id_candidato, $id_empleado, $codigo, $dpi, $nit, $cuenta_banco, $igss, $imagen, $nombres, $apellidos,
         $email, $pretension_salarial, $departamento, $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion,

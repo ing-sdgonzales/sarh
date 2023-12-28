@@ -7,28 +7,48 @@
 
     <div class="py-12 bg-gray-200 h-auto">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="mb-2">
-                @can('Crear empleados')
-                    <button type="button" wire:click="crear()"
-                        class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                    </button>
-                @endcan
+            <div class="mt-2 grid grid-cols-8 gap-x-6 gap-y-8 mb-2">
+                <div class="col-end-1">
+                    @can('Crear empleados')
+                        <button type="button" wire:click="crear()"
+                            class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    @endcan
 
-                @canany(['Crear empleados', 'Editar empleados'])
-                    @if ($modal)
-                        @include('livewire.empleados.crear')
-                    @endif
-                @endcanany
+                    @canany(['Crear empleados', 'Editar empleados'])
+                        @if ($modal)
+                            @include('livewire.empleados.crear')
+                        @endif
+                    @endcanany
 
-                @can('Crear contratos')
-                    @if ($modal_crear_contrato)
-                        @include('livewire.contratos.crear')
-                    @endif
-                @endcan
+                    @can('Crear contratos')
+                        @if ($modal_crear_contrato)
+                            @include('livewire.contratos.crear')
+                        @endif
+                    @endcan
+                </div>
+
+                <div class="col-span-8">
+                    <div class="relative rounded-md shadow-sm">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                            <span class="text-gray-500 sm:text-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                    class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                </svg>
+                            </span>
+                        </div>
+                        <input wire:model.live="busqueda" type="text" name="search" id="search"
+                            style="height: 42px;" autocomplete="off"
+                            class="inline-block w-full rounded-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset shadow-md focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            placeholder="Buscar">
+                    </div>
+                </div>
             </div>
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
                 <div class="overflow-x-auto">
@@ -117,7 +137,8 @@
                                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24" stroke-width="1.5"
                                                                         stroke="currentColor" class="w-5 h-5">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
                                                                             d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                                                     </svg>
                                                                     <h6 class="text-sm font-normal text-neutral-700">Editar
@@ -139,7 +160,8 @@
                                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24" stroke-width="1.5"
                                                                         stroke="currentColor" class="w-5 h-5">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
                                                                             d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z" />
                                                                     </svg>
 
@@ -152,7 +174,9 @@
                                                         </li>
                                                     @endcan
                                                 @endif
-                                                @if ((($empleado->estado == 1 || $empleado->estado == 0) && $empleado->id_relacion_laboral == 1) || $empleado->total_contratos > 0)
+                                                @if (
+                                                    (($empleado->estado == 1 || $empleado->estado == 0) && $empleado->id_relacion_laboral == 1) ||
+                                                        $empleado->total_contratos > 0)
                                                     @can('Ver contratos')
                                                         <li>
                                                             <a type="button"

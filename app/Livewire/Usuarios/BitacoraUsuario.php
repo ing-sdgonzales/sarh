@@ -24,8 +24,8 @@ class BitacoraUsuario extends Component
             ->get();
         $actividades = Activity::orderby('created_at', 'desc')
             ->select('activity_log.*', 'users.name as name')
-            ->leftJoin('users', 'activity_log.causer_id', '=', 'users.id');
-
+            ->leftJoin('users', 'activity_log.causer_id', '=', 'users.id')
+            ->whereNot('description', 'LIKE', '%livewire/update%');
         if (!empty($this->filtro)) {
             $actividades->where('activity_log.causer_id', '=', $this->filtro);
         }

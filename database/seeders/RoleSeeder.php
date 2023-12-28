@@ -89,6 +89,13 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Notificar requisitos'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Ver etapas'])->syncRoles([$administrador, $operativo]);
 
+        /* Permiso para ver la ruta de /capacitaciones */
+        Permission::create(['name' => 'Ver capacitaciones'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /capacitaciones */
+        Permission::create(['name' => 'Crear capacitaciones'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Editar capacitaciones'])->syncRoles([$administrador, $operativo]);
+
+
         if ($super) {
             $super->syncPermissions(Permission::all());
         }
