@@ -1,72 +1,108 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Capacitaciones') }}
+            {{ __('Consulta médica') }}
         </h2>
     </x-slot>
-
-    <div class="py-12 bg-gray-200 h-auto">
+    <div class="py-12 bg-gray-200">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="mt-2 grid grid-cols-8 gap-x-6 gap-y-8 mb-2">
-                <div class="col-end-1">
-                    @can('Crear capacitaciones')
-                        <button type="button" wire:click="crear"
-                            class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-6 h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                            </svg>
-                        </button>
-                    @endcan
-
-                    @canany(['Crear capacitaciones', 'Editar capacitaciones'])
-                        @if ($modal)
-                            @include('livewire.capacitaciones.crear')
-                        @endif
-                    @endcanany
+            <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-2">
+                <div class="sm:col-span-6 mx-auto">
+                    <img src="{{ asset('storage') . '/' . $empleado->imagen }}" class="mx-auto max-w-full rounded-lg"
+                        style="height: 150px" alt="imagen" />
+                    <label
+                        class="block text-sm font-medium leading-6 text-gray-900">{{ $empleado->nombres . ' ' . $empleado->apellidos }}</label>
                 </div>
-                <div class="col-span-8">
-                    <div class="relative rounded-md shadow-sm">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <span class="text-gray-500 sm:text-sm"><svg xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                    class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                </svg>
-                            </span>
-                        </div>
-                        <input wire:model.live="busqueda" type="text" name="search" id="search"
-                            style="height: 42px;" autocomplete="off"
-                            class="inline-block w-full rounded-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset shadow-md focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            placeholder="Buscar">
-                    </div>
+                <div class="sm:col-span-full bg-white rounded-lg mb-4">
+                    <ul class="w-full p-4">
+                        <li class="w-ful border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                            <b class="mr-2">Grupo sanguíneo:</b> {{ $empleado->grupo_sanguineo }}
+                        </li>
+                        {{-- <hr
+                            class="my-1 h-0.5 border-t-0 bg-transparent bg-gradient-to-r from-gray-200 via-neutral-500 to-gray-200 opacity-25 dark:opacity-100" /> --}}
+                        <li class="w-full border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                            <b class="mr-2">Alergias a medicamentos:</b>
+                            @if ($empleado->alergia_medicamento == 0)
+                                Ninguno
+                            @else
+                                {{ $empleado->tipo_medicamento }}
+                            @endif
+                        </li>
+                        <li class="w-full border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                            <b class="mr-2">Padecimientos de salud:</b>
+                            @if ($empleado->padecimiento_salud == 0)
+                                Ninguno
+                            @else
+                                {{ $empleado->tipo_enfermedad }}
+                            @endif
+                        </li>
+                        <li class="w-full border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                            <b class="mr-2">Intervenciones quirúrgicas:</b>
+                            @if ($empleado->intervencion_quirurgica == 0)
+                                Ninguno
+                            @else
+                                {{ $empleado->tipo_intervencion }}
+                            @endif
+                        </li>
+                        <li class="w-full border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                            <b class="mr-2">Accidentes:</b>
+                            @if ($empleado->sufrido_accidente == 0)
+                                Ninguno
+                            @else
+                                {{ $empleado->tipo_accidente }}
+                            @endif
+                        </li>
+                        <li class="w-full py-2">
+                            <b class="mr-2">Contacto de emergencia:</b> {{ $empleado->nombre_emergencia }} <b
+                                class="ml-2 mr-2">Teléfono:</b> {{ $empleado->telefono_emergencia }}
+                        </li>
+                    </ul>
                 </div>
             </div>
+            @can('Crear consulta médica')
+                <div class="mb-2">
+                    <button type="button" wire:click='crear'
+                        class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </button>
+                </div>
+            @endcan
+
+            @canany(['Crear consulta médica', 'Editar consulta médica'])
+                @if ($modal)
+                    @include('livewire.clinica.crear')
+                @endif
+            @endcanany
+
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
-                <div>
+                <div class="overflow-x-auto">
                     <table class="min-w-full bg-white rounded-lg text-center">
                         <thead class="bg-gray-100 text-center">
                             <tr>
-                                <th class="w-1/12 py-2 px-4">No.</th>
-                                <th class="w-1/4 py-2 px-4">Capacitación</th>
-                                <th class="w-1/6 py-2 px-4">Capacitador</th>
-                                <th class="w-1/6 py-2 px-4">Organizador</th>
+                                <th class="w-1/12 py-2 px-4">Consulta</th>
+                                <th class="w-1/4 py-2 px-4">Síntomas</th>
+                                <th class="w-1/4 py-2 px-4">Receta</th>
+                                <th class="w-1/12 py-2 px-4">Próxima consulta</th>
                                 <th class="w-1/12 py-2 px-4">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($capacitaciones as $capacitacion)
+                            @foreach ($registros_medicos as $registro)
                                 <tr>
-                                    <td class="py-2 px-4">{{ $loop->iteration }}.</td>
-                                    <td class="py-2 px-4">{{ $capacitacion->capacitacion }}</td>
-                                    <td class="py-2 px-4">{{ $capacitacion->capacitador }}</td>
-                                    <td class="py-2 px-4">{{ $capacitacion->organizador }}</td>
+                                    <td class="py-2 px-4">
+                                        {{ date('d-m-Y', strtotime($registro->fecha_consulta)) }}</td>
+                                    <td class="py-2 px-4">{{ $registro->consulta }}</td>
+                                    <td class="py-2 px-4">{{ $registro->receta }}</td>
+                                    <td class="py-2 px-4">{{ date('d-m-Y', strtotime($registro->proxima_consulta)) }}
+                                    </td>
                                     <td class="py-2 px-4">
                                         <div class="relative" data-te-dropdown-position="dropstart">
                                             <button
                                                 class="flex items-center mx-auto whitespace-nowrap rounded bg-gray-400 px-2 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-gray-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-gray-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-gray-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                                                type="button" id="dropdownMenuButton{{ $capacitacion->id }}"
+                                                type="button" id="dropdownMenuButton{{ $registro->id }}"
                                                 data-te-dropdown-toggle-ref aria-expanded="false" data-te-ripple-init
                                                 data-te-ripple-color="light">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -79,11 +115,11 @@
                                                 </svg>
                                             </button>
                                             <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
-                                                aria-labelledby="dropdownMenuButton{{ $capacitacion->id }}"
+                                                aria-labelledby="dropdownMenuButton{{ $registro->id }}"
                                                 data-te-dropdown-menu-ref>
-                                                @can('Editar capacitaciones')
+                                                @can('Editar consulta médica')
                                                     <li>
-                                                        <button type="button" wire:click='editar({{ $capacitacion->id }})'
+                                                        <button type="button" wire:click='editar({{ $registro->id }})'
                                                             class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                                                             data-te-dropdown-item-ref>
                                                             <div class="flex items-end space-x-2">
@@ -98,28 +134,6 @@
                                                         </button>
                                                     </li>
                                                 @endcan
-
-                                                @can('Listar sesiones de capacitación')
-                                                    <li>
-                                                        <a type="button"
-                                                            href="{{ route('sesiones', ['id_capacitacion' => $capacitacion->id]) }}"
-                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                            data-te-dropdown-item-ref>
-                                                            <div class="flex items-end space-x-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="w-5 h-5">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
-                                                                </svg>
-
-                                                                <h6 class="text-sm font-normal text-neutral-700">
-                                                                    Ver sesiones
-                                                                </h6>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                @endcan
                                             </ul>
                                         </div>
                                     </td>
@@ -127,9 +141,6 @@
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-                <div class="mt-2">
-                    {{ $capacitaciones->links() }}
                 </div>
             </div>
         </div>

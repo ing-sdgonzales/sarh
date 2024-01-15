@@ -1,15 +1,14 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Capacitaciones') }}
+            {{ __('Sesiones de capacitación') }}
         </h2>
     </x-slot>
-
     <div class="py-12 bg-gray-200 h-auto">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mt-2 grid grid-cols-8 gap-x-6 gap-y-8 mb-2">
                 <div class="col-end-1">
-                    @can('Crear capacitaciones')
+                    @can('Crear sesiones de capacitación')
                         <button type="button" wire:click="crear"
                             class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -19,28 +18,11 @@
                         </button>
                     @endcan
 
-                    @canany(['Crear capacitaciones', 'Editar capacitaciones'])
+                    @canany(['Crear sesiones de capacitación', 'Editar sesiones de capacitación'])
                         @if ($modal)
-                            @include('livewire.capacitaciones.crear')
+                            @include('livewire.capacitaciones.sesiones.crear')
                         @endif
                     @endcanany
-                </div>
-                <div class="col-span-8">
-                    <div class="relative rounded-md shadow-sm">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                            <span class="text-gray-500 sm:text-sm"><svg xmlns="http://www.w3.org/2000/svg"
-                                    fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                    class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                </svg>
-                            </span>
-                        </div>
-                        <input wire:model.live="busqueda" type="text" name="search" id="search"
-                            style="height: 42px;" autocomplete="off"
-                            class="inline-block w-full rounded-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset shadow-md focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            placeholder="Buscar">
-                    </div>
                 </div>
             </div>
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
@@ -48,25 +30,28 @@
                     <table class="min-w-full bg-white rounded-lg text-center">
                         <thead class="bg-gray-100 text-center">
                             <tr>
-                                <th class="w-1/12 py-2 px-4">No.</th>
-                                <th class="w-1/4 py-2 px-4">Capacitación</th>
-                                <th class="w-1/6 py-2 px-4">Capacitador</th>
-                                <th class="w-1/6 py-2 px-4">Organizador</th>
+                                <th class="w-1/12 py-2 px-4">Fecha</th>
+                                <th class="w-1/4 py-2 px-4">Ubicación</th>
+                                <th class="w-1/6 py-2 px-4">Horario</th>
+                                <th class="w-1/12 py-2 px-4">Participantes</th>
                                 <th class="w-1/12 py-2 px-4">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($capacitaciones as $capacitacion)
+                            @foreach ($sesiones as $sesion)
                                 <tr>
-                                    <td class="py-2 px-4">{{ $loop->iteration }}.</td>
-                                    <td class="py-2 px-4">{{ $capacitacion->capacitacion }}</td>
-                                    <td class="py-2 px-4">{{ $capacitacion->capacitador }}</td>
-                                    <td class="py-2 px-4">{{ $capacitacion->organizador }}</td>
+                                    <td class="py-2 px-4">{{ date('d-m-Y', strtotime($sesion->fecha)) }}
+                                    </td>
+                                    <td class="py-2 px-4">{{ $sesion->ubicacion }}</td>
+                                    <td class="py-2 px-4">
+                                        {{ date('H:i', strtotime($sesion->hora_inicio)) . ' - ' . date('H:i', strtotime($sesion->hora_fin)) }}
+                                    </td>
+                                    <td class="py-2 px-4">{{ $sesion->total_participantes }}</td>
                                     <td class="py-2 px-4">
                                         <div class="relative" data-te-dropdown-position="dropstart">
                                             <button
                                                 class="flex items-center mx-auto whitespace-nowrap rounded bg-gray-400 px-2 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-gray-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-gray-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-gray-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                                                type="button" id="dropdownMenuButton{{ $capacitacion->id }}"
+                                                type="button" id="dropdownMenuButton{{ $sesion->id }}"
                                                 data-te-dropdown-toggle-ref aria-expanded="false" data-te-ripple-init
                                                 data-te-ripple-color="light">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -79,11 +64,11 @@
                                                 </svg>
                                             </button>
                                             <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
-                                                aria-labelledby="dropdownMenuButton{{ $capacitacion->id }}"
+                                                aria-labelledby="dropdownMenuButton{{ $sesion->id }}"
                                                 data-te-dropdown-menu-ref>
-                                                @can('Editar capacitaciones')
+                                                @can('Editar sesión de capacitación')
                                                     <li>
-                                                        <button type="button" wire:click='editar({{ $capacitacion->id }})'
+                                                        <button type="button" wire:click='editar({{ $sesion->id }})'
                                                             class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                                                             data-te-dropdown-item-ref>
                                                             <div class="flex items-end space-x-2">
@@ -93,31 +78,10 @@
                                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                                         d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                                                 </svg>
-                                                                <h6 class="text-sm font-normal text-neutral-700">Editar</h6>
+                                                                <h6 class="text-sm font-normal text-neutral-700">
+                                                                    Editar</h6>
                                                             </div>
                                                         </button>
-                                                    </li>
-                                                @endcan
-
-                                                @can('Listar sesiones de capacitación')
-                                                    <li>
-                                                        <a type="button"
-                                                            href="{{ route('sesiones', ['id_capacitacion' => $capacitacion->id]) }}"
-                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                            data-te-dropdown-item-ref>
-                                                            <div class="flex items-end space-x-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                    viewBox="0 0 24 24" stroke-width="1.5"
-                                                                    stroke="currentColor" class="w-5 h-5">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
-                                                                </svg>
-
-                                                                <h6 class="text-sm font-normal text-neutral-700">
-                                                                    Ver sesiones
-                                                                </h6>
-                                                            </div>
-                                                        </a>
                                                     </li>
                                                 @endcan
                                             </ul>
@@ -129,7 +93,7 @@
                     </table>
                 </div>
                 <div class="mt-2">
-                    {{ $capacitaciones->links() }}
+                    {{ $sesiones->links() }}
                 </div>
             </div>
         </div>

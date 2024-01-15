@@ -7,6 +7,9 @@ use App\Livewire\Candidatos\EtapasProcesos;
 use App\Livewire\Candidatos\Expediente;
 use App\Livewire\Candidatos\VerFormulario;
 use App\Livewire\Capacitaciones\Capacitaciones;
+use App\Livewire\Capacitaciones\Sesiones;
+use App\Livewire\Clinica\Consulta;
+use App\Livewire\Clinica\Historial;
 use App\Livewire\Contratos\Contratos;
 use App\Livewire\Contratos\PuestosFuncionales\HistorialPuestos;
 use App\Livewire\Empleados\Empleados;
@@ -76,6 +79,10 @@ Route::middleware([
     Route::get('/bitacora_usuarios', BitacoraUsuario::class)->middleware('can:Ver bitácora')->name('bitacora');
 
     Route::get('/capacitaciones', Capacitaciones::class)->middleware('can:Ver capacitaciones')->name('capacitaciones');
+
+    Route::get('/historial_medico', Historial::class)->middleware('can:Ver historial médico')->name('historial_medico');
+    Route::get('/consulta_medica/{id_empleado}', Consulta::class)->middleware('can:Ver consulta médica')->name('consultas');
+    Route::get('/sesiones_capacitacion/{id_capacitacion}', Sesiones::class)->middleware('can:Ver sesiones de capacitación')->name('sesiones');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });

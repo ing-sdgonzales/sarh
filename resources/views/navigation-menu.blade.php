@@ -328,7 +328,7 @@
 
                                             </div>
                                             <div>
-                                                <a href="{{ route('candidatos') }}"
+                                                <a href="{{ route('historial_medico') }}"
                                                     class="font-semibold text-gray-900">
                                                     {{ __('Historial médico') }}
                                                     <span class="absolute inset-0"></span>

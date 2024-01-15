@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Livewire\Permisos\Permiso;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -94,6 +95,12 @@ class RoleSeeder extends Seeder
         /* Permisos CRUD para la vista /capacitaciones */
         Permission::create(['name' => 'Crear capacitaciones'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Editar capacitaciones'])->syncRoles([$administrador, $operativo]);
+
+        /* Permiso para ver la ruta /consultas */
+        Permission::create(['name' => 'Ver consulta médica'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /consultas */
+        Permission::create(['name' => 'Crear consulta médica'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Editar consulta médica'])->syncRoles([$administrador, $operativo]);
 
 
         if ($super) {
