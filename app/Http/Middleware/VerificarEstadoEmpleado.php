@@ -28,8 +28,8 @@ class VerificarEstadoEmpleado
             ->where('empleados.id', $id_empleado)
             ->first();
         if (
-            $empleado->relacion_laboral  == 'Exempleado'
-            || (($empleado->relacio_laboral ==  'Nuevo empleado' || $empleado->relacion_laboral == 'Empleado actual') && $empleado->total_contratos > 0)
+            $empleado->relacion_laboral == 'Exempleado'
+            || (($empleado->relacion_laboral == 'Nuevo empleado' || $empleado->relacion_laboral == 'Empleado actual') && $empleado->total_contratos > 0)
         ) {
             return $next($request);
         } else {
