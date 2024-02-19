@@ -10,5 +10,5 @@ class Bonificacion extends Model
     use HasFactory;
 
     protected $table = 'bonificaciones';
-    protected $fillable = ['bono', 'cantidad'];
+    protected $fillable = ['bono', 'cantidad', 'calculado', 'tipos_bonificaciones_id'];
 }

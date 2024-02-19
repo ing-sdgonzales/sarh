@@ -16,8 +16,6 @@ return new class extends Migration
 
             $table->bigIncrements('id');
             $table->string('numero', 25)->unique();
-            $table->date('fecha_inicio')->min('1996-11-11');
-            $table->date('fecha_fin');
             $table->unsignedDecimal('salario', 9, 2);
             $table->string('acuerdo_aprobacion', 15);
             $table->string('acuerdo_rescision', 15)->unique()->nullable();

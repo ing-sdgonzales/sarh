@@ -10,5 +10,5 @@ class Capacitacion extends Model
     use HasFactory;
 
     protected $table = 'capacitaciones';
-    protected $fillable = ['capacitacion', 'capacitador', 'dependencias_nominales_id'];
+    protected $fillable = ['capacitacion', 'origen', 'capacitador', 'dependencias_nominales_id'];
 }

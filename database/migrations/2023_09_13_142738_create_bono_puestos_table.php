@@ -15,7 +15,7 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->bigIncrements('id');
-            $table->unsignedDecimal('bono_calculado')->nullable();
+            $table->unsignedDecimal('cantidad', 9, 2);
 
             /* fks */
             $table->unsignedTinyInteger('bonificaciones_id');
@@ -24,7 +24,7 @@ return new class extends Migration
             /* references */
             $table->foreign('bonificaciones_id')->references('id')->on('bonificaciones')->onUpdate('cascade');
             $table->foreign('puestos_nominales_id')->references('id')->on('puestos_nominales')->onUpdate('cascade');
-            
+
             $table->timestamps();
         });
     }

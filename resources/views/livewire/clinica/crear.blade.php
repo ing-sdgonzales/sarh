@@ -90,6 +90,57 @@
                                 </div>
 
                                 <div class="sm:col-span-full">
+                                    <div class="relative flex gap-x-3">
+                                        <div class="flex h-6 items-center">
+                                            <input wire:model.live='suspension' id="suspension" name="suspension"
+                                                type="checkbox"
+                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                        </div>
+                                        <div class="text-sm leading-6">
+                                            <label for="suspension" class="font-medium text-gray-900">¿Requiere
+                                                suspensión?</label>
+                                            <p class="text-gray-500">Indicador cuando el paciente require suspensión
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if ($suspension)
+                                    <div class="sm:col-span-3">
+                                        <label for="desde"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Desde</label>
+                                        <div class="mt-2">
+                                            <input wire:model='desde' type="date" name="desde" id="desde"
+                                                required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <div>
+                                                <span class="text-red-600 text-sm">
+                                                    @error('desde')
+                                                        {{ $message }}
+                                                    @enderror
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-3">
+                                        <label for="hasta"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Hasta</label>
+                                        <div class="mt-2">
+                                            <input wire:model='hasta' type="date" name="hasta" id="hasta"
+                                                required
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <div>
+                                                <span class="text-red-600 text-sm">
+                                                    @error('hasta')
+                                                        {{ $message }}
+                                                    @enderror
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="sm:col-span-full">
                                     <label for="proxima_consulta"
                                         class="block text-sm font-medium leading-6 text-gray-900">Próxima consulta
                                         consulta</label>
@@ -109,12 +160,6 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div wire:loading.flex wire:target="guardar"
-                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                    <div
-                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
                     </div>
                 </div>
 

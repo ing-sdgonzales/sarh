@@ -10,5 +10,5 @@ class DependenciaNominal extends Model
     use HasFactory;
 
     protected $table = 'dependencias_nominales';
-    protected $fillable = ['dependencia', 'subproductos_id'];
+    protected $fillable = ['dependencia', 'nodo_padre'];
 }

@@ -10,5 +10,5 @@ class CatalogoPuesto extends Model
     use HasFactory;
 
     protected $table = 'catalogo_puestos';
-    protected $fillable  = ['codigo', 'puesto', 'renglones_id', 'cantidad'];
+    protected $fillable  = ['codigo', 'puesto', 'cantidad', 'jefe', 'renglones_id'];
 }

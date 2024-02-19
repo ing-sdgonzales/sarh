@@ -11,7 +11,7 @@ class Contrato extends Model
 
     protected $table = 'contratos';
     protected $fillable = [
-        'numero', 'fecha_inicio', 'fecha_fin', 'salario', 'acuerdo_aprobacion', 'acuerdo_rescicion', 'nit_autorizacion',
+        'numero', 'salario', 'acuerdo_aprobacion', 'acuerdo_rescicion', 'nit_autorizacion',
         'fianza', 'vigente', 'puestos_nominales_id', 'empleados_id', 'tipos_contrataciones_id'
     ];
 }

@@ -66,7 +66,7 @@
                                             <ul class="absolute z-[1000] left-0 top-full m-0 hidden h-auto list-none rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
                                                 aria-labelledby="dropdownMenuButton{{ $sesion->id }}"
                                                 data-te-dropdown-menu-ref>
-                                                @can('Editar sesión de capacitación')
+                                                @can('Editar sesiones de capacitación')
                                                     <li>
                                                         <button type="button" wire:click='editar({{ $sesion->id }})'
                                                             class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
@@ -94,6 +94,12 @@
                 </div>
                 <div class="mt-2">
                     {{ $sesiones->links() }}
+                </div>
+                <div wire:loading.flex wire:target="guardar"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
                 </div>
             </div>
         </div>

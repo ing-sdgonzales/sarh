@@ -53,6 +53,22 @@
                                 </div>
 
                                 <div class="sm:col-span-full">
+                                    <label for="origen"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Origen</label>
+                                    <div class="mt-2">
+                                        <input wire:model='origen' type="text" name="origen" id="origen"
+                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('origen')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-full">
                                     <label for="organizador"
                                         class="block text-sm font-medium leading-6 text-gray-900">Organizador</label>
                                     <div class="mt-2">
@@ -96,13 +112,6 @@
                         </div>
                     </div>
                 </div>
-                <div wire:loading.flex wire:target="guardar"
-                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                    <div
-                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
-                    </div>
-                </div>
-
                 <!--Modal footer-->
                 <div
                     class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">

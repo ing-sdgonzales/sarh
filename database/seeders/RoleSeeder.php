@@ -18,6 +18,7 @@ class RoleSeeder extends Seeder
         $super = Role::create(['name' => 'Súper Administrador']);
         $administrador = Role::create(['name' => 'Administrador']);
         $operativo = Role::create(['name' => 'Operativo']);
+        $empleado = Role::create(['name' => 'Empleado']);
 
         /* Permiso para ver la ruta /bitácora */
         Permission::create(['name' => 'Ver bitácora'])->syncRoles([$administrador]);
@@ -90,11 +91,8 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Notificar requisitos'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Ver etapas'])->syncRoles([$administrador, $operativo]);
 
-        /* Permiso para ver la ruta de /capacitaciones */
-        Permission::create(['name' => 'Ver capacitaciones'])->syncRoles([$administrador, $operativo]);
-        /* Permisos CRUD para la vista /capacitaciones */
-        Permission::create(['name' => 'Crear capacitaciones'])->syncRoles([$administrador, $operativo]);
-        Permission::create(['name' => 'Editar capacitaciones'])->syncRoles([$administrador, $operativo]);
+        /* Permiso para ver la ruta /historial_medico */
+        Permission::create(['name' => 'Ver historial médico'])->syncRoles([$administrador, $operativo]);
 
         /* Permiso para ver la ruta /consultas */
         Permission::create(['name' => 'Ver consulta médica'])->syncRoles([$administrador, $operativo]);
@@ -102,6 +100,32 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Crear consulta médica'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Editar consulta médica'])->syncRoles([$administrador, $operativo]);
 
+        /* Permiso para ver la ruta de /capacitaciones */
+        Permission::create(['name' => 'Ver capacitaciones'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /capacitaciones */
+        Permission::create(['name' => 'Crear capacitaciones'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Editar capacitaciones'])->syncRoles([$administrador, $operativo]);
+
+        /* Permiso para ver la ruta de /sesiones_capacitacion */
+        Permission::create(['name' => 'Ver sesiones de capacitación'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /sesiones_capacitacion */
+        Permission::create(['name' => 'Crear sesiones de capacitación'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Editar sesiones de capacitación'])->syncRoles([$administrador, $operativo]);
+
+        /* Permiso para ver la ruta de /vacaciones */
+        Permission::create(['name' => 'Ver vacaciones'])->syncRoles([$administrador, $operativo]);
+
+        /* Permiso para ver la ruta de /control_vacaciones */
+        Permission::create(['name' => 'Ver control de vacaciones'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /control_vacaciones */
+        Permission::create(['name' => 'Crear solicitudes de vacaciones'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Editar solicitudes de vacaciones'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Validar solicitudes de vacaciones'])->syncRoles([$administrador, $operativo]);
+
+        /* Permiso para ver la ruta de /inducciones */
+        Permission::create(['name' => 'Ver inducciones'])->syncRoles([$administrador, $operativo]);
+        /* Permisos CRUD para la vista /inducciones */
+        Permission::create(['name' => 'Asignar empleados a inducción'])->syncRoles([$administrador, $operativo]);
 
         if ($super) {
             $super->syncPermissions(Permission::all());

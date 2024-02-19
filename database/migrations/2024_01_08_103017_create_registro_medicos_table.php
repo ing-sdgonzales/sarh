@@ -19,13 +19,17 @@ return new class extends Migration
             $table->text('consulta');
             $table->text('receta');
             $table->date('proxima_consulta')->nullable();
+            $table->text('responsable_consulta');
+            $table->unsignedTinyInteger('suspension')->min(0)->max(1);
+            $table->date('desde')->nullable();
+            $table->date('hasta')->nullable();
 
             /* fks */
             $table->unsignedInteger('empleados_id');
 
             /* references */
             $table->foreign('empleados_id')->references('id')->on('empleados')->onUpdate('cascade');
-            
+
             $table->timestamps();
         });
     }

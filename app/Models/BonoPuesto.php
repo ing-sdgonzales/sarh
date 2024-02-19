@@ -10,5 +10,5 @@ class BonoPuesto extends Model
     use HasFactory;
 
     protected $table = 'bonos_puestos';
-    protected $fillable = ['bono_calculado', 'bonificaciones_id', 'puestos_nominales_id'];
+    protected $fillable = ['cantidad', 'bonificaciones_id', 'puestos_nominales_id'];
 }

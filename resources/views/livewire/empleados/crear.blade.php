@@ -213,14 +213,15 @@
                                     <hr>
                                 </div>
                                 <div class="sm:col-span-2">
-                                    <label for="departamento"
+                                    <label for="departamento_origen"
                                         class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
                                     <div class="mt-2">
-                                        <select wire:model='departamento' wire:change='getMunicipiosByDepartamento'
-                                            id="departamento" name="departamento" required
+                                        <select wire:model='departamento_origen'
+                                            wire:change='getMunicipiosByDepartamento' id="departamento_origen"
+                                            name="departamento_origen" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             <option value="">Seleccionar...</option>
-                                            @foreach ($departamentos ?? [] as $departamento)
+                                            @foreach ($departamentos_origen ?? [] as $departamento)
                                                 <option value="{{ $departamento->id }}">
                                                     {{ $departamento->nombre }}
                                                 </option>
@@ -229,7 +230,7 @@
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
-                                            @error('departamento')
+                                            @error('departamento_origen')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -375,17 +376,17 @@
                                 </div>
 
                                 <div class="sm:col-span-6">
-                                    <label for="direccion"
+                                    <label for="direccion_domicilio"
                                         class="block text-sm font-medium leading-6 text-gray-900">Residencia
                                         actual</label>
                                     <div class="mt-2">
-                                        <input wire:model='direccion' type="text" name="direccion" id="direccion"
-                                            required
+                                        <input wire:model='direccion_domicilio' type="text"
+                                            name="direccion_domicilio" id="direccion_domicilio" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
-                                            @error('direccion')
+                                            @error('direccion_domicilio')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -401,7 +402,7 @@
                                             id="departamento_residencia" name="departamento_residencia" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             <option value="">Seleccionar...</option>
-                                            @foreach ($departamentos ?? [] as $departamento)
+                                            @foreach ($departamentos_origen ?? [] as $departamento)
                                                 <option value="{{ $departamento->id }}">
                                                     {{ $departamento->nombre }}
                                                 </option>
@@ -468,7 +469,7 @@
                                             name="departamento_emision" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             <option value="">Seleccionar...</option>
-                                            @foreach ($departamentos ?? [] as $departamento)
+                                            @foreach ($departamentos_origen ?? [] as $departamento)
                                                 <option value="{{ $departamento->id }}">
                                                     {{ $departamento->nombre }}
                                                 </option>
@@ -3206,12 +3207,6 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div wire:loading.flex wire:target="guardar"
-                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                    <div
-                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
                     </div>
                 </div>
 

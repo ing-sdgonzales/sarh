@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Empleados;
 
+use App\Models\BonoAnualContrato;
+use App\Models\BonoPuesto;
 use App\Models\ConocidoConred;
 use App\Models\ContactoEmergencia;
 use App\Models\Contrato;
@@ -24,10 +26,13 @@ use App\Models\HijoEmpleado;
 use App\Models\HistoriaClinica;
 use App\Models\HistorialLaboral;
 use App\Models\Idioma;
+use App\Models\InduccionPendiente;
 use App\Models\LicenciaConducir;
 use App\Models\MadreEmpleado;
 use App\Models\Nacionalidad;
 use App\Models\PadreEmpleado;
+use App\Models\PagoContrato;
+use App\Models\PeriodoContrato;
 use App\Models\PersonaDependiente;
 use App\Models\ProgramaComputacion;
 use App\Models\PuestoNominal;
@@ -37,8 +42,6 @@ use App\Models\Region;
 use App\Models\RegistroAcademicoEmpleado;
 use App\Models\RegistroPuesto;
 use App\Models\RelacionLaboral;
-use App\Models\Renglon;
-use App\Models\RequisitoCandidato;
 use App\Models\TelefonoEmpleado;
 use App\Models\TipoContratacion;
 use App\Models\TipoDeuda;
@@ -46,7 +49,9 @@ use App\Models\TipoLicencia;
 use App\Models\TipoServicio;
 use App\Models\TipoVehiculo;
 use App\Models\TipoVivienda;
+use App\Models\VacacionDisponible;
 use App\Models\Vehiculo;
+use Carbon\Carbon;
 use Exception;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -60,17 +65,17 @@ class Empleados extends Component
     use WithPagination;
 
     /* Colecciones */
-    public $generos, $etnias, $grupos_sanguineos, $dependencias_nominales, $dependencias_funcionales, $departamentos,
+    public $generos, $etnias, $grupos_sanguineos, $dependencias_nominales, $dependencias_funcionales, $departamentos_origen,
         $municipios, $municipios_emision, $municipios_residencia, $nacionalidades, $tipos_viviendas, $estados_civiles,
         $tipos_licencias, $tipos_vehiculos, $tipos_deudas, $puestos_nominales, $puestos_funcionales, $tipos_servicios,
         $tipos_contrataciones, $regiones, $relaciones_laborales, $total_etapas;
 
     /* Filtros y busqueda */
-    public $busqueda, $query;
+    public $busqueda, $filtro;
 
     /* Variables de formulario */
     public $empleado, $id_candidato, $id_empleado, $codigo, $dpi, $nit, $cuenta_banco, $igss, $imagen, $nombres, $apellidos,
-        $email, $pretension_salarial, $departamento, $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion,
+        $email, $pretension_salarial, $departamento_origen, $municipio, $fecha_nacimiento, $nacionalidad, $estado_civil, $direccion_domicilio,
         $departamento_residencia, $municipio_residencia, $departamento_emision, $municipio_emision, $licencia, $relacion_laboral,
         $tipo_licencia, $tipo_vehiculo, $placa, $telefono_casa, $telefono_movil, $familiar_conred, $nombre_familiar_conred, $genero,
         $cargo_familiar_conred, $conocido_conred, $nombre_conocido_conred, $cargo_conocido_conred, $telefono_padre, $nombre_padre,
@@ -124,9 +129,13 @@ class Empleados extends Component
         $contrato_year, $numero_contrato, $aprobacion_correlativo, $aprobacion_renglon, $aprobacion_year, $acuerdo_aprobacion,
         $nit_autorizacion, $fianza, $rescision_form = false;
 
+    /* Variables organigrama */
+    public $secretaria, $subsecretarias = [], $subsecretaria, $direcciones = [], $direccion, $subdirecciones = [], $subdireccion, $departamentos = [],
+        $departamento, $delegaciones = [], $delegacion;
+
     public function render()
     {
-        $this->departamentos = Departamento::select('id', 'nombre')->get();
+        $this->departamentos_origen = Departamento::select('id', 'nombre')->get();
         $this->nacionalidades = Nacionalidad::select('id', 'nacionalidad')->get();
         $this->estados_civiles = EstadoCivil::select('id', 'estado_civil')->get();
         $this->generos = Genero::select('id', 'genero')->get();
@@ -136,7 +145,7 @@ class Empleados extends Component
         $this->tipos_viviendas = TipoVivienda::select('id', 'tipo_vivienda')->get();
         $this->tipos_deudas = TipoDeuda::select('id', 'tipo_deuda')->get();
         $this->grupos_sanguineos = GrupoSanguineo::select('id', 'grupo')->get();
-        $this->dependencias_nominales = DependenciaNominal::select('id', 'dependencia')->get();
+        $this->dependencias_nominales = DependenciaNominal::select('id', 'dependencia')->whereNull('nodo_padre')->get();
         $this->tipos_servicios = TipoServicio::select('id', 'tipo_servicio')->get();
         $this->tipos_contrataciones = TipoContratacion::select('id', 'tipo')->get();
         $this->dependencias_funcionales = DependenciaFuncional::select('id', 'dependencia')->get();
@@ -171,6 +180,15 @@ class Empleados extends Component
                     ->whereNotNull('etapas_aplicaciones.fecha_fin');
             })
             ->groupBy('empleados.id');
+        if (!empty($this->filtro)) {
+            $empleados->where(function ($query) {
+                $query->where('empleados.nombres', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('empleados.apellidos', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('empleados.codigo', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('empleados.nit', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('dpis.dpi', 'LIKE', '%' . $this->filtro . '%');;
+            });
+        }
         $empleados = $empleados->paginate(5);
         activity()
             ->causedBy(auth()->user())
@@ -194,7 +212,7 @@ class Empleados extends Component
             'apellidos' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
             'codigo' => 'required|filled|string|min:9|regex:/^9[1-9]\d{7,}$/',
             'pretension_salarial' => 'required|decimal:2',
-            'departamento' => 'required|integer|min:1',
+            'departamento_origen' => 'required|integer|min:1',
             'municipio' => 'required|integer|min:1',
             'fecha_nacimiento' => 'required|date|before_or_equal:' . \Carbon\Carbon::now()->subYears(18)->format('Y-m-d'),
             'nacionalidad' => 'required|integer|min:1',
@@ -202,7 +220,7 @@ class Empleados extends Component
             'relacion_laboral' => 'required|integer|min:1|max:3',
             'estado_civil' => 'required|integer|min:1',
             'estado_familiar' => 'nullable|integer',
-            'direccion' => 'required|filled',
+            'direccion_domicilio' => 'required|filled',
             'departamento_residencia' => 'required|integer|min:1',
             'municipio_residencia' => 'required|integer|min:1',
             'dpi' => ['required', 'filled', 'size:15', 'regex:/^[1-9]\d{3} [1-9][0-9]{4} ([0][1-9]|[1][0-9]|[2][0-2])([0][1-9]|[1][0-9]|[2][0-9]|[3][0-9])$/'],
@@ -325,7 +343,6 @@ class Empleados extends Component
                     'fecha_nacimiento' => $validated['fecha_nacimiento'],
                     'cuenta_banco' => $validated['cuenta_banco'],
                     'estado_familiar' => $validated['estado_familiar'],
-                    'direccion' => $validated['direccion'],
                     'estado_familiar' => $validated['estado_familiar'],
                     'pretension_salarial' => $validated['pretension_salarial'],
                     'estudia_actualmente' => $validated['estudia_actualmente'],
@@ -354,7 +371,7 @@ class Empleados extends Component
                 ]);
 
                 Direccion::updateOrCreate(['empleados_id' => $this->empleado->id], [
-                    'direccion' => $validated['direccion'],
+                    'direccion' => $validated['direccion_domicilio'],
                     'municipios_id' => $validated['municipio_emision']
                 ]);
 
@@ -646,6 +663,13 @@ class Empleados extends Component
                     'direccion' => $validated['direccion_contacto_emergencia'],
                     'telefono' => $validated['telefono_contacto_emergencia']
                 ]);
+
+                /* Creación de registro para nuevos empleados que se guardan como pendientes de capacitación de inducción */
+                if ($validated['relacion_laboral'] == 3) {
+                    InduccionPendiente::updateOrCreate(['empleados_id' => $this->empleado->id], [
+                        'pendiente' => 1
+                    ]);
+                }
             });
 
             session()->flash('message');
@@ -812,7 +836,7 @@ class Empleados extends Component
             $this->nombres = $empleado->nombres;
             $this->apellidos = $empleado->apellidos;
             $this->pretension_salarial = $empleado->pretension_salarial;
-            $this->departamento = $empleado->id_departamento;
+            $this->departamento_origen = $empleado->id_departamento;
             $this->getMunicipiosByDepartamento();
             $this->municipio = $empleado->id_municipio;
             $this->relacion_laboral = $empleado->id_relacion_laboral;
@@ -821,7 +845,7 @@ class Empleados extends Component
             $this->cuenta_banco = $empleado->cuenta_banco;
             $this->nacionalidad = $empleado->id_nacionalidad;
             $this->estado_civil = $empleado->id_estado_civil;
-            $this->direccion = $empleado->direccion;
+            $this->direccion_domicilio = $empleado->direccion;
             $this->estado_familiar = $empleado->estado_familiar;
             $this->departamento_residencia = $empleado->id_departamento_residencia;
             $this->getMunicipiosByDepartamentoResidencia();
@@ -926,7 +950,12 @@ class Empleados extends Component
         $validated = $this->validate([
             'tipo_contratacion' => 'required|integer|min:1',
             'tipo_servicio' => 'required|integer|min:1',
-            'dependencia_nominal' => 'required|integer|min:1',
+            'secretaria' => 'required|integer|min:1',
+            'subsecretaria' => 'nullable|integer|min:1',
+            'direccion' => 'nullable|integer|min:1',
+            'subdireccion' => 'nullable|integer|min:1',
+            'departamento' => 'nullable|integer|min:1',
+            'delegacion' => 'nullable|integer|min:1',
             'puesto_nominal' => 'required|integer|min:1',
             'fecha_inicio' => 'required|date|after_or_equal:1996-11-11',
             'fecha_fin' => 'required|date|after:fecha_inicio',
@@ -947,11 +976,38 @@ class Empleados extends Component
         try {
             $this->numero_contrato = $validated['contrato_correlativo'] . '-' . $validated['contrato_renglon'] . '-' . $validated['contrato_year'];
             $this->acuerdo_aprobacion = $validated['aprobacion_correlativo'] . '-' . $validated['aprobacion_renglon'] . '-' . $validated['aprobacion_year'];
-            DB::transaction(function () use ($validated) {
+
+            $bonos_mes = BonoPuesto::select(
+                'bonos_puestos.cantidad as cantidad',
+                'bonificaciones.tipos_bonificaciones_id as tipos_bonificaciones_id'
+            )
+                ->join('bonificaciones', 'bonos_puestos.bonificaciones_id', '=', 'bonificaciones.id')
+                ->where('bonos_puestos.puestos_nominales_id', $this->puesto_nominal)
+                ->where('bonificaciones.tipos_bonificaciones_id', 1)
+                ->get();
+
+            $bonos_year = BonoPuesto::select(
+                'bonificaciones.bono as bono',
+                'bonos_puestos.cantidad as cantidad',
+                'bonificaciones.tipos_bonificaciones_id as tipos_bonificaciones_id'
+            )
+                ->join('bonificaciones', 'bonos_puestos.bonificaciones_id', '=', 'bonificaciones.id')
+                ->where('bonos_puestos.puestos_nominales_id', $this->puesto_nominal)
+                ->where('bonificaciones.tipos_bonificaciones_id', 2)
+                ->get();
+
+            $monto_bonos = number_format(floatval($bonos_mes->sum('cantidad')), 2, '.', '');
+
+            DB::transaction(function () use ($validated, $monto_bonos, $bonos_year) {
+
+                if (!empty($monto_bonos)) {
+                    $salario_total = $validated['salario'] + $monto_bonos;
+                } else {
+                    $salario_total = $validated['salario'];
+                }
+
                 $contrato = Contrato::create([
                     'numero' => $this->numero_contrato,
-                    'fecha_inicio' => $validated['fecha_inicio'],
-                    'fecha_fin' => $validated['fecha_fin'],
                     'salario' => $validated['salario'],
                     'acuerdo_aprobacion' => $this->acuerdo_aprobacion,
                     'nit_autorizacion' => $validated['nit_autorizacion'],
@@ -962,13 +1018,145 @@ class Empleados extends Component
                     'empleados_id' => $this->id_empleado
                 ]);
 
-                $pst = PuestoNominal::findOrFail($this->puesto_nominal);
-                $pst->activo = 0;
-                $pst->save();
+                $periodo_contrato = PeriodoContrato::create([
+                    'fecha_inicio' => $validated['fecha_inicio'],
+                    'fecha_fin' => $validated['fecha_fin'],
+                    'contratos_id' => $contrato->id
+                ]);
 
+                $fecha_inicio = Carbon::parse($validated['fecha_inicio']);
+                $fecha_fin = Carbon::parse($validated['fecha_fin']);
+
+                $dias_mes = $this->getDiasMesByFechas($fecha_inicio, $fecha_fin);
+
+                foreach ($dias_mes as $mes => $dias) {
+                    $month = Carbon::createFromFormat('d-m-Y', '01-' . $mes);
+                    $salario = round($dias * ($salario_total / $month->daysInMonth), 2, PHP_ROUND_HALF_UP);
+
+                    PagoContrato::create([
+                        'salario' => $salario,
+                        'mes' => $mes,
+                        'primer_pago' => ($mes === key($dias_mes)) ? 1 : 0,
+                        'periodos_contratos_id' => $periodo_contrato->id
+                    ]);
+                }
+
+                $ultimo_mes_year = $fecha_inicio->copy()->endOfYear()->month;
+                $current_year = $fecha_inicio->copy()->year;
+                $dias_laborados = $fecha_fin->diffInDays($fecha_inicio) + 1;
+                $dias_year = $fecha_inicio->copy()->daysInYear;
+
+                if (!empty($bonos_year)) {
+                    foreach ($bonos_year as $bono_year) {
+                        if ($bono_year->bono == 'Aguinaldo') {
+                            $cantidad = round($dias_laborados * ($bono_year->cantidad / $dias_year), 2, PHP_ROUND_HALF_UP);
+                            if ($fecha_fin->copy()->month == ($ultimo_mes_year || $ultimo_mes_year - 1)) {
+                                BonoAnualContrato::create([
+                                    'bono' => $bono_year->bono,
+                                    'cantidad' => $cantidad,
+                                    'mes' => ($ultimo_mes_year == 12) ? $fecha_fin->copy()->format('m-Y') : $fecha_fin->copy()->addMonth()->format('m-Y'),
+                                    'periodos_contratos_id' => $periodo_contrato->id
+                                ]);
+                            } else {
+                                BonoAnualContrato::create([
+                                    'bono' => $bono_year->bono,
+                                    'cantidad' => $cantidad,
+                                    'mes' => $fecha_fin->copy()->month,
+                                    'periodos_contratos_id' => $periodo_contrato->id
+                                ]);
+                            }
+                        } elseif ($bono_year->bono == 'Bono 14') {
+                            $cantidad_mes = $bono_year->cantidad / 12;
+                            $bono14_parte1 = null;
+                            $bono14_parte2 = null;
+                            foreach ($dias_mes as $mes => $dias) {
+                                $month = Carbon::createFromFormat('d-m-Y', '01-' . $mes);
+                                if ($mes <= '06' . $current_year) {
+                                    $bono14_parte1 += $dias * $cantidad_mes / $month->daysInMonth;
+                                } else {
+                                    $bono14_parte2 += $dias * $cantidad_mes / $month->daysInMonth;
+                                }
+                            }
+                            if ($fecha_fin->copy()->month > 6 && !empty($bono14_parte1) && !empty($bono14_parte2)) {
+                                BonoAnualContrato::create([
+                                    'bono' => $bono_year->bono . ' primera parte',
+                                    'cantidad' => round($bono14_parte1, 2, PHP_ROUND_HALF_UP),
+                                    'mes' => '07-' . $current_year,
+                                    'periodos_contratos_id' => $periodo_contrato->id
+                                ]);
+                                BonoAnualContrato::create([
+                                    'bono' => $bono_year->bono . ' segunda parte',
+                                    'cantidad' => round($bono14_parte2, 2, PHP_ROUND_HALF_UP),
+                                    'mes' => ($fecha_fin->copy()->month == 12) ? $fecha_fin->copy()->format('m-Y') : $fecha_fin->copy()->addMonth()->format('m-Y'),
+                                    'periodos_contratos_id' => $periodo_contrato->id
+                                ]);
+                            } elseif ($fecha_fin->copy()->month == 6 && empty($bono14_parte1)) {
+                                BonoAnualContrato::create([
+                                    'bono' => $bono_year->bono . ' primera parte',
+                                    'cantidad' => round($bono14_parte1, 2, PHP_ROUND_HALF_UP),
+                                    'mes' => '07-' . $current_year,
+                                    'periodos_contratos_id' => $periodo_contrato->id
+                                ]);
+                            } elseif ($fecha_fin->copy()->month < 6 && empty($bono14_parte1)) {
+                                BonoAnualContrato::create([
+                                    'bono' => $bono_year->bono . ' primera parte',
+                                    'cantidad' => round($bono14_parte1, 2, PHP_ROUND_HALF_UP),
+                                    'mes' => $fecha_fin->copy()->addMonth()->format('m-Y'),
+                                    'periodos_contratos_id' => $periodo_contrato->id
+                                ]);
+                            }
+                        } elseif ($bono_year->bono == 'Bono vacacional') {
+                            $cantidad = round($dias_laborados * ($bono_year->cantidad / $dias_year), 2, PHP_ROUND_HALF_UP);
+                            BonoAnualContrato::create([
+                                'bono' => $bono_year->bono,
+                                'cantidad' => $cantidad,
+                                'mes' => ($fecha_fin->copy()->month == $ultimo_mes_year) ? $fecha_fin->copy()->format('m-Y') : $fecha_fin->copy()->addMonth()->format('m-Y'),
+                                'periodos_contratos_id' => $periodo_contrato->id
+                            ]);
+                        }
+                    }
+                }
+
+                if ($validated['contrato_renglon'] != '029') {
+                    $dias_periodo = $fecha_fin->diffInDays($fecha_inicio) + 1;
+                    $days_year = $fecha_inicio->copy()->daysInYear;
+                    $dias_vacaciones = round($dias_periodo * (20 / $days_year), 0, PHP_ROUND_HALF_UP);
+                    if ($dias_vacaciones > 0) {
+                        VacacionDisponible::create([
+                            'year' => $fecha_inicio->copy()->format('Y'),
+                            'dias_disponibles' => $dias_vacaciones,
+                            'empleados_id' => $this->id_empleado
+                        ]);
+                    }
+                }
+
+                $puesto_actual = PuestoNominal::findOrFail($validated['puesto_nominal']);
                 $emp = Empleado::findOrFail($this->id_empleado);
+
+                $dependencia_actual = DependenciaNominal::findOrFail($puesto_actual->dependencias_nominales_id);
+
+                $puesto_superior = DependenciaNominal::select(
+                    'contratos.empleados_id as id_empleado'
+                )
+                    ->join('puestos_nominales', 'dependencias_nominales.id', '=', 'puestos_nominales.dependencias_nominales_id')
+                    ->join('contratos', 'puestos_nominales.id', '=', 'contratos.puestos_nominales_id')
+                    ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', '=', 'catalogo_puestos.id')
+                    ->where('catalogo_puestos.jefe', 1)
+                    ->where('contratos.vigente', 1)
+                    ->where('puestos_nominales.activo', 0)
+                    ->where('puestos_nominales.dependencias_nominales_id', $dependencia_actual->nodo_padre)
+                    ->first();
+
                 $emp->estado = 1;
                 $emp->fecha_ingreso = $validated['fecha_inicio'];
+
+                if ($puesto_superior == null) {
+                    $emp->jefe_id = null;
+                } else {
+                    $emp->jefe_id = $puesto_superior->id_empleado;
+                }
+                $puesto_actual->activo = 0;
+                $puesto_actual->save();
                 $emp->save();
 
                 RegistroPuesto::create([
@@ -1011,6 +1199,109 @@ class Empleados extends Component
         }
     }
 
+    public function getSubsecretariasBySecretaria()
+    {
+        if (!empty($this->secretaria)) {
+            $this->subsecretarias = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->secretaria)->get();
+            $this->getPuestosByDependencia($this->secretaria);
+        } else {
+            $this->subsecretarias = [];
+            $this->puestos_nominales = [];
+        }
+        $this->subsecretaria = '';
+        $this->direccion = '';
+        $this->direcciones = [];
+        $this->subdirecciones = [];
+        $this->subdireccion = '';
+        $this->departamentos = [];
+        $this->departamento = '';
+        $this->delegaciones = [];
+        $this->delegacion = '';
+    }
+
+    public function getDireccionesBySubsecretaria()
+    {
+        if (!empty($this->subsecretaria)) {
+            $this->direcciones = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->subsecretaria)->get();
+            $this->getPuestosByDependencia($this->subsecretaria);
+        } else {
+            $this->direcciones = [];
+            $this->getPuestosByDependencia($this->secretaria);
+        }
+        $this->direccion = '';
+        $this->subdirecciones = [];
+        $this->subdireccion = '';
+        $this->departamentos = [];
+        $this->departamento = '';
+        $this->delegaciones = [];
+        $this->delegacion = '';
+    }
+
+    public function getSubdireccionesByDireccion()
+    {
+        if (!empty($this->direccion)) {
+            $this->subdirecciones = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->direccion)->get();
+            $this->getPuestosByDependencia($this->direccion);
+        } else {
+            $this->subdirecciones = [];
+            $this->getPuestosByDependencia($this->subsecretaria);
+        }
+        $this->subdireccion = '';
+        $this->departamentos = [];
+        $this->departamento = '';
+        $this->delegaciones = [];
+        $this->delegacion = '';
+    }
+
+    public function getDepartamentosBySubdireccion()
+    {
+        if (!empty($this->subdireccion)) {
+            $this->departamentos = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->subdireccion)->get();
+            $this->getPuestosByDependencia($this->subdireccion);
+        } else {
+            $this->departamentos = [];
+            $this->getPuestosByDependencia($this->direccion);
+        }
+        $this->departamento = '';
+        $this->delegaciones = [];
+        $this->delegacion = '';
+    }
+
+    public function getDelegacionesByDepartamento()
+    {
+        if (!empty($this->departamento)) {
+            $this->delegaciones = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->departamento)->get();
+            $this->getPuestosByDependencia($this->departamento);
+        } else {
+            $this->delegaciones = [];
+            $this->getPuestosByDependencia($this->subdireccion);
+        }
+    }
+
+    public function getDiasMesByFechas($fi, $ff)
+    {
+        $fecha_inicio = Carbon::parse($fi);
+        $fecha_fin = Carbon::parse($ff);
+
+        $result = [];
+
+        while ($fecha_inicio->lessThanOrEqualTo($fecha_fin)) {
+            $ultimo_dia_mes = $fecha_inicio->copy()->endOfMonth();
+
+            $dias_mes = $fecha_inicio->diffInDays($ultimo_dia_mes) + 1;
+
+            if ($ultimo_dia_mes->greaterThanOrEqualTo($fecha_fin)) {
+                $dias_mes = $fecha_inicio->diffInDays($fecha_fin) + 1;
+            }
+
+            $result[$fecha_inicio->copy()->format('m-Y')] = $dias_mes;
+
+            $fecha_inicio->addMonth()->startOfMonth();
+        }
+
+        return $result;
+    }
+
     public function crearContrato($id_empleado)
     {
         $this->id_empleado = $id_empleado;
@@ -1034,13 +1325,24 @@ class Empleados extends Component
         $this->contrato_renglon = '';
         $this->contrato_year = '';
         $this->numero_contrato = '';
+        $this->secretaria = '';
+        $this->subsecretaria = '';
+        $this->subsecretarias = [];
+        $this->direccion = '';
+        $this->direcciones = [];
+        $this->subdireccion = '';
+        $this->subdirecciones = [];
+        $this->departamento = '';
+        $this->departamentos = [];
+        $this->delegacion = '';
+        $this->delegaciones = [];
         $this->modal_crear_contrato = false;
     }
 
-    public function getPuestosByDependencia()
+    public function getPuestosByDependencia($id_dependencia)
     {
         $this->puesto_nominal = '';
-        if ($this->dependencia_nominal) {
+        if ($id_dependencia) {
             $this->puestos_nominales = DB::table('puestos_nominales')
                 ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', '=', 'catalogo_puestos.id')
                 ->select(
@@ -1048,7 +1350,7 @@ class Empleados extends Component
                     'puestos_nominales.codigo as codigo',
                     'catalogo_puestos.puesto as puesto'
                 )
-                ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia_nominal)
+                ->where('puestos_nominales.dependencias_nominales_id', '=', $id_dependencia)
                 ->where('puestos_nominales.activo', '=', 1)
                 ->where('puestos_nominales.eliminado', '=', 0)
                 ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
@@ -1058,7 +1360,6 @@ class Empleados extends Component
                         ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
                 })
                 ->get();
-            $this->salario = '';
         } else {
             $this->puestos_nominales = [];
         }
@@ -1087,7 +1388,21 @@ class Empleados extends Component
     {
         $this->puesto_nominal = '';
         $this->puestos_nominales = '';
+        $id_dependencia = '';
         if ($this->tipo_servicio) {
+            if (!empty($this->delegacion)) {
+                $id_dependencia = $this->delegacion;
+            } elseif (!empty($this->departamento)) {
+                $id_dependencia = $this->departamento;
+            } elseif (!empty($this->subdireccion)) {
+                $id_dependencia = $this->subdireccion;
+            } elseif (!empty($this->direccion)) {
+                $id_dependencia = $this->direccion;
+            } elseif (!empty($this->subsecretaria)) {
+                $id_dependencia = $this->subsecretaria;
+            } else {
+                $id_dependencia = $this->secretaria;
+            }
             $this->puestos_nominales = DB::table('puestos_nominales')
                 ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', '=', 'catalogo_puestos.id')
                 ->select(
@@ -1095,7 +1410,7 @@ class Empleados extends Component
                     'puestos_nominales.codigo as codigo',
                     'catalogo_puestos.puesto as puesto'
                 )
-                ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia_nominal)
+                ->where('puestos_nominales.dependencias_nominales_id', $id_dependencia)
                 ->where('puestos_nominales.activo', '=', 1)
                 ->where('puestos_nominales.eliminado', '=', 0)
                 ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
@@ -1124,10 +1439,10 @@ class Empleados extends Component
     public function getMunicipiosByDepartamento()
     {
         $this->municipio = '';
-        if ($this->departamento) {
+        if ($this->departamento_origen) {
             $this->municipios = DB::table('municipios')
                 ->select('id', 'nombre', 'departamentos_id')
-                ->where('departamentos_id', '=', $this->departamento)
+                ->where('departamentos_id', '=', $this->departamento_origen)
                 ->get();
         } else {
             $this->municipios = [];
@@ -1163,6 +1478,11 @@ class Empleados extends Component
     public function crear()
     {
         $this->modal = true;
+    }
+
+    public function updatedBusqueda()
+    {
+        $this->filtro = $this->busqueda;
     }
 
     public function limpiarModal()

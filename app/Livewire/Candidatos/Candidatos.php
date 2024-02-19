@@ -5,6 +5,7 @@ namespace App\Livewire\Candidatos;
 use App\Models\AplicacionCandidato;
 use App\Models\Candidato;
 use App\Models\ColegioCandidato;
+use App\Models\DependenciaNominal;
 use App\Models\Entrevista;
 use App\Models\EtapaAplicacion;
 use App\Models\InformeEvaluacion;
@@ -26,15 +27,15 @@ class Candidatos extends Component
     use WithPagination;
 
     /* catalogos */
-    public $estados_civiles, $departamentos, $municipios, $registros_academicos, $colegios, $dependencias, $puestos, $tipos_contrataciones,
+    public $estados_civiles, $departamentos_origen, $municipios, $registros_academicos, $colegios, $dependencias, $puestos, $tipos_contrataciones,
         $tipos_servicios;
 
     /* Filtro y busqueda */
-    public $busqueda, $query;
+    public $busqueda, $filtro;
 
     /* variables de consulta */
     public $id, $dpi, $nit, $igss, $nombre, $email, $imagen, $fecha_nacimiento, $fecha_registro, $fecha_ingreso,
-        $direccion, $tipo, $estado_civil, $municipio, $departamento, $telefono, $registro_academico,
+        $direccion_domicilio, $tipo, $estado_civil, $municipio, $departamento_origen, $telefono, $registro_academico,
         $registro_academico_estado, $titulo, $colegio, $colegiado, $dependencia, $puesto, $tipo_contratacion,
         $tipo_servicio, $observacion, $fecha_aplicacion, $aprobado;
 
@@ -59,6 +60,10 @@ class Candidatos extends Component
     /* Modal Fechas de Ingresos*/
     public $modal_fecha_ingreso = false;
 
+    /* Variables organigrama */
+    public $secretaria, $subsecretarias = [], $subsecretaria, $direcciones = [], $direccion, $subdirecciones = [], $subdireccion, $departamentos = [],
+        $departamento, $delegaciones = [], $delegacion;
+
     public $showLoading = false;
     public $entrevista_modal = false;
     public $imagen_control = false, $imagen_actual;
@@ -66,10 +71,10 @@ class Candidatos extends Component
     public function render()
     {
         $this->estados_civiles = DB::table('estados_civiles')->select('id', 'estado_civil')->get();
-        $this->departamentos = DB::table('departamentos')->select('id', 'nombre')->get();
+        $this->departamentos_origen = DB::table('departamentos')->select('id', 'nombre')->get();
         $this->registros_academicos =  DB::table('registros_academicos')->select('id', 'nivel')->get();
         $this->colegios = DB::table('colegios')->select('id', 'nombre')->get();
-        $this->dependencias = DB::table('dependencias_nominales')->select('id', 'dependencia')->get();
+        $this->dependencias = DB::table('dependencias_nominales')->select('id', 'dependencia')->whereNull('nodo_padre')->get();
         $this->tipos_contrataciones = DB::table('tipos_contrataciones')->select('id', 'tipo')->get();
         $this->tipos_servicios = DB::table('tipos_servicios')->select('id', 'tipo_servicio')->get();
         $this->fecha_registro = date('Y-m-d');
@@ -101,6 +106,16 @@ class Candidatos extends Component
                 'tipos_contrataciones.tipo as tipo_contratacion',
                 DB::raw('COUNT(CASE WHEN etapas_aplicaciones.fecha_fin IS NOT NULL THEN 1 END) AS conteo_etapas')
             )->groupBy('candidatos.id');
+        if (!empty($this->filtro)) {
+            $candidatos->where(function ($query) {
+                $query->where('nombre', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('renglon', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('dependencia', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('profesion', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('region', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('tipo_contratacion', 'LIKE', '%' . $this->filtro . '%');
+            });
+        }
         $candidatos = $candidatos->paginate(5);
         activity()
             ->causedBy(auth()->user())
@@ -123,9 +138,9 @@ class Candidatos extends Component
                 'fecha_nacimiento' => 'required|date|before_or_equal:' . \Carbon\Carbon::now()->subYears(18)->format('Y-m-d'),
                 'estado_civil' => 'required|integer|min:1',
                 'fecha_registro' => 'required|date',
-                'direccion' => 'required|filled|regex:/[^0-9]/',
+                'direccion_domicilio' => 'required|filled|regex:/[^0-9]/',
                 'telefono' => ['required', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
-                'departamento' => 'required|integer|min:1',
+                'departamento_origen' => 'required|integer|min:1',
                 'municipio' => 'required|integer|min:1',
                 'registro_academico' => 'required|integer|min:1',
                 'titulo' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
@@ -135,7 +150,12 @@ class Candidatos extends Component
                 'tipo_contratacion' => 'required|integer|min:1',
                 'tipo_servicio' => 'required|integer|min:1',
                 'fecha_aplicacion' => 'required|date',
-                'dependencia' => 'required|integer|min:1',
+                'secretaria' => 'required|integer|min:1',
+                'subsecretaria' => 'nullable|integer|min:1',
+                'direccion' => 'nullable|integer|min:1',
+                'subdireccion' => 'nullable|integer|min:1',
+                'departamento' => 'nullable|integer|min:1',
+                'delegacion' => 'nullable|integer|min:1',
                 'puesto' => 'required|integer|min:1',
                 'observacion' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.:;¡¿,!?]+$/u'
             ]);
@@ -150,9 +170,9 @@ class Candidatos extends Component
                 'fecha_nacimiento' => 'required|date|before_or_equal:' . \Carbon\Carbon::now()->subYears(18)->format('Y-m-d'),
                 'estado_civil' => 'required|integer|min:1',
                 'fecha_registro' => 'required|date',
-                'direccion' => 'required|filled|regex:/[^0-9]/',
+                'direccion_domicilio' => 'required|filled|regex:/[^0-9]/',
                 'telefono' => ['required', 'regex:/^(3|4|5)\d{3}-\d{4}$/'],
-                'departamento' => 'required|integer|min:1',
+                'departamento_origen' => 'required|integer|min:1',
                 'municipio' => 'required|integer|min:1',
                 'registro_academico' => 'required|integer|min:1',
                 'titulo' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
@@ -162,7 +182,12 @@ class Candidatos extends Component
                 'tipo_contratacion' => 'required|integer|min:1',
                 'tipo_servicio' => 'required|integer|min:1',
                 'fecha_aplicacion' => 'required|date',
-                'dependencia' => 'required|integer|min:1',
+                'secretaria' => 'required|integer|min:1',
+                'subsecretaria' => 'nullable|integer|min:1',
+                'direccion' => 'nullable|integer|min:1',
+                'subdireccion' => 'nullable|integer|min:1',
+                'departamento' => 'nullable|integer|min:1',
+                'delegacion' => 'nullable|integer|min:1',
                 'puesto' => 'required|integer|min:1',
                 'observacion' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.:;¡¿,!?]+$/u'
             ]);
@@ -194,7 +219,7 @@ class Candidatos extends Component
                     'imagen' => $img,
                     'fecha_nacimiento' => $validated['fecha_nacimiento'],
                     'fecha_registro' => $validated['fecha_registro'],
-                    'direccion' => $validated['direccion'],
+                    'direccion' => $validated['direccion_domicilio'],
                     'estados_civiles_id' => $validated['estado_civil'],
                     'municipios_id' => $validated['municipio'],
                     'tipos_contrataciones_id' => $validated['tipo_contratacion']
@@ -264,6 +289,8 @@ class Candidatos extends Component
             ->join('registros_academicos_candidatos', 'candidatos.id', '=', 'registros_academicos_candidatos.candidatos_id')
             ->join('tipos_contrataciones', 'candidatos.tipos_contrataciones_id', '=', 'tipos_contrataciones.id')
             ->join('telefonos_candidatos', 'candidatos.id', '=', 'telefonos_candidatos.candidatos_id')
+            ->leftJoin('colegios_candidatos', 'candidatos.id', '=', 'colegios_candidatos.candidatos_id')
+            ->join('colegios', 'colegios_candidatos.colegios_id', '=', 'colegios.id')
             ->select(
                 'candidatos.dpi as dpi',
                 'candidatos.nit as nit',
@@ -278,7 +305,7 @@ class Candidatos extends Component
                 'candidatos.estados_civiles_id as id_estado_civil',
                 'municipios.id as id_municipio',
                 'departamentos.id as id_departamento',
-                'registros_academicos_candidatos.id as id_registro_academico',
+                'registros_academicos_candidatos.registros_academicos_id as id_registro_academico',
                 'registros_academicos_candidatos.profesion as profesion',
                 'registros_academicos_candidatos.estado as registro_academico_estado',
                 'tipos_contrataciones.id as id_tipo_contratacion',
@@ -287,7 +314,10 @@ class Candidatos extends Component
                 'dependencias_nominales.id as id_dependencia',
                 'aplicaciones_candidatos.puestos_nominales_id as id_puesto',
                 'aplicaciones_candidatos.observacion as observacion',
-                'telefonos_candidatos.telefono as telefono'
+                'telefonos_candidatos.telefono as telefono',
+                'colegios_candidatos.profesion as profesion',
+                'colegios_candidatos.colegiado as colegiado',
+                'colegios.id as id_colegio'
             )->where('candidatos.id', '=', $id)
             ->first();
 
@@ -300,9 +330,9 @@ class Candidatos extends Component
         $this->imagen_actual = $candidato->imagen;
         $this->fecha_nacimiento = $candidato->fecha_nacimiento;
         $this->fecha_registro = $candidato->fecha_registro;
-        $this->direccion = $candidato->direccion;
+        $this->direccion_domicilio = $candidato->direccion;
         $this->estado_civil = $candidato->id_estado_civil;
-        $this->departamento = $candidato->id_departamento;
+        $this->departamento_origen = $candidato->id_departamento;
         $this->updatedDepartamento();
         $this->municipio = $candidato->id_municipio;
         $this->registro_academico = $candidato->id_registro_academico;
@@ -311,13 +341,131 @@ class Candidatos extends Component
         $this->tipo_contratacion = $candidato->id_tipo_contratacion;
         $this->tipo_servicio = $candidato->id_tipo_servicio;
         $this->fecha_aplicacion = $candidato->fecha_aplicacion;
-        $this->dependencia = $candidato->id_dependencia;
-        $this->updatedDependencia();
+        $this->colegio = $candidato->id_colegio;
+        $this->colegiado = $candidato->colegiado;
+
+        $nodoHoja = DependenciaNominal::findOrFail($candidato->id_dependencia);
+        $caminoCompleto = collect([$nodoHoja]);
+
+        // Recorrer cada nodo padre hasta llegar a la raíz
+        while ($nodoHoja->nodo_padre !== null) {
+            // Obtener el nodo padre del nodo actual
+            $nodoPadre = DependenciaNominal::findOrFail($nodoHoja->nodo_padre);
+
+            // Agregar el nodo padre a la colección
+            $caminoCompleto->prepend($nodoPadre);
+
+            // Establecer el nodo padre como el nuevo nodo actual
+            $nodoHoja = $nodoPadre;
+        }
+
+        foreach ($caminoCompleto as $nodo) {
+            $nivel = $caminoCompleto->search($nodo) + 1;
+
+            if ($nivel == 1) {
+                $this->secretaria = $nodo->id;
+                $this->getSubsecretariasBySecretaria();
+            } elseif ($nivel == 2) {
+                $this->subsecretaria = $nodo->id;
+                $this->getDireccionesBySubsecretaria();
+            } elseif ($nivel == 3) {
+                $this->direccion = $nodo->id;
+                $this->getSubdireccionesByDireccion();
+            } elseif ($nivel == 4) {
+                $this->subdireccion = $nodo->id;
+                $this->getDepartamentosBySubdireccion();
+            } elseif ($nivel == 5) {
+                $this->departamento = $nodo->id;
+                $this->getDelegacionesByDepartamento();
+            } elseif ($nivel == 6) {
+                $this->delegacion = $nodo->id;
+            }
+        }
+
         $this->telefono =  $candidato->telefono;
         $this->puesto = $candidato->id_puesto;
         $this->observacion = $candidato->observacion;
 
         $this->abrirModal();
+    }
+
+    public function getSubsecretariasBySecretaria()
+    {
+        if (!empty($this->secretaria)) {
+            $this->subsecretarias = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->secretaria)->get();
+            $this->getPuestosByDependencia($this->secretaria);
+        } else {
+            $this->subsecretarias = [];
+            $this->puestos = [];
+        }
+        $this->subsecretaria = '';
+        $this->direccion = '';
+        $this->direcciones = [];
+        $this->subdirecciones = [];
+        $this->subdireccion = '';
+        $this->departamentos = [];
+        $this->departamento = '';
+        $this->delegaciones = [];
+        $this->delegacion = '';
+    }
+
+    public function getDireccionesBySubsecretaria()
+    {
+        if (!empty($this->subsecretaria)) {
+            $this->direcciones = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->subsecretaria)->get();
+            $this->getPuestosByDependencia($this->subsecretaria);
+        } else {
+            $this->direcciones = [];
+            $this->getPuestosByDependencia($this->secretaria);
+        }
+        $this->direccion = '';
+        $this->subdirecciones = [];
+        $this->subdireccion = '';
+        $this->departamentos = [];
+        $this->departamento = '';
+        $this->delegaciones = [];
+        $this->delegacion = '';
+    }
+
+    public function getSubdireccionesByDireccion()
+    {
+        if (!empty($this->direccion)) {
+            $this->subdirecciones = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->direccion)->get();
+            $this->getPuestosByDependencia($this->direccion);
+        } else {
+            $this->subdirecciones = [];
+            $this->getPuestosByDependencia($this->subsecretaria);
+        }
+        $this->subdireccion = '';
+        $this->departamentos = [];
+        $this->departamento = '';
+        $this->delegaciones = [];
+        $this->delegacion = '';
+    }
+
+    public function getDepartamentosBySubdireccion()
+    {
+        if (!empty($this->subdireccion)) {
+            $this->departamentos = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->subdireccion)->get();
+            $this->getPuestosByDependencia($this->subdireccion);
+        } else {
+            $this->departamentos = [];
+            $this->getPuestosByDependencia($this->direccion);
+        }
+        $this->departamento = '';
+        $this->delegaciones = [];
+        $this->delegacion = '';
+    }
+
+    public function getDelegacionesByDepartamento()
+    {
+        if (!empty($this->departamento)) {
+            $this->delegaciones = DependenciaNominal::select('id', 'dependencia')->where('nodo_padre', $this->departamento)->get();
+            $this->getPuestosByDependencia($this->departamento);
+        } else {
+            $this->delegaciones = [];
+            $this->getPuestosByDependencia($this->subdireccion);
+        }
     }
 
     public function aprobarExpediente()
@@ -762,10 +910,10 @@ class Candidatos extends Component
         return redirect()->route('candidatos');
     }
 
-    public function getPuestosByDependencia()
+    public function getPuestosByDependencia($id_dependencia)
     {
         $this->puesto = '';
-        if ($this->dependencia) {
+        if ($id_dependencia) {
             $this->puestos = DB::table('puestos_nominales')
                 ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', '=', 'catalogo_puestos.id')
                 ->select(
@@ -773,7 +921,7 @@ class Candidatos extends Component
                     'puestos_nominales.codigo as codigo',
                     'catalogo_puestos.puesto as puesto'
                 )
-                ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia)
+                ->where('puestos_nominales.dependencias_nominales_id', '=', $id_dependencia)
                 ->where('puestos_nominales.activo', '=', 1)
                 ->where('puestos_nominales.eliminado', '=', 0)
                 ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
@@ -792,7 +940,21 @@ class Candidatos extends Component
     {
         $this->puesto = '';
         $this->puestos = '';
+        $id_dependencia = '';
         if ($this->tipo_servicio) {
+            if (!empty($this->delegacion)) {
+                $id_dependencia = $this->delegacion;
+            } elseif (!empty($this->departamento)) {
+                $id_dependencia = $this->departamento;
+            } elseif (!empty($this->subdireccion)) {
+                $id_dependencia = $this->subdireccion;
+            } elseif (!empty($this->direccion)) {
+                $id_dependencia = $this->direccion;
+            } elseif (!empty($this->subsecretaria)) {
+                $id_dependencia = $this->subsecretaria;
+            } else {
+                $id_dependencia = $this->secretaria;
+            }
             $this->puestos = DB::table('puestos_nominales')
                 ->join('catalogo_puestos', 'puestos_nominales.catalogo_puestos_id', '=', 'catalogo_puestos.id')
                 ->select(
@@ -800,9 +962,9 @@ class Candidatos extends Component
                     'puestos_nominales.codigo as codigo',
                     'catalogo_puestos.puesto as puesto'
                 )
-                ->where('puestos_nominales.dependencias_nominales_id', '=', $this->dependencia)
+                ->where('puestos_nominales.dependencias_nominales_id', $id_dependencia)
                 ->where('puestos_nominales.activo', '=', 1)
-                ->where('puestos_nominales.eliminado', '=', 1)
+                ->where('puestos_nominales.eliminado', '=', 0)
                 ->where('puestos_nominales.tipos_servicios_id', '=', $this->tipo_servicio)
                 ->whereExists(function ($query) {
                     $query->select(DB::raw(1))
@@ -818,10 +980,10 @@ class Candidatos extends Component
     public function getMunicipiosByDepartamento()
     {
         $this->municipio = '';
-        if ($this->departamento) {
+        if ($this->departamento_origen) {
             $this->municipios = DB::table('municipios')
                 ->select('id', 'nombre', 'departamentos_id')
-                ->where('departamentos_id', '=', $this->departamento)
+                ->where('departamentos_id', '=', $this->departamento_origen)
                 ->get();
         } else {
             $this->municipios = [];
@@ -831,11 +993,6 @@ class Candidatos extends Component
     public function updatedDepartamento()
     {
         $this->getMunicipiosByDepartamento();
-    }
-
-    public function updatedDependencia()
-    {
-        $this->getPuestosByDependencia();
     }
 
     public function crear()
@@ -853,8 +1010,52 @@ class Candidatos extends Component
         $this->entrevista_modal = true;
     }
 
+    public function updatedBusqueda()
+    {
+        $this->filtro = $this->busqueda;
+    }
+
     public function cerrarModal()
     {
+        $this->id = '';
+        $this->dpi = '';
+        $this->nit = '';
+        $this->igss = '';
+        $this->nombre = '';
+        $this->email = '';
+        $this->imagen = '';
+        $this->fecha_nacimiento = '';
+        $this->fecha_registro = '';
+        $this->fecha_ingreso = '';
+        $this->direccion_domicilio = '';
+        $this->tipo = '';
+        $this->estado_civil = '';
+        $this->municipio = '';
+        $this->departamento_origen = '';
+        $this->telefono = '';
+        $this->registro_academico = '';
+        $this->registro_academico_estado = '';
+        $this->titulo = '';
+        $this->colegio = '';
+        $this->colegiado = '';
+        $this->dependencia = '';
+        $this->puesto = '';
+        $this->tipo_contratacion = '';
+        $this->tipo_servicio = '';
+        $this->observacion = '';
+        $this->fecha_aplicacion = '';
+        $this->aprobado = '';
+        $this->secretaria = '';
+        $this->subsecretaria = '';
+        $this->subsecretarias = [];
+        $this->direccion = '';
+        $this->direcciones = [];
+        $this->subdireccion = '';
+        $this->subdirecciones = [];
+        $this->departamento = '';
+        $this->departamentos = [];
+        $this->delegacion = '';
+        $this->delegaciones = [];
         $this->modal = false;
     }
 

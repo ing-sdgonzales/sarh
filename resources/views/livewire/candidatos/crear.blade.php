@@ -229,16 +229,16 @@
                                 </div>
 
                                 <div class="sm:col-span-4">
-                                    <label for="direccion"
+                                    <label for="direccion_domicilio"
                                         class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
                                     <div class="mt-2">
-                                        <input wire:model='direccion' type="text" name="dirección" id="direccion"
-                                            required
+                                        <input wire:model='direccion_domicilio' type="text" name="dirección"
+                                            id="direccion_domicilio" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
-                                            @error('direccion')
+                                            @error('direccion_domicilio')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -263,22 +263,23 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    <label for="departamento"
+                                    <label for="departamento_origen"
                                         class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
                                     <div class="mt-2">
-                                        <select wire:model='departamento' wire:change='getMunicipiosByDepartamento'
-                                            id="departamento" name="departamento" required
+                                        <select wire:model='departamento_origen'
+                                            wire:change='getMunicipiosByDepartamento' id="departamento_origen"
+                                            name="departamento_origen" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             <option value="">Seleccionar...</option>
-                                            @foreach ($departamentos ?? [] as $departamento)
+                                            @foreach ($departamentos_origen ?? [] as $departamento)
                                                 <option value="{{ $departamento->id }}">{{ $departamento->nombre }}
-                                                </option>
+                                                </option>_origen
                                             @endforeach
                                         </select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
-                                            @error('departamento')
+                                            @error('departamento_origen')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -366,11 +367,6 @@
                                             <option value="">Seleccionar...</option>
                                             <option value="1">En curso</option>
                                             <option value="2">Finalizado</option>
-                                            {{-- @foreach ($registros_academicos ?? [] as $registro_academico_estado)
-                                                <option value="{{ $registro_academico_estado->id }}">
-                                                    {{ $registro_academico_estado->titulo }}
-                                                </option>
-                                            @endforeach --}}
                                         </select>
                                     </div>
                                     <div>
@@ -497,15 +493,15 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
-                                    <label for="dependencia"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Dependencia</label>
+                                <div class="sm:col-span-full">
+                                    <label for="secretaria"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Secretaría</label>
                                     <div class="mt-2">
-                                        <select wire:model='dependencia' wire:change='getPuestosByDependencia'
-                                            id="dependencia" name="dependencia" required
+                                        <select wire:model='secretaria' wire:change='getSubsecretariasBySecretaria'
+                                            id="secretaria" name="secretaria" required
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                             <option value="">Seleccionar...</option>
-                                            @foreach ($dependencias ?? [] as $dependencia)
+                                            @foreach ($dependencias as $dependencia)
                                                 <option value="{{ $dependencia->id }}">
                                                     {{ $dependencia->dependencia }}
                                                 </option>
@@ -514,14 +510,148 @@
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
-                                            @error('dependencia')
+                                            @error('secretaria')
                                                 {{ $message }}
                                             @enderror
                                         </span>
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
+                                @if ($subsecretarias)
+                                    <div class="sm:col-span-full">
+                                        <label for="subsecretaria"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Subsecretaría</label>
+                                        <div class="mt-2">
+                                            <select wire:model='subsecretaria'
+                                                wire:change='getDireccionesBySubsecretaria' id="subsecretaria"
+                                                name="subsecretaria"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($subsecretarias as $subsecretaria)
+                                                    <option value="{{ $subsecretaria->id }}">
+                                                        {{ $subsecretaria->dependencia }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('subsecretaria')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+
+
+                                @if (count($direcciones) > 0)
+                                    <div class="sm:col-span-full">
+                                        <label for="direccion"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
+                                        <div class="mt-2">
+                                            <select wire:model='direccion' wire:change='getSubdireccionesByDireccion'
+                                                id="direccion" name="direccion"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($direcciones as $direccion)
+                                                    <option value="{{ $direccion->id }}">
+                                                        {{ $direccion->dependencia }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('direccion')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if (count($subdirecciones) > 0)
+                                    <div class="sm:col-span-full">
+                                        <label for="subdireccion"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Subdirección</label>
+                                        <div class="mt-2">
+                                            <select wire:model='subdireccion'
+                                                wire:change='getDepartamentosBySubdireccion' id="subdireccion"
+                                                name="subdireccion"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($subdirecciones as $subdireccion)
+                                                    <option value="{{ $subdireccion->id }}">
+                                                        {{ $subdireccion->dependencia }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('subdireccion')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+
+
+                                @if (count($departamentos) > 0)
+                                    <div class="sm:col-span-full">
+                                        <label for="departamento"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
+                                        <div class="mt-2">
+                                            <select wire:model='departamento'
+                                                wire:change='getDelegacionesByDepartamento' id="departamento"
+                                                name="departamento"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($departamentos as $departamento)
+                                                    <option value="{{ $departamento->id }}">
+                                                        {{ $departamento->dependencia }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('departamento')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if (count($delegaciones) > 0)
+                                    <div class="sm:col-span-full">
+                                        <label for="delegacion"
+                                            class="block text-sm font-medium leading-6 text-gray-900">Delegación</label>
+                                        <div class="mt-2">
+                                            <select wire:model='delegacion' id="delegacion" name="delegacion"
+                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <option value="">Seleccionar...</option>
+                                                @foreach ($delegaciones as $delegacion)
+                                                    <option value="{{ $delegacion->id }}">
+                                                        {{ $delegacion->dependencia }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('delegacion')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="sm:col-span-full">
                                     <label for="puesto"
                                         class="block text-sm font-medium leading-6 text-gray-900">Puesto</label>
                                     <div class="mt-2">
@@ -564,20 +694,8 @@
 
                             </div>
                         </div>
-                        {{-- <div class="mt-6 flex items-center justify-end gap-x-6">
-                            <button type="button"
-                                class="text-sm font-semibold leading-6 text-gray-900">{{ __('Cancel') }}</button>
-                            <button type="submit"
-                                class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{{ __('Save') }}</button>
-                        </div> --}}
                 </form>
             </div>
-            <div wire:loading.flex wire:target="guardar"
-                class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
-                </div>
-            </div>
-
             <!--Modal footer-->
             <div
                 class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">

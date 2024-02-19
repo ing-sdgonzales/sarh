@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'CheckEmailSearch' => \App\Http\Middleware\CheckEmailSearch::class,
         'VerificarEstadoFormulario' => \App\Http\Middleware\VerificarEstadoFormulario::class,
-        'verificar.estado.empleado' => \App\Http\Middleware\VerificarEstadoEmpleado::class
+        'verificar.estado.empleado' => \App\Http\Middleware\VerificarEstadoEmpleado::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
     ];
 }

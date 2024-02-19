@@ -3,6 +3,7 @@
 namespace App\Livewire\Capacitaciones;
 
 use App\Models\Capacitacion;
+use Livewire\WithPagination;
 use App\Models\CapacitacionEmpleado;
 use App\Models\DependenciaNominal;
 use App\Models\Empleado;
@@ -14,6 +15,8 @@ use Livewire\Component;
 
 class Sesiones extends Component
 {
+    use WithPagination;
+    
     public $id_capacitacion, $filtro, $query, $participantes_actuales;
 
     /* Colecciones */
@@ -57,7 +60,8 @@ class Sesiones extends Component
             'sesiones_capacitaciones.ubicacion as ubicacion',
             DB::raw('(SELECT COUNT(*) FROM capacitaciones_empleados WHERE sesiones_capacitaciones_id = sesiones_capacitaciones.id) as total_participantes')
         )
-            ->where('sesiones_capacitaciones.capacitaciones_id', $this->id_capacitacion);
+            ->where('sesiones_capacitaciones.capacitaciones_id', $this->id_capacitacion)
+            ->orderBy('sesiones_capacitaciones.fecha', 'asc');
 
         $sesiones = $sesiones->paginate(7, pageName: 'sesiones');
 
@@ -235,6 +239,7 @@ class Sesiones extends Component
         $this->participante = [];
         $this->participantes_actuales = [];
         $this->busqueda_empleado = '';
+        $this->id_sesion = '';
     }
 
     public function mount($id_capacitacion)

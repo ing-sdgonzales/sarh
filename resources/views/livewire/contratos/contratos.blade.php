@@ -47,6 +47,12 @@
                             @endif
                         @endcan
 
+                        @canany(['Crear período de contrato'])
+                            @if ($modal_periodo)
+                                @include('livewire.contratos.crear-periodo')
+                            @endif
+                        @endcanany
+
                     </div>
                 </div>
                 <div class="sm:col-span-4">
@@ -64,8 +70,8 @@
             </div>
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg w-auto">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white rounded-lg overflow-hidden text-center table-auto">
+                <div>
+                    <table class="min-w-full bg-white rounded-lg text-center">
                         <thead class="bg-gray-100 text-center">
                             <tr>
                                 <th class="w-1/12 py-2 px-4">No.</th>
@@ -108,7 +114,8 @@
                                                 data-te-dropdown-menu-ref>
                                                 @can('Editar contratos')
                                                     <li>
-                                                        <button type="button" wire:click='editar({{ $contrato->id }})'
+                                                        <button type="button"
+                                                            wire:click='editar({{ $contrato->id }}, {{ $contrato->id_periodo }})'
                                                             class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                                                             data-te-dropdown-item-ref>
                                                             <div class="flex items-end space-x-2">
@@ -145,6 +152,31 @@
                                                         </button>
                                                     </li>
                                                 @endcan
+
+                                                @if ($contrato_renglon != '029')
+                                                    @can('Crear nuevo período de contrato')
+                                                        <li>
+                                                            <button type="button"
+                                                                wire:click='crearPeriodo({{ $contrato->id }})'
+                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                                data-te-dropdown-item-ref>
+                                                                <div class="flex items-end space-x-2">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                        viewBox="0 0 24 24" stroke-width="1.5"
+                                                                        stroke="currentColor" class="w-5 h-5">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                                                                    </svg>
+
+                                                                    <h6 class="text-sm font-normal text-neutral-700">
+                                                                        Agregar
+                                                                        período</h6>
+                                                                </div>
+                                                            </button>
+                                                        </li>
+                                                    @endcan
+                                                @endif
                                             </ul>
                                         </div>
                                     </td>
@@ -155,6 +187,24 @@
                 </div>
                 <div class="mt-2">
                     {{ $contratos->links() }}
+                </div>
+                <div wire:loading.flex wire:target="guardarContrato"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
+                </div>
+                <div wire:loading.flex wire:target="editarContrato"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
+                </div>
+                <div wire:loading.flex wire:target="guardarPeriodo"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
                 </div>
             </div>
         </div>
@@ -167,7 +217,18 @@
                         title: '¡Ups!',
                         text: data[0].message,
                         icon: 'warning',
-                        confirmButtonText: 'Aceptar'
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#1F2937'
+                    });
+                });
+
+                Livewire.on('showPeriodosAlert', data => {
+                    Swal.fire({
+                        title: '¡Ups!',
+                        text: data[0].message,
+                        icon: 'warning',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#1F2937'
                     });
                 });
             });
@@ -179,7 +240,8 @@
                         title: '¡Ups!',
                         text: data[0].message,
                         icon: 'warning',
-                        confirmButtonText: 'Aceptar'
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#1F2937'
                     });
                 });
             });
@@ -191,7 +253,8 @@
                         title: '¡Ups!',
                         text: data[0].message,
                         icon: 'error',
-                        confirmButtonText: 'Aceptar'
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#1F2937'
                     });
                 });
             });

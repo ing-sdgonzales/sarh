@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->bigIncrements('id');
             $table->text('capacitacion');
+            $table->text('origen')->nullable();
             $table->string('capacitador', 100);
 
             /* fks */
@@ -23,7 +24,7 @@ return new class extends Migration
 
             /* references */
             $table->foreign('dependencias_nominales_id')->references('id')->on('dependencias_nominales')->onUpdate('cascade');
-            
+
             $table->timestamps();
         });
     }

@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
-                <div class="overflow-x-auto">
+                <div>
                     <table class="min-w-full bg-white rounded-lg text-center">
                         <thead class="bg-gray-100 text-center">
                             <tr>
@@ -340,6 +340,48 @@
                 </div>
                 <div class="mt-2">
                     {{ $candidatos->links() }}
+                </div>
+                <div wire:loading.flex wire:target="guardar"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
+                </div>
+                <div wire:loading.flex wire:target="guardarEntrevista"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
+                </div>
+                <div wire:loading.flex wire:target="aprobarExpediente"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
+                </div>
+                <div wire:loading.flex wire:target="guardarFechaIngreso"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
+                </div>
+                <div wire:loading.flex wire:target="guardarInformeEvaluacion"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
+                </div>
+                <div wire:loading.flex wire:target="guardarPruebaPsicometrica"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
+                </div>
+                <div wire:loading.flex wire:target="guardarPrubaTecnica"
+                    class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+                    <div
+                        class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                    </div>
                 </div>
             </div>
         </div>

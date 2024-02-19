@@ -28,7 +28,7 @@ return new class extends Migration
 
             /* references */
             $table->foreign('contratos_id')->references('id')->on('contratos')->onUpdate('cascade');
-            $table->foreign('primer_puesto_id')->references('puestos_nominales_id')->on('contratos')->onUpdate('cascade');
+            $table->foreign('primer_puesto_id')->references('id')->on('puestos_nominales')->onUpdate('cascade');
             $table->foreign('puestos_funcionales_id')->references('id')->on('puestos_funcionales')->onUpdate('cascade');
             $table->foreign('dependencias_funcionales_id')->references('id')->on('dependencias_funcionales')->onUpdate('cascade');
             $table->foreign('regiones_id')->references('id')->on('regiones')->onUpdate('cascade');

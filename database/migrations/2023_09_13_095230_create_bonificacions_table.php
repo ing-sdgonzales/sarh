@@ -17,6 +17,13 @@ return new class extends Migration
             $table->tinyIncrements('id');
             $table->string('bono');
             $table->unsignedDecimal('cantidad', 9, 2);
+            $table->unsignedTinyInteger('calculado')->min(0)->max(1);
+
+            /* fks */
+            $table->unsignedTinyInteger('tipos_bonificaciones_id');
+
+            /* references */
+            $table->foreign('tipos_bonificaciones_id')->references('id')->on('tipos_bonificaciones')->onUpdate('cascade');
 
             $table->timestamps();
         });

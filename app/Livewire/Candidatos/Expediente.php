@@ -5,7 +5,6 @@ namespace App\Livewire\Candidatos;
 use App\Models\AplicacionCandidato;
 use App\Models\Candidato;
 use App\Models\EtapaAplicacion;
-use App\Models\Requisito;
 use App\Models\RequisitoCandidato;
 use App\Models\RequisitoPuesto;
 use App\Notifications\AvisoRequisitosRechazados;

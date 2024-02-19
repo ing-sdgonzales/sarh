@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EspecialidadSeeder::class);
         $this->call(RegistroAcademicoSeeder::class);
         $this->call(TipoServicioSeeder::class);
+        $this->call(TipoBonoSeeder::class);
         $this->call(BonificacionSeeder::class);
         $this->call(RequisitoSeeder::class);
         $this->call(RoleSeeder::class);
@@ -51,8 +52,14 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'Sergio Daniel Gonzáles López',
-            'email' => 'sdgonzales@conred.org.gt',
+            'email' => 'sdgonzales@conred.gob.gt',
             'password' => bcrypt('Admin123')
         ])->assignRole('Súper Administrador');
+
+        \App\Models\User::factory()->create([
+            'name' => 'Marvin René Solorzano Tello',
+            'email' => 'mrsolorzano@conred.gob.gt',
+            'password' => bcrypt('Admin123')
+        ])->assignRole('Administrador');
     }
 }

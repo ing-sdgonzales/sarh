@@ -19,7 +19,7 @@ class Capacitaciones extends Component
 
     /* Variables modal crear y editar */
     public $modal = false;
-    public $capacitacion, $organizador, $capacitador;
+    public $capacitacion, $origen, $organizador, $capacitador;
 
     public function render()
     {
@@ -28,6 +28,7 @@ class Capacitaciones extends Component
         $capacitaciones = Capacitacion::select(
             'capacitaciones.id as id',
             'capacitaciones.capacitacion as capacitacion',
+            'capacitaciones.origen as origen',
             'capacitaciones.capacitador as capacitador',
             'dependencias_nominales.dependencia as organizador'
         )
@@ -56,12 +57,14 @@ class Capacitaciones extends Component
         try {
             $validated = $this->validate([
                 'capacitacion' => ['required', 'filled', 'regex:/^[\d]+(?:\.\d{1,2})?|[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s.:;,-]+$/u'],
+                'origen' => ['nullable', 'regex:/^[\d]+(?:\.\d{1,2})?|[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s.:;,-]+$/u'],
                 'capacitador' => 'required|filled|regex:/^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s.:;,-]+$/u',
                 'organizador' => 'required|integer|min:1'
             ]);
 
             Capacitacion::updateOrCreate(['id' => $this->id_capacitacion], [
                 'capacitacion' => $validated['capacitacion'],
+                'origen' => $validated['origen'],
                 'capacitador' => $validated['capacitador'],
                 'dependencias_nominales_id' => $validated['organizador']
             ]);
@@ -86,6 +89,7 @@ class Capacitaciones extends Component
         $this->id_capacitacion = $id;
         $capacitacion = Capacitacion::findOrFail($id);
         $this->capacitacion = $capacitacion->capacitacion;
+        $this->origen = $capacitacion->origen;
         $this->capacitador = $capacitacion->capacitador;
         $this->organizador = $capacitacion->dependencias_nominales_id;
         $this->modal = true;
@@ -106,6 +110,7 @@ class Capacitaciones extends Component
         $this->modal = false;
         $this->id_capacitacion = '';
         $this->capacitacion = '';
+        $this->origen = '';
         $this->capacitador = '';
         $this->organizador = '';
     }

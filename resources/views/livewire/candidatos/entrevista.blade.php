@@ -71,11 +71,6 @@
                         </div> --}}
                 </form>
             </div>
-            <div wire:loading.flex wire:target="guardarEntrevista"
-                class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
-                </div>
-            </div>
 
             <!--Modal footer-->
             <div

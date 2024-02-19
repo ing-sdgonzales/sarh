@@ -5,6 +5,7 @@ namespace App\Livewire\Clinica;
 use App\Models\Empleado;
 use App\Models\RegistroMedico;
 use Exception;
+use Laravel\Sanctum\Contracts\HasApiTokens;
 use Livewire\Component;
 
 class Consulta extends Component
@@ -16,7 +17,7 @@ class Consulta extends Component
 
     /*  Variables modal crear y editar consulta */
     public $modal = false;
-    public $fecha_consulta, $consulta, $receta, $proxima_consulta;
+    public $fecha_consulta, $consulta, $receta, $proxima_consulta, $responsable, $suspension, $desde, $hasta;
 
     public function render()
     {
@@ -58,7 +59,10 @@ class Consulta extends Component
                 'fecha_consulta' => 'required|date',
                 'consulta' => 'required|filled|regex:/^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s.:;,-]+$/u',
                 'receta' => ['required', 'filled', 'regex:/^[\d]+(?:\.\d{1,2})?|[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s.:;,-]+$/u'],
-                'proxima_consulta' => 'nullable|date'
+                'suspension' => 'nullable',
+                'desde' => 'required_if:suspension,true|nullable|date',
+                'hasta' => 'required_if:suspesion,true|nullable|date|after:desde',
+                'proxima_consulta' => 'nullable|date|after_or_equal:fecha_consulta'
             ]);
 
             RegistroMedico::updateOrCreate(['id' => $this->id_registro], [
@@ -66,6 +70,10 @@ class Consulta extends Component
                 'consulta' => $validated['consulta'],
                 'receta' => $validated['receta'],
                 'proxima_consulta' => $validated['proxima_consulta'],
+                'responsable_consulta' => auth()->user()->name,
+                'suspension' => $validated['suspension'] ? 1 : 0,
+                'desde' => $validated['desde'],
+                'hasta' => $validated['hasta'],
                 'empleados_id' => $this->id_empleado
             ]);
 
@@ -89,11 +97,24 @@ class Consulta extends Component
     {
         $this->id_registro = $id;
         $registro = RegistroMedico::findOrFail($id);
-        $this->fecha_consulta = $registro->fecha_consulta;
-        $this->consulta = $registro->consulta;
-        $this->receta = $registro->receta;
-        $this->proxima_consulta = $registro->proxima_consulta;
+        if (!empty($registro)) {
+            $this->fecha_consulta = $registro->fecha_consulta;
+            $this->consulta = $registro->consulta;
+            $this->receta = $registro->receta;
+            $this->proxima_consulta = $registro->proxima_consulta;
+            $this->suspension = ($registro->suspension == 1) ? true : false;
+            $this->desde = $registro->desde;
+            $this->hasta = $registro->hasta;
+        }
         $this->modal = true;
+    }
+
+    public function updatedSuspension()
+    {
+        if ($this->suspension == false) {
+            $this->desde = null;
+            $this->hasta = null;
+        }
     }
 
     public function mount($id_empleado)
@@ -114,5 +135,8 @@ class Consulta extends Component
         $this->consulta = '';
         $this->receta = '';
         $this->proxima_consulta = '';
+        $this->desde = '';
+        $this->hasta = '';
+        $this->suspension = false;
     }
 }

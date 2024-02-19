@@ -4,10 +4,14 @@ namespace App\Livewire\Clinica;
 
 use App\Models\Empleado;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Historial extends Component
 {
-    public $busqueda;
+    use WithPagination;
+
+    public $busqueda, $filtro;
+
     public function render()
     {
         $empleados = Empleado::select(
@@ -24,6 +28,14 @@ class Historial extends Component
             ->join('puestos_nominales', 'contratos.puestos_nominales_id', '=', 'puestos_nominales.id')
             ->join('renglones', 'puestos_nominales.renglones_id', '=', 'renglones.id')
             ->join('dependencias_nominales', 'puestos_nominales.dependencias_nominales_id', '=', 'dependencias_nominales.id');
+        if (!empty($this->filtro)) {
+            $empleados->where(function ($query) {
+                $query->where('nombres', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('apellidos', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('renglon', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('dependencia', 'LIKE', '%' . $this->filtro . '%');
+            });
+        }
         $empleados = $empleados->paginate(5);
         activity()
             ->causedBy(auth()->user())
@@ -32,5 +44,10 @@ class Historial extends Component
         return view('livewire.clinica.historial', [
             'empleados' => $empleados
         ]);
+    }
+
+    public function updatedBusqueda()
+    {
+        $this->filtro = $this->busqueda;
     }
 }

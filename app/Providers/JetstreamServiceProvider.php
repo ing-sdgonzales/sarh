@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Actions\Jetstream\DeleteUser;
+use App\Http\Responses\LoginResponse;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,13 +30,17 @@ class JetstreamServiceProvider extends ServiceProvider
     {
         $this->configurePermissions();
 
+        // Registra la nueva clase LoginResponse
+        $this->app->singleton(
+            \Laravel\Fortify\Contracts\LoginResponse::class,
+            LoginResponse::class
+        );
+
         Fortify::authenticateUsing(function (Request $request) {
+
             $user = User::where('email', $request->email)->first();
 
-            if (
-                $user &&
-                Hash::check($request->password, $user->password)
-            ) {
+            if ($user && Hash::check($request->password, $user->password)) {
 
                 $user->update([
                     'last_login_at' => Carbon::now()->toDateTimeString(),
@@ -45,6 +50,7 @@ class JetstreamServiceProvider extends ServiceProvider
                 return $user;
             }
         });
+
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('Súper Administrador') ? true : null;

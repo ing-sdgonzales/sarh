@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('codigo', 10);
             $table->text('puesto');
             $table->unsignedSmallInteger('cantidad')->min(0);
+            $table->unsignedTinyInteger('jefe')->min(0)->max(1);
 
             $table->timestamps();
         });

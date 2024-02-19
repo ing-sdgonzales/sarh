@@ -16,7 +16,8 @@ return new class extends Migration
 
             $table->tinyIncrements('id');
             $table->text('dependencia');
-            
+            $table->unsignedTinyInteger('nodo_padre')->nullable();
+
             $table->timestamps();
         });
     }
