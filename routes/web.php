@@ -11,6 +11,8 @@ use App\Livewire\Capacitaciones\Inducciones\Inducciones;
 use App\Livewire\Capacitaciones\Sesiones;
 use App\Livewire\Clinica\Consulta;
 use App\Livewire\Clinica\Historial;
+use App\Livewire\Conred\Formulario\Index;
+use App\Livewire\Conred\Postularse;
 use App\Livewire\Contratos\Contratos;
 use App\Livewire\Contratos\PuestosFuncionales\HistorialPuestos;
 use App\Livewire\Empleados\Empleados;
@@ -55,6 +57,9 @@ Route::get('/buscar_aplicacion', [BuscarAplicacionController::class, 'index'])
 Route::post('/buscar_aplicacion', [BuscarAplicacionController::class, 'buscar'])
     ->middleware(['guest:' . config('fortify.guard')]);
 
+Route::get('/quieroserconred', Postularse::class)->middleware(['guest:' . config('fortify.guard')])->name('postularse');
+Route::get('/quieroserconred/formulario/{id_puesto}', Index::class)->middleware(['guest:' . config('fortify.guard'), 'verificar.estado.puesto'])->name('postularse.formulario.index');
+
 Route::get('/presentar_requisitos/{id_candidato}', ListarRequisitos::class)
     ->middleware(['CheckEmailSearch', 'guest:' . config('fortify.guard')])->name('presentar_requisitos');
 
@@ -86,7 +91,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/sesiones_capacitacion/{id_capacitacion}', Sesiones::class)->middleware('can:Ver sesiones de capacitación')->name('sesiones');
     Route::get('/vacaciones', Vacaciones::class)->middleware('can:Ver vacaciones')->name('vacaciones');
     Route::get('/vacaciones/control_vacaciones/{id_empleado}', ControlVacaciones::class)->middleware('can:Ver control de vacaciones')->name('control_vacaciones');
-    Route::get('/inducciones', Inducciones::class)->middleware('can:Ver inducciones')->name('inducciones');//*
+    Route::get('/inducciones', Inducciones::class)->middleware('can:Ver inducciones')->name('inducciones'); //*
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('can: Ver dashboard')->name('dashboard');
 });
 

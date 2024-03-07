@@ -11,4 +11,9 @@ class Departamento extends Model
 
     protected $table = 'departamentos';
     protected $fillable = ['codigo', 'nombre', 'regiones_id'];
+
+    public function municipios()
+    {
+        return $this->hasMany(Municipio::class, 'departamentos_id', 'id');
+    }
 }

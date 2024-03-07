@@ -14,6 +14,6 @@ class Candidato extends Model
     protected $table = 'candidatos';
     protected $fillable = [
         'dpi', 'nit', 'iggs', 'nombre', 'email', 'imagen', 'fecha_nacimiento', 'fecha_registro', 'fecha_ingreso',
-        'direccion', 'estado', 'aprobado', 'estados_civiles_id', 'municipios_id', 'tipos_contrataciones_id'
+        'direccion', 'estado', 'aprobado', 'contratado', 'estados_civiles_id', 'municipios_id', 'tipos_contrataciones_id'
     ];
 }

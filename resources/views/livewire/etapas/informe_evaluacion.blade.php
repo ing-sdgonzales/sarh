@@ -28,7 +28,7 @@
             </div>
 
             <!--Modal body-->
-            <form method="POST" wire:submit='guardarInformeEvaluacion'>
+            <form method="POST" wire:submit='guardarInformeEvaluacion' enctype="multipart/form-data>
                 @method('POST')
                 @csrf
                 <div class="relative p-4">
@@ -40,7 +40,7 @@
                                         class="block text-sm font-medium leading-6 text-gray-900">Informe</label>
                                     <div class="mt-2">
                                         <input wire:model='informe_ubicacion' type="file" accept=".pdf"
-                                            name="informe_ubicacion" id="informe_ubicacion" required
+                                            name="informe_ubicacion" id="informe_ubicacion"
                                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         <div>
                                             <span class="text-red-600 text-sm">

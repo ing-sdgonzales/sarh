@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckPuestoIsAvailable;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'VerificarEstadoFormulario' => \App\Http\Middleware\VerificarEstadoFormulario::class,
         'verificar.estado.empleado' => \App\Http\Middleware\VerificarEstadoEmpleado::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'verificar.estado.puesto' => \App\Http\Middleware\CheckPuestoIsAvailable::class
     ];
 }

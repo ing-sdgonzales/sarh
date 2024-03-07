@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('candidatos', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            
+
             $table->integerIncrements('id');
             $table->string('dpi', 50)->unique();
             $table->string('nit', 15)->unique();
@@ -27,6 +27,7 @@ return new class extends Migration
             $table->text('direccion');
             $table->unsignedTinyInteger('estado')->default(0);
             $table->unsignedTinyInteger('aprobado')->default(0);
+            $table->unsignedTinyInteger('contratado')->default(0);
 
             /* fks */
             $table->unsignedTinyInteger('estados_civiles_id');

@@ -56,10 +56,10 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('Admin123')
         ])->assignRole('Súper Administrador');
 
-        \App\Models\User::factory()->create([
+        /* \App\Models\User::factory()->create([
             'name' => 'Marvin René Solorzano Tello',
             'email' => 'mrsolorzano@conred.gob.gt',
             'password' => bcrypt('Admin123')
-        ])->assignRole('Administrador');
+        ])->assignRole('Administrador'); */
     }
 }

@@ -20,6 +20,7 @@ class CatalogoPuestos extends Component
 
     /* Variables modal crear y editar */
     public $modal = false;
+    public $modo_edicion = false;
     public $id_puesto, $codigo, $puesto, $cantidad, $renglon;
 
     public function render()
@@ -45,14 +46,12 @@ class CatalogoPuestos extends Component
             });
         }
 
-        $puestos = $puestos->paginate(10);
-
         activity()
             ->causedBy(auth()->user())
             ->withProperties(['user_id' => auth()->id()])
             ->log("El usuario " . auth()->user()->name .  " visitó la página: " . request()->path());
         return view('livewire.puesto.catalogo.catalogo-puestos', [
-            'puestos' => $puestos
+            'puestos' => $puestos->paginate(10),
         ]);
     }
 
@@ -101,7 +100,7 @@ class CatalogoPuestos extends Component
         $this->cantidad = $puesto->cantidad;
         $this->renglon = $puesto->renglones_id;
         $this->puesto = $puesto->puesto;
-
+        $this->modo_edicion = true;
         $this->modal = true;
     }
 
@@ -122,6 +121,7 @@ class CatalogoPuestos extends Component
         $this->renglon = '';
         $this->puesto = '';
         $this->cantidad = '';
+        $this->modo_edicion = false;
         $this->modal = false;
     }
 }

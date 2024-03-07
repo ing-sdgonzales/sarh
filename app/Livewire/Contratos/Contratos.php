@@ -994,7 +994,6 @@ class Contratos extends Component
 
         try {
             $contrato = Contrato::findOrFail($this->id_contrato);
-
             $bonos = BonoPuesto::select(
                 'cantidad'
             )

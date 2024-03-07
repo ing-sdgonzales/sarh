@@ -85,23 +85,11 @@ class Expediente extends Component
 
     public function guardar()
     {
+        $validated = $this->validate([
+            'aprobado' => 'required|integer|min:0',
+            'observacion' => 'required_if:aprobado,0|nullable'
+        ]);
         try {
-            $validated = $this->validate([
-                'aprobado' => 'required|integer|min:0',
-            ]);
-
-            if ($validated['aprobado'] == 1) {
-                $validated = $this->validate([
-                    'aprobado' => 'required|integer|min:0',
-                    'observacion' => 'nullable|string'
-                ]);
-            } else {
-                $validated = $this->validate([
-                    'aprobado' => 'required|integer|min:0',
-                    'observacion' => 'required|filled'
-                ]);
-            }
-
             DB::transaction(function () use ($validated) {
                 $req = RequisitoCandidato::findOrFail($this->id_requisito_candidato);
 
@@ -151,7 +139,6 @@ class Expediente extends Component
                     $can->notify(new NotificacionPresentarExpediente);
                 }
             });
-
 
             $log = DB::table('requisitos_candidatos')
                 ->join('candidatos', 'requisitos_candidatos.candidatos_id', '=', 'candidatos.id')

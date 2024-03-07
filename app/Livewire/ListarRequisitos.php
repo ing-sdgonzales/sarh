@@ -10,7 +10,6 @@ use App\Notifications\NotificacionCargaRequisitos;
 use Exception;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
@@ -166,7 +165,7 @@ class ListarRequisitos extends Component
 
                     /* $this->requisitos_cargados[$requisito_id] = $archivo->getClientOriginalName(); */
                 }
-                Notification::route('mail', 'ing.sergiodaniel@gmail.com')
+                Notification::route('mail', 'sarh.conred@gmail.com')
                     ->notify(new NotificacionCargaRequisitos($this->requisitos_cargados, $this->nombre_candidato, $this->id_candidato));
 
                 $reqs_puesto = RequisitoPuesto::select('requisitos_id')->where('puestos_nominales_id', $this->puesto)

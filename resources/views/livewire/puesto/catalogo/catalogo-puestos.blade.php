@@ -5,14 +5,13 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gray-200 h-auto">
+    <div class="py-12 h-full">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-10">
             <div class="mt-2 grid grid-cols-8 gap-x-6 gap-y-8 mb-2">
-
                 <!--Button trigger extra large modal-->
                 <div class="col-end-1">
                     @can('Crear puestos en catálogo')
-                        <button type="button" wire:click='crear()'
+                        <button type="button" wire:click='crear'
                             class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="w-6 h-6">
@@ -39,16 +38,19 @@
                                 </svg>
                             </span>
                         </div>
-                        <input wire:model.live="busqueda" type="text" name="search" id="search"
+                        {{-- <input wire:model.live="busqueda" type="text" name="search" id="search"
                             style="height: 42px;" autocomplete="off"
                             class="inline-block w-full rounded-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset shadow-md focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            placeholder="Buscar">
+                            placeholder="Buscar"> --}}
+                        <x-input wire:model.live="busqueda" type="text" name="search" id="search"
+                            style="height: 42px;" autocomplete="off" class="inline-block w-full pl-10"
+                            placeholder="Buscar" />
                     </div>
                 </div>
 
                 <div class="col-span-3">
                     <div>
-                        <select wire:model='renglon_filtro' id="renglon_filtro" name="renglon_filtro"
+                        {{-- <select wire:model='renglon_filtro' id="renglon_filtro" name="renglon_filtro"
                             wire:change='getPuestosByRenglon' style="height: 42px;"
                             class="block w-full rounded-lg border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 shadow-md">
                             <option value="">Filtrar por renglón...</option>
@@ -57,16 +59,25 @@
                                     {{ $renglon->renglon }}-{{ $renglon->nombre }}
                                 </option>
                             @endforeach
-                        </select>
+                        </select> --}}
+                        <x-select wire:model='renglon_filtro' id="renglon_filtro" name="renglon_filtro"
+                            wire:change='getPuestosByRenglon' style="height: 42px;" class="block w-full">
+                            <option value="">Filtrar por renglón...</option>
+                            @foreach ($renglones as $renglon)
+                                <option value="{{ $renglon->id }}">
+                                    {{ $renglon->renglon }}-{{ $renglon->nombre }}
+                                </option>
+                            @endforeach
+                        </x-select>
                     </div>
                 </div>
             </div>
 
             <div class="bg-white dark:bg-gray-800 overflow-x-hidden shadow-xl sm:rounded-lg">
                 <div>
-                    <table class="min-w-full bg-white rounded-lg overflow-x-hidden text-center">
-                        <thead class="bg-gray-100 text-center">
-                            <tr>
+                    <table class="min-w-full rounded-lg overflow-x-hidden text-center">
+                        <thead class="bg-gray-300 dark:bg-gray-800 text-center">
+                            <tr class="text-gray-800 dark:text-gray-300">
                                 <th class="w-1/12 py-2 px-4">No.</th>
                                 <th class="w-1/12 py-2 px-4">Código</th>
                                 <th class="w-1/4 py-2 px-4">Puesto</th>
@@ -75,9 +86,10 @@
                                 <th class="w-1/12 py-2 px-4">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="bg-white dark:bg-gray-600">
                             @foreach ($puestos as $puesto)
-                                <tr>
+                                <tr
+                                    class="text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
                                     <td class="py-2 px-4">{{ $loop->iteration }}.</td>
                                     <td class="py-2 px-4">{{ $puesto->codigo }}</td>
                                     <td class="py-2 px-4">{{ $puesto->puesto }}</td>
@@ -130,7 +142,7 @@
             </div>
             <div wire:loading.flex wire:target="guardar"
                 class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-                <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-indigo-50 bg-transparent">
+                <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-[#FF921F] bg-transparent">
                 </div>
             </div>
         </div>

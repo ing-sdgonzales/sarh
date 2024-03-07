@@ -1,6 +1,6 @@
 <div class="min-h-screen flex justify-center items-center dark:bg-gray-900"
     style="background-image: radial-gradient(circle, #0057b8 20%, #002c59 90%);">
-    <div class="w-full sm:max-w-3xl bg-gray-200 dark:bg-gray-800 shadow-2xl sm:rounded-lg overflow-hidden border-orange-500 border-2"
+    <div class="w-full sm:max-w-3xl bg-gray-200 dark:bg-gray-800 shadow-2xl sm:rounded-lg overflow-hidden border-[#FF921F] border-2"
         style="height: 400px;">
         <div class="flex justify-center items-center h-full">
             <div class="grid grid-cols-2 gap-6">

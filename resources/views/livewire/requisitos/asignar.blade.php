@@ -7,21 +7,21 @@
 
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
 
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full"
+        <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full"
             role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <div
                 class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
                 <!--Modal title-->
                 <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
-                    Nuevo registro
+                    Agregar requisitos
                 </h5>
                 <!--Close button-->
                 <button type="button" wire:click='cerrarModalAsignar()'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-6 w-6">
+                        stroke="currentColor" class="h-6 w-6 dark:text-gray-200">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -32,39 +32,46 @@
                 <form method="POST">
                     @csrf
                     <div class="space-y-12">
-                        <div class="border-b border-gray-900/10 pb-6">
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Requisitos</h2>
+                        <div class="{{-- border-b border-gray-900/10 --}} pb-6">
+                            <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">Requisitos
+                            </h2>
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-6">
-                                    <label for="puesto_requisitos"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Puesto</label>
+                                    {{-- <label for="puesto_requisitos"
+                                        class="block text-sm font-medium leading-6 text-gray-900">Puesto</label> --}}
+                                    <x-label for="puesto_requisitos" value="{{ __('Puesto') }}" />
                                     <div class="mt-2">
-                                        <input type="text" name="puesto_requisitos" readonly id="puesto_requisitos"
+                                        {{-- <input type="text" name="puesto_requisitos" readonly id="puesto_requisitos"
                                             value="{{ $puesto_requisitos->cod_puesto }} - {{ $puesto_requisitos->cod_catalogo }} - {{ $puesto_requisitos->puesto }}"
-                                            class="block w-full rounded-md text-center border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            class="block w-full rounded-md text-center border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"> --}}
+                                        <x-input type="text" name="puesto_requisitos" readonly id="puesto_requisitos"
+                                            value="{{ $puesto_requisitos->cod_puesto }} - {{ $puesto_requisitos->cod_catalogo }} - {{ $puesto_requisitos->puesto }}"
+                                            class="block w-full text-center" />
                                     </div>
                                 </div>
                                 <div class="sm:col-span-6">
                                     <table
-                                        class="min-w-full bg-white rounded-lg overflow-hidden text-center ring-1 ring-gray-300">
-                                        <thead class="bg-gray-100 text-center">
-                                            <tr>
-                                                <th class="w-1/12 py-2 px-4">No.</th>
+                                        class="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden text-center ring-1 ring-gray-300 dark:ring-gray-600">
+                                        <thead class="bg-gray-300 dark:bg-gray-800 text-center">
+                                            <tr class="text-gray-800 dark:text-gray-300">
+                                                <th class="w-1/12 py-2 px-4"></th>
                                                 <th class="w-1/3 py-2 px-4">Requisito</th>
                                                 <th class="w-1/3 py-2 px-4">Especificación</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="bg-white dark:bg-gray-600">
                                             @foreach ($requisitos as $req)
-                                                <tr>
+                                                <tr class="text-gray-800 dark:text-gray-200">
                                                     <td class="py-2 px-4 items-center">
                                                         <div class="relative flex gap-x-2">
-                                                            {{ $loop->iteration }}.
                                                             <div class="flex h-6 items-center">
-                                                                <input wire:model='requisito' type="checkbox"
+                                                                {{-- <input wire:model='requisito' type="checkbox"
                                                                     id="requisito-{{ $req->id }}"
                                                                     value="{{ $req->id }}"
-                                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"> --}}
+                                                                <x-checkbox wire:model='requisito'
+                                                                    id="requisito-{{ $req->id }}"
+                                                                    value="{{ $req->id }}" />
                                                             </div>
                                                         </div>
                                                     </td>

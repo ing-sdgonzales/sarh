@@ -18,6 +18,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
 use Livewire\WithPagination;
 use Livewire\Component;
 
@@ -55,6 +56,7 @@ class Candidatos extends Component
 
     /* Modal Informe de Evaluación */
     public $modal_informe_evaluacion = false;
+    #[Validate('file|mimes:pdf|max:2048')]
     public $informe_ubicacion;
 
     /* Modal Fechas de Ingresos*/
@@ -321,7 +323,7 @@ class Candidatos extends Component
             )->where('candidatos.id', '=', $id)
             ->first();
 
-        $this->dpi =  $candidato->dpi;
+        $this->dpi = $candidato->dpi;
         $this->nit = $candidato->nit;
         $this->igss = $candidato->igss;
         $this->nombre = $candidato->nombre;
@@ -573,37 +575,37 @@ class Candidatos extends Component
 
     public function guardarInformeEvaluacion()
     {
-        try {
-            $ubicacion = '';
-            $aplicacion = AplicacionCandidato::select(
-                'aplicaciones_candidatos.id as id_aplicacion',
-                'candidatos.nombre as nombre_candidato'
-            )
-                ->join('candidatos', 'aplicaciones_candidatos.candidatos_id', '=', 'candidatos.id')
-                ->where('candidatos_id', $this->id)
-                ->where('puestos_nominales_id', $this->id_puesto)
-                ->first();
-            $informe = InformeEvaluacion::select('id', 'fecha_carga', 'ubicacion')->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)->first();
-            if ($informe) {
-                $validated = $this->validate([
-                    'informe_ubicacion' => 'nullable|file|mimes:pdf|max:2048'
-                ]);
-            } else {
-                $validated = $this->validate([
-                    'informe_ubicacion' => 'required|file|mimes:pdf|max:2048'
-                ]);
-            }
-            if ($validated['informe_ubicacion']) {
-                if ($informe) {
-                    if (Storage::disk('public')->exists($informe->ubicacion)) {
-                        Storage::disk('public')->delete($informe->ubicacion);
-                    }
-                }
-                $ubicacion = $this->informe_ubicacion->store('informes_evaluacion', 'public');
-            } else {
-                $ubicacion = $informe->ubicacion;
-            }
+        $ubicacion = '';
+        $aplicacion = AplicacionCandidato::select(
+            'aplicaciones_candidatos.id as id_aplicacion',
+            'candidatos.nombre as nombre_candidato'
+        )
+            ->join('candidatos', 'aplicaciones_candidatos.candidatos_id', '=', 'candidatos.id')
+            ->where('candidatos_id', $this->id)
+            ->where('puestos_nominales_id', $this->id_puesto)
+            ->first();
 
+        $informe = InformeEvaluacion::select('id', 'fecha_carga', 'ubicacion')->where('aplicaciones_candidatos_id', $aplicacion->id_aplicacion)->first();
+        if ($informe) {
+            $validated = $this->validate([
+                'informe_ubicacion' => 'nullable|file|mimes:pdf|max:2048'
+            ]);
+        } else {
+            $validated = $this->validate([
+                'informe_ubicacion' => 'required|file|mimes:pdf|max:2048'
+            ]);
+        }
+        if ($validated['informe_ubicacion']) {
+            if ($informe) {
+                if (Storage::disk('public')->exists($informe->ubicacion)) {
+                    Storage::disk('public')->delete($informe->ubicacion);
+                }
+            }
+            $ubicacion = $this->informe_ubicacion->store('informes_evaluacion', 'public');
+        } else {
+            $ubicacion = $informe->ubicacion;
+        }
+        try {
             DB::transaction(function () use ($informe, $aplicacion, $validated, $ubicacion) {
                 if ($informe) {
                     InformeEvaluacion::where('id', $informe->id)->update([
@@ -648,19 +650,6 @@ class Candidatos extends Component
     {
         $this->id = $id_candidato;
         $this->id_puesto = $id_puesto;
-        $aplicacion = AplicacionCandidato::select(
-            'id',
-        )
-            ->where('candidatos_id', $this->id)
-            ->where('puestos_nominales_id', $this->id_puesto)
-            ->first();
-        $informe = InformeEvaluacion::select('id', 'fecha_carga', 'ubicacion')->where('aplicaciones_candidatos_id', $aplicacion->id)->first();
-        if ($informe) {
-            $this->informe_ubicacion = $informe->ubicacion;
-        } else {
-            $this->informe_ubicacion = '';
-        }
-
         $this->modal_informe_evaluacion = true;
     }
 
