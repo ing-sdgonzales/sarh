@@ -9,7 +9,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
 
-                @role('Empleado')
+                @if (auth()->user()->hasRole('Empleado'))
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
                         <a href="{{ route('dashboard-empleados') }}">
@@ -85,7 +85,8 @@
 
                                                 </div>
                                                 <div>
-                                                    <a href="{{ route('vacaciones') }}" class="font-semibold text-gray-900">
+                                                    <a href="{{ route('vacaciones') }}"
+                                                        class="font-semibold text-gray-900">
                                                         {{ __('Solicitar permiso') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
@@ -107,7 +108,8 @@
                                                     </svg>
                                                 </div>
                                                 <div>
-                                                    <a href="{{ route('vacaciones') }}" class="font-semibold text-gray-900">
+                                                    <a href="{{ route('vacaciones') }}"
+                                                        class="font-semibold text-gray-900">
                                                         {{ __('Solicitar constancia laboral') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
@@ -144,7 +146,9 @@
                             </div>
                         </div>
                     </div>
-                @else
+                @elseif(auth()->user()->hasRole('Súper Administrador') ||
+                        auth()->user()->hasRole('Administrador') ||
+                        auth()->user()->hasRole('Operativo'))
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
                         <a href="{{ route('dashboard') }}">
@@ -267,7 +271,8 @@
                                                     </svg>
                                                 </div>
                                                 <div>
-                                                    <a href="{{ route('puestos') }}" class="font-semibold text-gray-900">
+                                                    <a href="{{ route('puestos') }}"
+                                                        class="font-semibold text-gray-900">
                                                         {{ __('Administración de puestos') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
@@ -475,7 +480,8 @@
                                                         {{ __('Inducciones') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Empleados pendientes de capacitación de
+                                                    <p class="mt-1 text-gray-600">Empleados pendientes de capacitación
+                                                        de
                                                         inducción
                                                     </p>
                                                 </div>
@@ -591,7 +597,20 @@
                             </div>
                         </div>
                     </div>
-                @endrole
+                @else
+                    <!-- Logo -->
+                    <div class="shrink-0 flex items-center">
+                        <a href="{{ route('dashboard-empleados') }}">
+                            <x-application-mark class="block h-9 w-auto" />
+                        </a>
+                    </div>
+                    <!-- Navigation Links -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
+                            {{ __('Formulario PIR') }}
+                        </x-nav-link>
+                    </div>
+                @endif
             </div>
 
             <!-- Teams Dropdown -->
@@ -751,7 +770,7 @@
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
 
-            @role('Empleado')
+            @if (auth()->user()->hasRole('Empleado'))
                 <x-responsive-nav-link href="{{ route('dashboard-empleados') }}" :active="request()->routeIs('dashboard-empleados')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
@@ -775,7 +794,9 @@
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
-            @else
+            @elseif(auth()->user()->hasRole('Súper Administrador') ||
+                    auth()->user()->hasRole('Administrador') ||
+                    auth()->user()->hasRole('Operativo'))
                 <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
@@ -815,8 +836,8 @@
                     </x-slot>
                     <x-slot name="content">
                         {{-- <x-dropdown-link href="{{ route('candidatos') }}" :active="request()->routeIs('candidatos')">
-                        {{ __('Reclutamiento') }}
-                    </x-dropdown-link> --}}
+        {{ __('Reclutamiento') }}
+    </x-dropdown-link> --}}
                     </x-slot>
                 </x-dropdown>
 
@@ -846,12 +867,15 @@
                     </x-slot>
                     <x-slot name="content">
                         {{-- <x-dropdown-link href="{{ route('candidatos') }}" :active="request()->routeIs('candidatos')">
-                        {{ __('Reclutamiento') }}
-                    </x-dropdown-link> --}}
+        {{ __('Reclutamiento') }}
+    </x-dropdown-link> --}}
                     </x-slot>
                 </x-dropdown>
-            @endrole
-
+            @else
+            <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
+                    {{ __('Formulario PIR') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
