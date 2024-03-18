@@ -4,6 +4,67 @@
             {{ __('Informe de Estado de Fuerza') }}
         </h2>
     </x-slot>
+
+    <div class="p-4 mt-2 grid grid-cols-6 gap-x-4 gap-y-8">
+        @can('Consolidar PIR')
+            <div class="sm:col-span-1">
+                <button type="button" wire:click="consolidarPIR"
+                    class="inline-block w-full rounded-md h-[42px] bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                    <div class="flex items-end space-x-2 justify-center">
+                        <h6 class="text-sm font-normal text-gray-200">Consolidar PIR</h6>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                        </svg>
+                    </div>
+                </button>
+            </div>
+
+            <div class="sm:col-span-1">
+                <button type="button" wire:click="generarReporteDiario"
+                    class="inline-block w-full rounded-md h-[42px] bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                    <div class="flex items-end space-x-2 justify-center">
+                        <h6 class="text-sm font-normal text-gray-200">Reporte diario</h6>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                        </svg>
+                    </div>
+                </button>
+            </div>
+
+            <div class="sm:col-span-2">
+                <button type="button" wire:click="generarReporteAusencias"
+                    class="inline-block w-full rounded-md h-[42px] bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                    <div class="flex items-end space-x-2 justify-center">
+                        <h6 class="text-sm font-normal text-gray-200">Reporte de ausencias</h6>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        @endcan
+
+        <div class="sm:col-span-1">
+            <button type="button" wire:click="generarFromularioPIR"
+                class="inline-block w-full rounded-md h-[42px] bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                <div class="flex items-end space-x-2 justify-center">
+                    <h6 class="text-sm font-normal text-gray-200">PIR</h6>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                    </svg>
+                </div>
+            </button>
+        </div>
+    </div>
+
     <div class="relative p-4">
         <form wire:submit='guardar'>
             @csrf
@@ -87,6 +148,13 @@
                                                     <td class="py-2 px-4"><x-input
                                                             wire:model='personal.{{ $key }}.observacion'
                                                             type="text" class="text-center block w-full" />
+                                                        <div>
+                                                            <span class="text-red-600 text-sm">
+                                                                @error('personal.{{ $key }}.observacion')
+                                                                    {{ $message }}
+                                                                @enderror
+                                                            </span>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -142,9 +210,8 @@
                                                             @endforeach
                                                         </x-select></td>
                                                     <td class="py-2 px-4"><x-input
-                                                            wire:model='contratista.{{ $key }}.observacion'
+                                                            wire:model="contratista.{{ $key }}.observacion"
                                                             type="text" class="text-center block w-full" />
-                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -159,7 +226,8 @@
                 <x-button type="submit">{{ __('Guardar') }}</x-button>
             </div>
         </form>
-        <div wire:loading.flex wire:target="guardar"
+        <div wire:loading.flex
+            wire:target="guardar,generarFromularioPIR,consolidarPIR,generarReporteDiario,generarReporteAusencias"
             class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-[#FF921F] bg-transparent">
             </div>
@@ -195,7 +263,9 @@
                 Swal.fire({
                     icon: 'error',
                     title: '¡Ups!',
-                    html: `<?php echo session('error'); ?>`
+                    html: `<?php echo session('error'); ?>`,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#1F2937'
                 })
             </script>
         @endif
@@ -206,7 +276,9 @@
                 Swal.fire({
                     icon: 'error',
                     title: '¡Ups!',
-                    html: `<small class="text-danger"><?php echo implode('<br>', $errors->all()); ?></small>`
+                    html: `<small class="text-danger"><?php echo implode('<br>', $errors->all()); ?></small>`,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#1F2937'
                 })
             </script>
         @endif

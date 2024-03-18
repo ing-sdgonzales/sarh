@@ -20,16 +20,14 @@ return new class extends Migration
 
             /* fks */
             $table->unsignedTinyInteger('pir_direccion_id');
-            $table->unsignedTinyInteger('pir_grupo_id');
-            $table->unsignedTinyInteger('pir_reporte_id');
-            $table->unsignedTinyInteger('tipo_servicio_id');
+            $table->unsignedTinyInteger('pir_grupo_id')->default(1);
+            $table->unsignedTinyInteger('pir_reporte_id')->default(1);
             $table->unsignedTinyInteger('renglon_id');
 
             /* references */
             $table->foreign('pir_direccion_id')->references('id')->on('pir_direcciones')->onUpdate('cascade');
             $table->foreign('pir_grupo_id')->references('id')->on('pir_grupos')->onUpdate('cascade');
             $table->foreign('pir_reporte_id')->references('id')->on('pir_reportes')->onUpdate('cascade');
-            $table->foreign('tipo_servicio_id')->references('id')->on('tipos_servicios')->onUpdate('cascade');
             $table->foreign('renglon_id')->references('id')->on('renglones')->onUpdate('cascade');
 
             $table->timestamps();

@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->tinyIncrements('id');
             $table->text('direccion');
+            $table->dateTime('hora_actualizacion');
 
             /* fks */
             $table->unsignedTinyInteger('pir_seccion_id');

@@ -40,7 +40,7 @@ class PirDireccionSeeder extends Seeder
             ['dir' => 'Dirección de Comunicacion Social', 'sec' => 2],
         ];
 
-        $permiso = Permission::create(['name' => 'Crear PIR']);
+        /* $permiso = Permission::create(['name' => 'Crear PIR']); */
         $permiso = Permission::create(['name' => 'Consolidar PIR']);
 
         foreach ($direcciones as $direccion) {
@@ -52,7 +52,9 @@ class PirDireccionSeeder extends Seeder
                 'name' => $direccion['dir']
             ]);
 
-            $permiso->assignRole($rol);
+            if ($rol->name == 'Dirección de Recursos Humanos') {
+                $permiso->assignRole($rol);
+            }
         }
     }
 }
