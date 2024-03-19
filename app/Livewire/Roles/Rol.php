@@ -33,9 +33,8 @@ class Rol extends Component
                 'guard_name' => 'web'
             ]);
 
-            if (!empty($this->permiso)) {
-                $rl->syncPermissions($this->permiso);
-            }
+            $rl->syncPermissions($this->permiso);
+
             activity()
                 ->causedBy(auth()->user())
                 ->withProperties(['user_id' => auth()->id()])

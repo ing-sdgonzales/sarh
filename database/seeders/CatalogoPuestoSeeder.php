@@ -114,10 +114,13 @@ class CatalogoPuestoSeeder extends Seeder
             ['codigo' => '72672', 'puesto' => 'Subdirector Ejecutivo III', 'renglones_id' => 6, 'cantidad' => 20, 'jefe' => 1],
             ['codigo' => '72671', 'puesto' => 'Director Ejecutivo III', 'renglones_id' => 6, 'cantidad' => 15, 'jefe' => 1],
 
+            /* 029 */
+            ['codigo' => '72998', 'puesto' => 'Servicios Profesionales', 'renglones_id' => 10, 'cantidad' => 107, 'jefe' => 0],
+            ['codigo' => '72999', 'puesto' => 'Servicios Técnicos', 'renglones_id' => 10, 'cantidad' => 210, 'jefe' => 0],
+
             /* 031 */
             ['codigo' => '74986', 'puesto' => 'Peón Vigilante I', 'renglones_id' => 11, 'cantidad' => 135, 'jefe' => 0],
             ['codigo' => '74987', 'puesto' => 'Peón Vigilante V', 'renglones_id' => 11, 'cantidad' => 15, 'jefe' => 0],
-
         ];
 
         foreach ($puestosData as $puestos) {

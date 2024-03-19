@@ -22,6 +22,7 @@ use App\Livewire\Formularios\Formulario;
 use App\Livewire\Formularios\Formulario029;
 use App\Livewire\ListarRequisitos;
 use App\Livewire\Permisos\Permiso;
+use App\Livewire\Pir\Formulario as PirFormulario;
 use App\Livewire\Puesto\Catalogo\CatalogoPuestos;
 use App\Livewire\Puesto\Puestos;
 use App\Livewire\Requisitos\Requisitos;
@@ -103,4 +104,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     /* Ruta de inicio de solicitudes de vacaciones */
     Route::get('/empleados/solicitudes/vacaciones', VacacionesVacaciones::class)->name('empleados-solicitudes-vacaciones');
+});
+
+
+/* Grupo de rutas para el roles de PIR */
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+
+    /* Ruta de formulario PIR */
+    Route::get('/pir', PirFormulario::class)->name('formulario_pir');
 });

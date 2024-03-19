@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\PirReporte;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -49,6 +50,13 @@ class DatabaseSeeder extends Seeder
         $this->call(RenglonSeeder::class);
         $this->call(BonoRenglonSeeder::class);
         $this->call(CatalogoPuestoSeeder::class);
+
+        /* PIR */
+        $this->call(PirGrupoSeeder::class);
+        $this->call(PirReporteSeeder::class);
+        $this->call(PirSeccionSeeder::class);
+        $this->call(PirDireccionSeeder::class);
+        $this->call(RecursosHumanosSeeder::class);
 
         \App\Models\User::factory()->create([
             'name' => 'Sergio Daniel Gonzáles López',
