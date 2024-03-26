@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('descripcion');
             $table->text('experiencia');
             $table->text('disponibilidad');
+            $table->text('estudios');
 
             /* fks */
             $table->unsignedTinyInteger('registros_academicos_id');

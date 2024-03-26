@@ -14,10 +14,10 @@
                 <!--Modal title-->
                 <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
-                    {{ $modo_edicion ? 'Editar registro' : 'Nuevo registro' }}
+                    Información del perfil del puesto
                 </h5>
                 <!--Close button-->
-                <button type="button" wire:click='cerrarModal'
+                <button type="button" wire:click='cerrarPerfilModal'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -28,21 +28,20 @@
             </div>
 
             <!--Modal body-->
-            <form method="POST" wire:submit='guardar'>
-                @method('POST')
+            <form method="POST" wire:submit='guardarPerfil'>
                 @csrf
                 <div class="relative p-4">
                     <div class="space-y-12">
                         <div class="pb-6">
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-full">
-                                    <x-label for="capacitacion" value="{{ __('Capacitación') }}" />
+                                    <x-label for="descripcion" value="{{ __('Descripción') }}" />
                                     <div class="mt-2">
-                                        <x-input wire:model='capacitacion' type="text" name="capacitacion"
-                                            id="capacitacion" required class="block w-full" />
+                                        <x-textarea wire:model='descripcion' name="descripcion" rows="2"
+                                            id="descripcion" required class="block w-full"></x-textarea>
                                         <div>
                                             <span class="text-red-600 text-sm">
-                                                @error('capacitacion')
+                                                @error('descripcion')
                                                     {{ $message }}
                                                 @enderror
                                             </span>
@@ -51,13 +50,13 @@
                                 </div>
 
                                 <div class="sm:col-span-full">
-                                    <x-label for="origen" value="{{ __('Origen') }}" />
+                                    <x-label for="experiencia" value="{{ __('Experiencia') }}" />
                                     <div class="mt-2">
-                                        <x-input wire:model='origen' type="text" name="origen" id="origen"
-                                            class="block w-full" />
+                                        <x-textarea wire:model='experiencia' name="experiencia" rows="2"
+                                            id="experiencia" required class="block w-full"></x-textarea>
                                         <div>
                                             <span class="text-red-600 text-sm">
-                                                @error('origen')
+                                                @error('experiencia')
                                                     {{ $message }}
                                                 @enderror
                                             </span>
@@ -66,35 +65,50 @@
                                 </div>
 
                                 <div class="sm:col-span-full">
-                                    <x-label for="organizador" value="{{ __('Organizador') }}" />
+                                    <x-label for="disponibilidad" value="{{ __('Disponibilidad') }}" />
                                     <div class="mt-2">
-                                        <x-select wire:model='organizador' id="organizador" name="organizador" required
+                                        <x-textarea wire:model='disponibilidad' name="disponibilidad" rows="1"
+                                            id="disponibilidad" required class="block w-full"></x-textarea>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('disponibilidad')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-full">
+                                    <x-label for="registro_academico" value="{{ __('Nivel acádemico') }}" />
+                                    <div class="mt-2">
+                                        <x-select wire:model='registro_academico' id="registro_academico" name="registro_academico" required
                                             class="block w-full">
                                             <option value="">Seleccionar...</option>
-                                            @foreach ($dependencias_nominales ?? [] as $dependencia)
-                                                <option value="{{ $dependencia->id }}">
-                                                    {{ $dependencia->dependencia }}
+                                            @foreach ($registros_academicos as $registro)
+                                                <option value="{{ $registro->id }}">
+                                                    {{ $registro->nivel }}
                                                 </option>
                                             @endforeach
                                         </x-select>
-                                    </div>
-                                    <div>
-                                        <span class="text-red-600 text-sm">
-                                            @error('organizador')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
+                                        <div>
+                                            <span class="text-red-600 text-sm">
+                                                @error('registro_academico')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="sm:col-span-full">
-                                    <x-label for="capacitador" value="{{ __('Capacitador') }}" />
+                                    <x-label for="estudios" value="{{ __('Estudios') }}" />
                                     <div class="mt-2">
-                                        <x-input wire:model='capacitador' type="text" name="capacitador"
-                                            id="capacitador" required class="block w-full" />
+                                        <x-textarea wire:model='estudios' name="estudios" rows="2" id="estudios"
+                                            required class="block w-full"></x-textarea>
                                         <div>
                                             <span class="text-red-600 text-sm">
-                                                @error('capacitador')
+                                                @error('estudios')
                                                     {{ $message }}
                                                 @enderror
                                             </span>
@@ -106,10 +120,11 @@
                         </div>
                     </div>
                 </div>
+
                 <!--Modal footer-->
                 <div
                     class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-gray-300 border-opacity-100 p-4 dark:border-opacity-50">
-                    <button type="button" wire:click='cerrarModal'
+                    <button type="button" wire:click='cerrarPerfilModal'
                         class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                         data-te-ripple-init data-te-ripple-color="light">
                         {{ __('Cancel') }}

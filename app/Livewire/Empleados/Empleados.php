@@ -1359,6 +1359,11 @@ class Empleados extends Component
                         ->from('requisitos_puestos')
                         ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
                 })
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                    ->from('perfiles')
+                    ->whereRaw('perfiles.puestos_nominales_id = puestos_nominales.id');
+                })
                 ->get();
         } else {
             $this->puestos_nominales = [];
@@ -1418,6 +1423,11 @@ class Empleados extends Component
                     $query->select(DB::raw(1))
                         ->from('requisitos_puestos')
                         ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
+                })
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                    ->from('perfiles')
+                    ->whereRaw('perfiles.puestos_nominales_id = puestos_nominales.id');
                 })
                 ->get();
         } else {

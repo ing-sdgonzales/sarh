@@ -12,19 +12,25 @@
                 <div class="col-end-1">
                     @can('Crear puestos')
                         <button type="button" wire:click='crear'
-                            class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                            class="inline-block rounded-md bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                         </button>
                     @endcan
-                    
+
                     @canany(['Crear puestos', 'Editar puestos'])
                         @if ($modal)
                             @include('livewire.puesto.crear')
                         @endif
                     @endcanany
+
+                    @can('Crear perfiles')
+                        @if ($perfil_modal)
+                            @include('livewire.puesto.perfiles.crear')
+                        @endif
+                    @endcan
                 </div>
                 <div class="sm:col-span-full">
                     <div class="relative rounded-md shadow-sm">
@@ -39,10 +45,6 @@
                         </div>
                         <x-input wire:model.live="busqueda" type="text" name="search" id="search"
                             class="inline-block w-full pl-10" autocomplete="off" placeholder="Buscar" />
-                        {{-- <input wire:model.live="busqueda" type="text" name="search" id="search"
-                            style="height: 42px;" autocomplete="off"
-                            class="inline-block w-full rounded-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset shadow-md focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            placeholder="Buscar"> --}}
                     </div>
                 </div>
 
@@ -54,10 +56,10 @@
                 @endcan
             </div>
 
-
-            <div class="bg-white dark:bg-gray-800 overflow-x-hidden shadow-xl sm:rounded-lg">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full rounded-lg overflow-x-hidden text-center">
+            <div {{-- class="overflow-x-auto" --}}>
+                <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-md">
+                    <table
+                        class="min-w-full border-2 border-separate border-spacing-0 text-center shadow-lg rounded-md border-solid border-gray-300 dark:border-gray-800">
                         <thead class="bg-gray-300 dark:bg-gray-800 text-center">
                             <tr class="text-gray-800 dark:text-gray-300">
                                 <th class="w-1/12 py-2 px-4">Código</th>
@@ -72,20 +74,30 @@
                             @foreach ($puestos as $puesto)
                                 <tr
                                     class="text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
-                                    <td class="py-2 px-4">{{ $puesto->codigo }}</td>
-                                    <td class="py-2 px-4">{{ $puesto->puesto }}</td>
-                                    <td class="py-2 px-4">{{ $puesto->dependencia }}</td>
-                                    <td class="py-2 px-4">{{ $puesto->renglon }}</td>
-                                    <td class="py-2 px-4">
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $puesto->codigo }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $puesto->puesto }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $puesto->dependencia }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $puesto->renglon }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         @if ($puesto->activo == 1)
                                             <span
-                                                class="inline-block whitespace-nowrap rounded-[0.27rem] bg-success-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-success-800">Desocupado</span>
+                                                class="inline-block whitespace-nowrap rounded-[0.27rem] bg-success-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-success-800">Desocupado</span>
                                         @else
                                             <span
                                                 class="inline-block whitespace-nowrap rounded-[0.27rem] bg-danger-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-danger-800">Ocupado</span>
                                         @endif
                                     </td>
-                                    <td class="py-2 px-4">
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         <div class="relative" data-te-dropdown-position="dropstart">
                                             <button
                                                 class="flex items-center mx-auto whitespace-nowrap rounded bg-gray-400 px-2 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-gray-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-gray-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-gray-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
@@ -143,6 +155,29 @@
                                                         </button>
                                                     </li>
                                                 @endcan
+
+                                                @can('Crear perfil')
+                                                    <li>
+                                                        <button type="button"
+                                                            wire:click='crearPerfil({{ $puesto->id }})'
+                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                            data-te-dropdown-item-ref>
+                                                            <div class="flex items-end space-x-2">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="1.5"
+                                                                    stroke="currentColor" class="w-5 h-5">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+                                                                </svg>
+
+                                                                <h6
+                                                                    class="text-sm font-normal text-neutral-700 dark:text-gray-200">
+                                                                    Perfil
+                                                                </h6>
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                @endcan
                                         </div>
                                     </td>
                                 </tr>
@@ -159,7 +194,7 @@
                 <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-[#FF921F] bg-transparent">
                 </div>
             </div>
-            <div wire:loading.flex wire:target="guardarRequisitos"
+            <div wire:loading.flex wire:target="guardarRequisitos,guardarPerfil"
                 class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                 <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-[#FF921F] bg-transparent">
                 </div>

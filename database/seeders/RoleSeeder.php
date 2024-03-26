@@ -51,6 +51,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'Crear puestos'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Editar puestos'])->syncRoles([$administrador, $operativo]);
         Permission::create(['name' => 'Asignar requisitos'])->syncRoles([$administrador, $operativo]);
+        Permission::create(['name' => 'Crear perfiles'])->syncRoles([$administrador, $operativo]);
 
         /* Permiso para ver la ruta /candidatos */
         Permission::create(['name' => 'Ver candidatos'])->syncRoles([$administrador, $operativo]);

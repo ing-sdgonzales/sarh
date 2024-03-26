@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Created by Josias Montag
  * Date: 10/30/18 11:04 AM
@@ -91,6 +90,7 @@ class RecaptchaV3
 
 
         return isset($body['score']) ? $body['score'] : false;
+
     }
 
 
@@ -114,18 +114,19 @@ class RecaptchaV3
     /**
      * @param $action
      */
-    public function field($action,  $name = 'g-recaptcha-response')
+    public function field($action, $name = 'g-recaptcha-response')
     {
         $fieldId = uniqid($name . '-', false);
-        /* $html = '<input type="text" wire:model="' . $lw . '" name="' . $name . '" id="' . $fieldId . '">'; */
-        $html = "<script>
+        $html = '<input type="hidden" name="' . $name . '" id="' . $fieldId . '">';
+        $html .= "<script>
   grecaptcha.ready(function() {
       grecaptcha.execute('" . $this->sitekey . "', {action: '" . $action . "'}).then(function(token) {
-         /* document.getElementById('" . $fieldId . "').value = token; */
-         @this.set('captcha', token);
+         document.getElementById('" . $fieldId . "').value = token;
       });
-  })
+  });
   </script>";
         return $html;
     }
+
+
 }

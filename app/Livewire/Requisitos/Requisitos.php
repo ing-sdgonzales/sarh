@@ -10,7 +10,7 @@ use Livewire\Component;
 class Requisitos extends Component
 {
     public $id_requisito, $requisito, $especificacion;
-    public $modal = false;
+    public $modal = false, $modo_edicion = false;
     public function render()
     {
         activity()
@@ -48,7 +48,8 @@ class Requisitos extends Component
         }
     }
 
-    public function editar($id_requisito){
+    public function editar($id_requisito)
+    {
         $this->id_requisito = $id_requisito;
 
         $requisito = Requisito::select(
@@ -60,6 +61,7 @@ class Requisitos extends Component
         $this->requisito = $requisito->requisito;
         $this->especificacion = $requisito->especificacion;
 
+        $this->modo_edicion = true;
         $this->modal = true;
     }
 
@@ -71,6 +73,7 @@ class Requisitos extends Component
     public function cerrarModal()
     {
         $this->modal = false;
+        $this->modo_edicion = false;
         $this->requisito = '';
         $this->especificacion = '';
     }

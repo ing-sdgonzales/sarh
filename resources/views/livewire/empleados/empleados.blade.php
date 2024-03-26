@@ -5,12 +5,12 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gray-200 h-auto">
+    <div class="py-12 h-full">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mt-2 grid grid-cols-8 gap-x-6 gap-y-8 mb-2">
                 <div class="col-end-1">
                     @can('Crear empleados')
-                        <button type="button" wire:click="crear()"
+                        <button type="button" wire:click="crear"
                             class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="w-6 h-6">
@@ -43,18 +43,17 @@
                                 </svg>
                             </span>
                         </div>
-                        <input wire:model.live="busqueda" type="text" name="search" id="search"
-                            style="height: 42px;" autocomplete="off"
-                            class="inline-block w-full rounded-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset shadow-md focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            placeholder="Buscar">
+                        <x-input wire:model.live="busqueda" type="text" name="search" id="search"
+                            class="inline-block w-full pl-10" autocomplete="off" placeholder="Buscar" />
                     </div>
                 </div>
             </div>
-            <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white rounded-lg text-center">
-                        <thead class="bg-gray-100 text-center overflow-hidden">
-                            <tr>
+            <div {{-- class="overflow-x-auto" --}}>
+                <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-md">
+                    <table
+                        class="min-w-full border-2 border-separate border-spacing-0 text-center shadow-lg rounded-md border-solid border-gray-300 dark:border-gray-800">
+                        <thead class="bg-gray-300 dark:bg-gray-800 text-center">
+                            <tr class="text-gray-800 dark:text-gray-300">
                                 <th class="w-1/12 py-2 px-4">Foto</th>
                                 <th class="w-1/12 py-2 px-4">Código</th>
                                 <th class="w-1/6 py-2 px-4">DPI</th>
@@ -65,18 +64,32 @@
                                 <th class="w-1/4 py-2 px-4">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="bg-white dark:bg-gray-600">
                             @foreach ($empleados as $empleado)
-                                <tr>
-                                    <td class="py-2 px-4"><img src="{{ asset('storage') . '/' . $empleado->imagen }}"
+                                <tr
+                                    class="text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        <img src="{{ asset('storage') . '/' . $empleado->imagen }}"
                                             class="mx-auto max-w-full rounded-lg" style="height: 70px; width: 70px"
                                             alt="imagen" /></td>
-                                    <td class="py-2 px-4">{{ $empleado->codigo }}</td>
-                                    <td class="py-2 px-4">{{ $empleado->dpi }}</td>
-                                    <td class="py-2 px-4">{{ $empleado->nombres }} {{ $empleado->apellidos }} </td>
-                                    <td class="py-2 px-4">{{ $empleado->nit }}</td>
-                                    <td class="py-2 px-4">{{ $empleado->profesion }}</td>
-                                    <td class="py-2 px-4">
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $empleado->codigo }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $empleado->dpi }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $empleado->nombres }} {{ $empleado->apellidos }} </td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $empleado->nit }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $empleado->profesion }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         @if ($empleado->estado == 0)
                                             <span
                                                 class="inline-block whitespace-nowrap rounded-[0.27rem] bg-gray-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-gray-800">Inactivo</span>
@@ -88,7 +101,8 @@
                                                 class="inline-block whitespace-nowrap rounded-[0.27rem] bg-yellow-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-md align-baseline text-[0.75em] font-bold leading-none text-yellow-800">Suspendido</span>
                                         @endif
                                     </td>
-                                    <td class="py-2 px-4">
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         <div class="relative" data-te-dropdown-position="dropstart">
                                             <button
                                                 class="flex items-center mx-auto whitespace-nowrap rounded bg-gray-400 px-2 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-gray-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-gray-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-gray-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"

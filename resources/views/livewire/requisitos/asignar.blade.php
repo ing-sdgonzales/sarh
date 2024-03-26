@@ -17,7 +17,7 @@
                     Agregar requisitos
                 </h5>
                 <!--Close button-->
-                <button type="button" wire:click='cerrarModalAsignar()'
+                <button type="button" wire:click='cerrarModalAsignar'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -32,18 +32,11 @@
                 <form method="POST">
                     @csrf
                     <div class="space-y-12">
-                        <div class="{{-- border-b border-gray-900/10 --}} pb-6">
-                            <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">Requisitos
-                            </h2>
+                        <div class="pb-6">
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-6">
-                                    {{-- <label for="puesto_requisitos"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Puesto</label> --}}
                                     <x-label for="puesto_requisitos" value="{{ __('Puesto') }}" />
                                     <div class="mt-2">
-                                        {{-- <input type="text" name="puesto_requisitos" readonly id="puesto_requisitos"
-                                            value="{{ $puesto_requisitos->cod_puesto }} - {{ $puesto_requisitos->cod_catalogo }} - {{ $puesto_requisitos->puesto }}"
-                                            class="block w-full rounded-md text-center border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"> --}}
                                         <x-input type="text" name="puesto_requisitos" readonly id="puesto_requisitos"
                                             value="{{ $puesto_requisitos->cod_puesto }} - {{ $puesto_requisitos->cod_catalogo }} - {{ $puesto_requisitos->puesto }}"
                                             class="block w-full text-center" />
@@ -51,7 +44,7 @@
                                 </div>
                                 <div class="sm:col-span-6">
                                     <table
-                                        class="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden text-center ring-1 ring-gray-300 dark:ring-gray-600">
+                                        class="min-w-full border-2 border-separate border-spacing-0 text-center shadow-lg rounded-md border-solid border-gray-300 dark:border-gray-600">
                                         <thead class="bg-gray-300 dark:bg-gray-800 text-center">
                                             <tr class="text-gray-800 dark:text-gray-300">
                                                 <th class="w-1/12 py-2 px-4"></th>
@@ -62,22 +55,24 @@
                                         <tbody class="bg-white dark:bg-gray-600">
                                             @foreach ($requisitos as $req)
                                                 <tr class="text-gray-800 dark:text-gray-200">
-                                                    <td class="py-2 px-4 items-center">
+                                                    <td
+                                                        class="py-2 px-4 items-center {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                                         <div class="relative flex gap-x-2">
                                                             <div class="flex h-6 items-center">
-                                                                {{-- <input wire:model='requisito' type="checkbox"
-                                                                    id="requisito-{{ $req->id }}"
-                                                                    value="{{ $req->id }}"
-                                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"> --}}
                                                                 <x-checkbox wire:model='requisito'
                                                                     id="requisito-{{ $req->id }}"
                                                                     value="{{ $req->id }}" />
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td class="py-2 px-4"><label for="requisito-{{ $req->id }}">
-                                                            {{ $req->requisito }}</label></td>
-                                                    <td class="py-2 px-4">{{ $req->especificacion }}</td>
+                                                    <td
+                                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                                        <label for="requisito-{{ $req->id }}">
+                                                            {{ $req->requisito }}</label>
+                                                    </td>
+                                                    <td
+                                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                                        {{ $req->especificacion }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -95,12 +90,12 @@
             <!--Modal footer-->
             <div
                 class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
-                <button type="button" wire:click='cerrarModalAsignar()'
+                <button type="button" wire:click='cerrarModalAsignar'
                     class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                     data-te-ripple-init data-te-ripple-color="light">
                     {{ __('Cancel') }}
                 </button>
-                <button type="submit" wire:click='guardarRequisitos()'
+                <button type="submit" wire:click='guardarRequisitos'
                     class="ml-1 inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                     data-te-ripple-init data-te-ripple-color="light">
                     {{ __('Save') }}

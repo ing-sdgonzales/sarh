@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gray-200 h-screen">
+    <div class="py-12 h-full">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-2">
                 @can('Crear requisitos')
@@ -25,24 +25,32 @@
                 @endcanany
             </div>
 
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white rounded-lg overflow-hidden text-center">
-                        <thead class="bg-gray-100 text-center">
-                            <tr>
+            <div {{-- class="overflow-x-auto" --}}>
+                <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-md">
+                    <table
+                        class="min-w-full border-2 border-separate border-spacing-0 text-center shadow-lg rounded-md border-solid border-gray-300 dark:border-gray-800">
+                        <thead class="bg-gray-300 dark:bg-gray-800 text-center">
+                            <tr class="text-gray-800 dark:text-gray-300">
                                 <th class="w-1/12 py-2 px-4">No.</th>
                                 <th class="w-1/4 py-2 px-4">Requisito</th>
                                 <th class="w-1/4 py-2 px-4">Especificación</th>
                                 <th class="w-1/12 py-2 px-4">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="bg-white dark:bg-gray-600">
                             @foreach ($requisitos as $requisito)
-                                <tr>
-                                    <td class="py-2 px-4">{{ $loop->iteration }}.</td>
-                                    <td class="py-2 px-4">{{ $requisito->requisito }}</td>
-                                    <td class="py-2 px-4">{{ $requisito->especificacion }}</td>
-                                    <td class="py-2 px-4">
+                                <tr class="text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-700">
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $loop->iteration }}.</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $requisito->requisito }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $requisito->especificacion }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         <div class="relative" data-te-dropdown-position="dropstart">
                                             <button
                                                 class="flex items-center mx-auto whitespace-nowrap rounded bg-gray-400 px-2 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-gray-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-gray-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-gray-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
@@ -73,7 +81,9 @@
                                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                                         d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                                                 </svg>
-                                                                <h6 class="text-sm font-normal text-neutral-700">Editar</h6>
+                                                                <h6
+                                                                    class="text-sm font-normal text-neutral-700 dark:text-gray-200">
+                                                                    Editar</h6>
                                                             </div>
                                                         </button>
                                                     </li>

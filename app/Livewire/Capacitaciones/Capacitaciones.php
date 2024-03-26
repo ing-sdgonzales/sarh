@@ -18,7 +18,7 @@ class Capacitaciones extends Component
     public $id_capacitacion, $busqueda, $query;
 
     /* Variables modal crear y editar */
-    public $modal = false;
+    public $modal = false, $modo_edicion = false;
     public $capacitacion, $origen, $organizador, $capacitador;
 
     public function render()
@@ -92,6 +92,7 @@ class Capacitaciones extends Component
         $this->origen = $capacitacion->origen;
         $this->capacitador = $capacitacion->capacitador;
         $this->organizador = $capacitacion->dependencias_nominales_id;
+        $this->modo_edicion = true;
         $this->modal = true;
     }
 
@@ -108,6 +109,7 @@ class Capacitaciones extends Component
     public function cerrarModal()
     {
         $this->modal = false;
+        $this->modo_edicion = false;
         $this->id_capacitacion = '';
         $this->capacitacion = '';
         $this->origen = '';

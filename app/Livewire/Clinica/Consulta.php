@@ -16,7 +16,7 @@ class Consulta extends Component
     public $registros_medicos;
 
     /*  Variables modal crear y editar consulta */
-    public $modal = false;
+    public $modal = false, $modo_edicion = false;
     public $fecha_consulta, $consulta, $receta, $proxima_consulta, $responsable, $suspension, $desde, $hasta;
 
     public function render()
@@ -106,6 +106,7 @@ class Consulta extends Component
             $this->desde = $registro->desde;
             $this->hasta = $registro->hasta;
         }
+        $this->modo_edicion = true;
         $this->modal = true;
     }
 
@@ -130,6 +131,7 @@ class Consulta extends Component
     public function cerrarModal()
     {
         $this->modal = false;
+        $this->modo_edicion = false;
         $this->id_registro = '';
         $this->fecha_consulta = '';
         $this->consulta = '';

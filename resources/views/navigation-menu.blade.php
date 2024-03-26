@@ -1,7 +1,10 @@
 @props(['active'])
 
 @php
-    $classes = $active ?? false ? 'inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out' : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out';
+    $classes =
+        $active ?? false
+            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 dark:border-indigo-600 text-sm font-medium leading-5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
+            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out';
 @endphp
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
@@ -187,60 +190,64 @@
                                     x-transition:leave-end="opacity-0 translate-y-1"
                                     class="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 origin-top-right">
                                     <div
-                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white dark:bg-gray-700 text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                                         <div class="p-4">
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600">
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
                                                     </svg>
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('candidatos') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Reclutamiento') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Gestión de candidatos
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Gestión de
+                                                        candidatos
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600"
-                                                        aria-hidden="true">
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                                                     </svg>
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('empleados') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Empleados') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Administración de empleados
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Administración de
+                                                        empleados
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600">
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
                                                     </svg>
@@ -248,22 +255,24 @@
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('requisitos') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Requisitos') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Gestión de requisitos
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Gestión de
+                                                        requisitos
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
-                                                    <svg class="h-6 w-6 text-gray-600 group-hover:text-indigo-600"
-                                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                                        stroke="currentColor" aria-hidden="true">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -272,23 +281,24 @@
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('puestos') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Administración de puestos') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Administración de puestos
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Administración de
+                                                        puestos
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        data-slot="icon"
-                                                        class="h-6 w-6 text-gray-600 group-hover:text-indigo-600">
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                                                     </svg>
@@ -296,11 +306,12 @@
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('catalogo_puestos') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Catálogo de puestos') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Denominación general de puestos y su
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Denominación
+                                                        general de puestos y su
                                                         disponibilidad
                                                     </p>
                                                 </div>
@@ -359,26 +370,28 @@
                                     x-transition:leave-end="opacity-0 translate-y-1"
                                     class="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 origin-top-right">
                                     <div
-                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white dark:bg-gray-700 text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                                         <div class="p-4">
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600">
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
                                                     </svg>
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('vacaciones') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Gestión de vacaciones') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Gestión de candidatos
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Gestión de
+                                                        candidatos
                                                     </p>
                                                 </div>
                                             </div>
@@ -436,51 +449,53 @@
                                     x-transition:leave-end="opacity-0 translate-y-1"
                                     class="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 origin-top-right">
                                     <div
-                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white dark:bg-gray-700 text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                                         <div class="p-4">
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        data-slot="icon"
-                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600">
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />
                                                     </svg>
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('capacitaciones') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Capacitaciones') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Sesiones de capacitación para los
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Sesiones de
+                                                        capacitación para los
                                                         empleados
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600">
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M16.712 4.33a9.027 9.027 0 0 1 1.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 0 0-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 0 1 0 9.424m-4.138-5.976a3.736 3.736 0 0 0-.88-1.388 3.737 3.737 0 0 0-1.388-.88m2.268 2.268a3.765 3.765 0 0 1 0 2.528m-2.268-4.796a3.765 3.765 0 0 0-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 0 1-1.388.88m2.268-2.268 4.138 3.448m0 0a9.027 9.027 0 0 1-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0-3.448-4.138m3.448 4.138a9.014 9.014 0 0 1-9.424 0m5.976-4.138a3.765 3.765 0 0 1-2.528 0m0 0a3.736 3.736 0 0 1-1.388-.88 3.737 3.737 0 0 1-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 0 1-1.652-1.306 9.027 9.027 0 0 1-1.306-1.652m0 0 4.138-3.448M4.33 16.712a9.014 9.014 0 0 1 0-9.424m4.138 5.976a3.765 3.765 0 0 1 0-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 0 1 1.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 0 0-1.652 1.306A9.025 9.025 0 0 0 4.33 7.288" />
                                                     </svg>
-
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('inducciones') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Inducciones') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Empleados pendientes de capacitación
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Empleados
+                                                        pendientes de capacitación
                                                         de
                                                         inducción
                                                     </p>
@@ -488,25 +503,25 @@
                                             </div>
 
                                             <!-- Item -->
-                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                                                 <div
-                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                        data-slot="icon"
-                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600">
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                                                     </svg>
-
                                                 </div>
                                                 <div>
                                                     <a href="{{ route('historial_medico') }}"
-                                                        class="font-semibold text-gray-900">
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
                                                         {{ __('Historial médico') }}
                                                         <span class="absolute inset-0"></span>
                                                     </a>
-                                                    <p class="mt-1 text-gray-600">Registro de consultas médicas e
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Registro de
+                                                        consultas médicas e
                                                         información clínica del empleado
                                                     </p>
                                                 </div>
@@ -565,7 +580,7 @@
                                     x-transition:leave-end="opacity-0 translate-y-1"
                                     class="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 origin-top-right">
                                     <div
-                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white dark:bg-gray-700 text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                                         <div class="p-4">
 
                                             <!-- Otras opciones de menú -->
@@ -872,7 +887,7 @@
                     </x-slot>
                 </x-dropdown>
             @else
-            <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
+                <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
                     {{ __('Formulario PIR') }}
                 </x-responsive-nav-link>
             @endif

@@ -16,14 +16,14 @@ use Livewire\Component;
 class Sesiones extends Component
 {
     use WithPagination;
-    
+
     public $id_capacitacion, $filtro, $query, $participantes_actuales;
 
     /* Colecciones */
     public $dependencias_nominales;
 
     /* Variables modal crear y editar */
-    public $modal = false;
+    public $modal = false, $modo_edicion = false;
     public $fecha, $hora_inicio, $hora_fin, $ubicacion, $participante = [], $dependencia_nominal, $busqueda_empleado,
         $id_sesion, $marcador_dependencia = [], $marcador = false;
 
@@ -144,6 +144,7 @@ class Sesiones extends Component
             $this->participante[] = $participante->empleados_id;
         }
         $this->participantes_actuales = $this->participante;
+        $this->modo_edicion = true;
         $this->modal = true;
     }
 
@@ -231,6 +232,7 @@ class Sesiones extends Component
     public function cerrarModal()
     {
         $this->modal = false;
+        $this->modo_edicion = false;
         $this->fecha = '';
         $this->hora_inicio = '';
         $this->hora_fin = '';

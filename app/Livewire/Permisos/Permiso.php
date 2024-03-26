@@ -16,7 +16,7 @@ class Permiso extends Component
     use WithPagination;
 
     public $id, $permiso = '';
-    public $modal = false;
+    public $modal = false, $modo_edicion = false;
     public function render()
     {
         activity()
@@ -64,6 +64,7 @@ class Permiso extends Component
         $per = Permission::findOrFail($id);
         $this->permiso = $per->name;
 
+        $this->modo_edicion = true;
         $this->abrirModal();
     }
 
@@ -80,6 +81,7 @@ class Permiso extends Component
     public function cerrarModal()
     {
         $this->modal = false;
+        $this->modo_edicion = false;
         $this->limpiarModal();
     }
 

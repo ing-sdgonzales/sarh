@@ -18,7 +18,6 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
-use Livewire\Attributes\Validate;
 use Livewire\WithPagination;
 use Livewire\Component;
 
@@ -56,7 +55,6 @@ class Candidatos extends Component
 
     /* Modal Informe de Evaluación */
     public $modal_informe_evaluacion = false;
-    #[Validate('file|mimes:pdf|max:2048')]
     public $informe_ubicacion;
 
     /* Modal Fechas de Ingresos*/
@@ -206,12 +204,6 @@ class Candidatos extends Component
                     $img = $this->imagen->store('candidatos', 'public');
                     Storage::delete('public/' . $this->imagen_actual);
                 }
-
-                /* if ($this->imagen !== null) {
-                    $img = $this->imagen->store('candidatos', 'public');
-                } else {
-                    $img = $this->imagen;
-                } */
                 $candidato_new = Candidato::updateOrCreate(['id' => $this->id], [
                     'dpi' => $validated['dpi'],
                     'nit' => $validated['nit'],
@@ -545,6 +537,11 @@ class Candidatos extends Component
                         'fecha_fin' => date('Y-m-d')
                     ]);
             });
+            /**
+             * 
+             * AGREGAR METODO PARA NOTIFICACIÓN DE DE FECHA DE INGREOS DE CANDIDATO
+             *  
+             **/
             session()->flash('message');
             $this->cerrarModalFechaIngreso();
             activity()
@@ -606,14 +603,14 @@ class Candidatos extends Component
             $ubicacion = $informe->ubicacion;
         }
         try {
-            DB::transaction(function () use ($informe, $aplicacion, $validated, $ubicacion) {
+            DB::transaction(function () use ($informe, $aplicacion, $ubicacion) {
                 if ($informe) {
                     InformeEvaluacion::where('id', $informe->id)->update([
                         'fecha_carga' => now(),
                         'ubicacion' => $ubicacion
                     ]);
                 } else {
-                    DB::transaction(function () use ($validated, $ubicacion, $aplicacion) {
+                    DB::transaction(function () use ($ubicacion, $aplicacion) {
                         InformeEvaluacion::create([
                             'ubicacion' => $ubicacion,
                             'aplicaciones_candidatos_id' => $aplicacion->id_aplicacion
@@ -919,6 +916,11 @@ class Candidatos extends Component
                         ->from('requisitos_puestos')
                         ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
                 })
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('perfiles')
+                        ->whereRaw('perfiles.puestos_nominales_id = puestos_nominales.id');
+                })
                 ->get();
         } else {
             $this->puestos = [];
@@ -959,6 +961,11 @@ class Candidatos extends Component
                     $query->select(DB::raw(1))
                         ->from('requisitos_puestos')
                         ->whereRaw('requisitos_puestos.puestos_nominales_id = puestos_nominales.id');
+                })
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('perfiles')
+                        ->whereRaw('perfiles.puestos_nominales_id = puestos_nominales.id');
                 })
                 ->get();
         } else {

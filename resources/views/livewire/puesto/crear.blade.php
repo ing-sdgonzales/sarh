@@ -37,13 +37,8 @@
                                 del puesto</h2>
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-1">
-                                    {{-- <label for="codigo"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Código</label> --}}
                                     <x-label for="codigo" value="{{ __('Código') }}" />
                                     <div class="mt-2">
-                                        {{-- <input wire:model='codigo' type="number" name="código" id="codigo"
-                                            step="1" min="0"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"> --}}
                                         <x-input id="codigo" type="number" class="mt-1 block w-full"
                                             wire:model="codigo" min="0" step="1" required />
                                     </div>
@@ -57,20 +52,8 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    {{-- <label for="renglon"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Renglón</label> --}}
                                     <x-label for="renglon" value="{{ __('Renglón') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model='renglon' wire:change='getPuestosByRenglon' id="renglon"
-                                            name="renglón" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($renglones as $renglon)
-                                                <option value="{{ $renglon->id }}">{{ $renglon->renglon }} -
-                                                    {{ $renglon->nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model='renglon' wire:change='getPuestosByRenglon' id="renglon"
                                             name="renglón" class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -91,19 +74,8 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    {{-- <label for="puesto"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Puesto</label> --}}
                                     <x-label for="puesto" value="{{ __('Puesto') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model='puesto' id="puesto" name="puesto"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($catalogo_puestos as $cpuesto)
-                                                <option value="{{ $cpuesto->id }}">{{ $cpuesto->codigo }} -
-                                                    {{ $cpuesto->puesto }}
-                                                </option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model='puesto' id="puesto" name="puesto" class="block w-full"
                                             required>
                                             <option value="">Seleccionar...</option>
@@ -124,14 +96,8 @@
                                 </div>
 
                                 <div class="sm:col-span-4">
-                                    {{-- <label for="partida"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Partida
-                                        presupuestaria</label> --}}
                                     <x-label for="partida" value="{{ __('Partida presupuestaria') }}" />
                                     <div class="mt-2">
-                                        {{-- <input wire:model='partida' id="partida" name="partida_presupuestaria"
-                                            type="text" required autocomplete="off"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"> --}}
                                         <x-input wire:model='partida' id="partida" name="partida_presupuestaria"
                                             type="text" required class="block w-full" />
                                     </div>
@@ -160,21 +126,8 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    {{-- <label for="region"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Región</label> --}}
                                     <x-label for="region" value="{{ __('Región') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model="region" wire:change="getDepartamentosByRegion"
-                                            id="region" name="región" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($regiones as $region)
-                                                <option value="{{ $region->id }}">{{ $region->region }} -
-                                                    {{ $region->nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select> --}}
-
                                         <x-select wire:model="region" wire:change="getDepartamentosByRegion"
                                             id="region" name="región" required class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -196,19 +149,8 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    {{-- <label for="departamento"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Departamento</label> --}}
                                     <x-label for="departamento" value="{{ __('Departamento') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model="departamento" wire:change="getMunicipiosByDepartamento"
-                                            id="departamento" name="departamento" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($departamentos_region ?? [] as $departamento)
-                                                <option value="{{ $departamento->id }}">{{ $departamento->nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model="departamento" wire:change="getMunicipiosByDepartamento"
                                             id="departamento" name="departamento" required class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -228,17 +170,8 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    {{-- <label for="municipio"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Municipio</label> --}}
                                     <x-label for="municipio" value="{{ __('Municipio') }}" />
                                     <div class="mt-2">
-                                        {{-- <select  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($municipios ?? [] as $municipio)
-                                                <option value="{{ $municipio->id }}">{{ $municipio->nombre }}
-                                                </option>
-                                            @endforeach
-                                        </select > --}}
                                         <x-select wire:model='municipio' id="municipio" name="municipio" required
                                             class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -258,20 +191,8 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    {{-- <label for="especialidad"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Especialidad</label> --}}
                                     <x-label for="especialidad" value="{{ __('Especialidad') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model='especialidad' id="especialidad" name="especialidad"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($especialidades as $especialidad)
-                                                <option value="{{ $especialidad->id }}">
-                                                    {{ $especialidad->especialidad }}
-                                                </option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model='especialidad' id="especialidad" name="especialidad"
                                             required class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -292,21 +213,9 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    {{-- <label for="fuentes_financiamientos"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Fuentes de
-                                        financiamiento</label> --}}
                                     <x-label for="fuentes_financiamientos"
                                         value="{{ __('Fuentes de financiamiento') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model='fuentes_financiamientos' id="fuentes_financiamientos"
-                                            required name="fuentes_financiamientos"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($fuentes as $fuente)
-                                                <option value="{{ $fuente->id }}">{{ $fuente->codigo }} -
-                                                    {{ $fuente->fuente }}</option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model='fuentes_financiamientos' id="fuentes_financiamientos"
                                             required name="fuentes_financiamientos" class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -326,17 +235,8 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    {{-- <label for="plaza"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Plaza</label> --}}
                                     <x-label for="plaza" value="{{ __('Plaza') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model='plaza' id="plaza" name="plaza" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($plazas as $plaza)
-                                                <option value="{{ $plaza->id }}">{{ $plaza->plaza }}</option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model='plaza' id="plaza" name="plaza" required
                                             class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -356,20 +256,8 @@
                                 </div>
 
                                 <div class="sm:col-span-full">
-                                    {{-- <label for="secretaria"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Secretaría</label> --}}
                                     <x-label for="secretaria" value="{{ __('Secretaría') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model='secretaria' wire:change='getSubsecretariasBySecretaria'
-                                            id="secretaria" name="secretaria" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($dependencias as $dependencia)
-                                                <option value="{{ $dependencia->id }}">
-                                                    {{ $dependencia->dependencia }}
-                                                </option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model='secretaria' wire:change='getSubsecretariasBySecretaria'
                                             id="secretaria" name="secretaria" required class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -391,21 +279,8 @@
 
                                 @if ($subsecretarias)
                                     <div class="sm:col-span-full">
-                                        {{-- <label for="subsecretaria"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Subsecretaría</label> --}}
                                         <x-label for="subsecretaria" value="{{ __('Subsecretaría') }}" />
                                         <div class="mt-2">
-                                            {{-- <select wire:model='subsecretaria'
-                                                wire:change='getDireccionesBySubsecretaria' id="subsecretaria"
-                                                name="subsecretaria"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">Seleccionar...</option>
-                                                @foreach ($subsecretarias as $subsecretaria)
-                                                    <option value="{{ $subsecretaria->id }}">
-                                                        {{ $subsecretaria->dependencia }}
-                                                    </option>
-                                                @endforeach
-                                            </select> --}}
                                             <x-select wire:model='subsecretaria'
                                                 wire:change='getDireccionesBySubsecretaria' id="subsecretaria"
                                                 name="subsecretaria" class="block w-full">
@@ -430,20 +305,8 @@
 
                                 @if (count($direcciones) > 0)
                                     <div class="sm:col-span-full">
-                                        {{-- <label for="direccion"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Dirección</label> --}}
                                         <x-label for="direccion" value="{{ __('Dirección') }}" />
                                         <div class="mt-2">
-                                            {{-- <select wire:model='direccion' wire:change='getSubdireccionesByDireccion'
-                                                id="direccion" name="direccion"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">Seleccionar...</option>
-                                                @foreach ($direcciones as $direccion)
-                                                    <option value="{{ $direccion->id }}">
-                                                        {{ $direccion->dependencia }}
-                                                    </option>
-                                                @endforeach
-                                            </select> --}}
                                             <x-select wire:model='direccion'
                                                 wire:change='getSubdireccionesByDireccion' id="direccion"
                                                 name="direccion" class="block w-full">
@@ -467,21 +330,8 @@
 
                                 @if (count($subdirecciones) > 0)
                                     <div class="sm:col-span-full">
-                                        {{-- <label for="subdireccion"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Subdirección</label> --}}
                                         <x-label for="subdireccion" value="{{ __('Subdirección') }}" />
                                         <div class="mt-2">
-                                            {{-- <select wire:model='subdireccion'
-                                                wire:change='getDepartamentosBySubdireccion' id="subdireccion"
-                                                name="subdireccion"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">Seleccionar...</option>
-                                                @foreach ($subdirecciones as $subdireccion)
-                                                    <option value="{{ $subdireccion->id }}">
-                                                        {{ $subdireccion->dependencia }}
-                                                    </option>
-                                                @endforeach
-                                            </select> --}}
                                             <x-select wire:model='subdireccion'
                                                 wire:change='getDepartamentosBySubdireccion' id="subdireccion"
                                                 name="subdireccion" class="block w-full">
@@ -506,21 +356,8 @@
 
                                 @if (count($departamentos) > 0)
                                     <div class="sm:col-span-full">
-                                        {{-- <label for="departamento"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Departamento</label> --}}
                                         <x-label for="departamento" value="{{ __('Departamento') }}" />
                                         <div class="mt-2">
-                                            {{-- <select wire:model='departamento'
-                                                wire:change='getDelegacionesByDepartamento' id="departamento"
-                                                name="departamento"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">Seleccionar...</option>
-                                                @foreach ($departamentos as $departamento)
-                                                    <option value="{{ $departamento->id }}">
-                                                        {{ $departamento->dependencia }}
-                                                    </option>
-                                                @endforeach
-                                            </select> --}}
                                             <x-select wire:model='departamento'
                                                 wire:change='getDelegacionesByDepartamento' id="departamento"
                                                 name="departamento" class="block w-full">
@@ -544,19 +381,8 @@
 
                                 @if (count($delegaciones) > 0)
                                     <div class="sm:col-span-full">
-                                        {{-- <label for="delegacion"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Delegación</label> --}}
                                         <x-label for="delegacion" value="{{ __('Delegación') }}" />
                                         <div class="mt-2">
-                                            {{-- <select wire:model='delegacion' id="delegacion" name="delegacion"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                                <option value="">Seleccionar...</option>
-                                                @foreach ($delegaciones as $delegacion)
-                                                    <option value="{{ $delegacion->id }}">
-                                                        {{ $delegacion->dependencia }}
-                                                    </option>
-                                                @endforeach
-                                            </select> --}}
                                             <x-select wire:model='delegacion' id="delegacion" name="delegacion"
                                                 class="block w-full">
                                                 <option value="">Seleccionar...</option>
@@ -578,19 +404,8 @@
                                 @endif
 
                                 <div class="sm:col-span-full">
-                                    {{-- <label for="subproducto"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Subproducto</label> --}}
                                     <x-label for="subproducto" value="{{ __('Subproducto') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model='subproducto' id="subproducto" name="subproducto" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($subproductos ?? [] as $subproducto)
-                                                <option value="{{ $subproducto->id }}">
-                                                    {{ $subproducto->codigo }} - {{ $subproducto->proyecto }}
-                                                </option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model='subproducto' id="subproducto" name="subproducto"
                                             required class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -611,21 +426,8 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    {{-- <label for="tipo_servicio"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Tipo de
-                                        servicio</label> --}}
                                     <x-label for="tipo_servicio" value="{{ __('Tipo de servicio') }}" />
                                     <div class="mt-2">
-                                        {{-- <select wire:model='tipo_servicio' id="tipo_servicio" name="tipo_servicio"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($tipos_servicios as $servicio)
-                                                <option value="{{ $servicio->id }}">
-                                                    {{ $servicio->tipo_servicio }}
-                                                </option>
-                                            @endforeach
-                                        </select> --}}
                                         <x-select wire:model='tipo_servicio' id="tipo_servicio" name="tipo_servicio"
                                             required class="block w-full">
                                             <option value="">Seleccionar...</option>
@@ -651,9 +453,6 @@
 
                                     <div class="relative flex gap-x-3">
                                         <div class="flex h-6 items-center">
-                                            {{-- <input wire:model='financiado' id="financiado" name="financiado"
-                                                type="checkbox" value="1"
-                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"> --}}
                                             <x-checkbox wire:model='financiado' id="financiado" name="financiado"
                                                 type="checkbox" value="1"></x-checkbox>
                                         </div>
@@ -668,21 +467,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="{{-- border-b border-gray-900/10 dark:border-gray-500 --}} pb-12">
+                        <div class="pb-6">
                             <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200"">Salario y
                                 Bonificaciones</h2>
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                                 <div class="sm:col-span-3">
-                                    {{-- <label for="salario"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Salario base
-                                        u honorarios(Q)</label> --}}
                                     <x-label for="salario" value="{{ __('Salario base u honorarios (Q)') }}" />
                                     <div class="mt-2">
-                                        {{-- <input wire:model.live='salario' id="salario" name="salario"
-                                            type="number" step="0.01" min="0" pattern="^\d+(\.\d{1,2})?$"
-                                            required value="0.00"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"> --}}
                                         <x-input wire:model.live='salario' id="salario" name="salario"
                                             type="number" step="0.01" min="0" pattern="^\d+(\.\d{1,2})?$"
                                             required value="0.00" class="block w-full" />
@@ -714,12 +506,6 @@
                                                     <td class="py-2 px-4 items-center">
                                                         <div class="relative flex gap-x-20">
                                                             <div class="flex h-6 items-center">
-                                                                {{-- <input wire:model='bono'
-                                                                    wire:key='bono_chk{{ $bn->id }}'
-                                                                    wire:change='actualizarBonos' type="checkbox"
-                                                                    id="bono-{{ $bn->id }}"
-                                                                    value="{{ $bn->id }}"
-                                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"> --}}
                                                                 <x-checkbox wire:model='bono'
                                                                     wire:key='bono_chk{{ $bn->id }}'
                                                                     wire:change='actualizarBonos' type="checkbox"
@@ -775,12 +561,12 @@
             <!--Modal footer-->
             <div
                 class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-gray-300 border-opacity-100 p-4 dark:border-opacity-50">
-                <button type="button" wire:click='cerrarModal()'
+                <button type="button" wire:click='cerrarModal'
                     class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                     data-te-ripple-init data-te-ripple-color="light">
                     {{ __('Cancel') }}
                 </button>
-                <button type="submit" wire:click='guardar()'
+                <button type="submit" wire:click='guardar'
                     class="ml-1 inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                     data-te-ripple-init data-te-ripple-color="light">
                     {{ __('Save') }}

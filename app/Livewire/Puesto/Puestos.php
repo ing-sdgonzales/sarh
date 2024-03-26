@@ -6,7 +6,9 @@ use App\Models\Bonificacion;
 use App\Models\BonoPuesto;
 use App\Models\DependenciaNominal;
 use App\Models\DependenciaSubproducto;
+use App\Models\Perfil;
 use App\Models\PuestoNominal;
+use App\Models\RegistroAcademico;
 use App\Models\Renglon;
 use App\Models\RequisitoPuesto;
 use Exception;
@@ -20,19 +22,23 @@ class Puestos extends Component
     use WithPagination;
 
     /* catalogos */
-    public $renglones, $regiones, $especialidades, $fuentes, $plazas, $dependencias,
+    public $renglones, $regiones, $especialidades, $fuentes, $plazas, $dependencias, $registros_academicos,
         $catalogo_puestos, $departamentos_region, $municipios, $tipos_servicios, $bonos, $subproductos;
 
     /* variables de consulta */
     public $id, $codigo, $renglon = 1, $puesto, $partida, $region, $departamento_region, $municipio = null, $fecha_registro,
         $fuentes_financiamientos, $plaza, $especialidad, $financiado, $tipo_servicio, $bono = [],
         $salario, $subproducto, $requisito = [], $bono_calculado = 0.00, $aguinaldo = 0.00, $bono14 = 0.00;
+
     /* Variables organigrama */
     public $secretaria, $subsecretarias = [], $subsecretaria, $direcciones = [], $direccion, $subdirecciones = [], $subdireccion, $departamentos = [],
         $departamento, $delegaciones = [], $delegacion;
 
+    /* Variables modal perfil */
+    public $descripcion, $experiencia, $disponibilidad, $registro_academico, $estudios;
+
     public $modal = false;
-    public $requisitos_modal = false;
+    public $requisitos_modal = false, $perfil_modal = false;
     public $bonos_actuales, $puesto_requisitos, $requisitos_actuales;
     public $modo_edicion = false;
     public function render()
@@ -46,6 +52,7 @@ class Puestos extends Component
         $this->dependencias = DB::table('dependencias_nominales')->select('id', 'dependencia')->whereNull('nodo_padre')->get();
         $this->catalogo_puestos = DB::table('catalogo_puestos')->select('id', 'codigo', 'puesto')->get();
         $this->tipos_servicios = DB::table('tipos_servicios')->select('id', 'tipo_servicio')->get();
+        $this->registros_academicos = RegistroAcademico::all();
         $this->getPuestosByRenglon($this->renglon);
 
         $puestos = DB::table('puestos_nominales')
@@ -64,7 +71,7 @@ class Puestos extends Component
         $requisitos = DB::table('requisitos')->select('id', 'requisito', 'especificacion');
 
         $puestos = $puestos->paginate(5, pageName: 'puestos-page');
-        $requisitos =  $requisitos->paginate(7, pageName: 'requisitos-page');
+        $requisitos =  $requisitos->paginate(5, pageName: 'requisitos-page');
 
         activity()
             ->causedBy(auth()->user())
@@ -670,6 +677,62 @@ class Puestos extends Component
     public function updatedRenglon()
     {
         $this->getPuestosByRenglon($this->renglon);
+    }
+
+    public function guardarPerfil()
+    {
+        $validated = $this->validate([
+            'descripcion' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.:;¡¿,!?]+$/u',
+            'experiencia' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.:;¡¿,!?]+$/u',
+            'disponibilidad' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.:;¡¿,!?]+$/u',
+            'estudios' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.:;¡¿,!?]+$/u',
+            'registro_academico' => 'required|integer|min:1'
+        ]);
+
+        try {
+
+            Perfil::updateOrCreate(['puestos_nominales_id' => $this->id], [
+                'descripcion' => $validated['descripcion'],
+                'experiencia' => $validated['experiencia'],
+                'disponibilidad' => $validated['disponibilidad'],
+                'registros_academicos_id' => $validated['registro_academico'],
+                'estudios' => $validated['estudios']
+            ]);
+
+            $log = DB::table('catalogo_puestos')
+                ->join('puestos_nominales', 'catalogo_puestos.id', '=', 'puestos_nominales.catalogo_puestos_id')
+                ->select(
+                    'catalogo_puestos.puesto as puesto',
+                    'puestos_nominales.codigo as codigo'
+                )
+                ->where('puestos_nominales.id', $this->id)
+                ->first();
+
+            session()->flash('message');
+            $this->cerrarPerfilModal();
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name . " guardó el perfil para el puesto: " . $log->codigo . "-" . $log->puesto);
+            return redirect()->route('puestos');
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarPerfilModal();
+            return redirect()->route('puestos');
+        }
+    }
+
+    public function crearPerfil($id_puesto)
+    {
+        $this->id = $id_puesto;
+        $this->perfil_modal = true;
+    }
+
+    public function cerrarPerfilModal()
+    {
+        $this->id = '';
+        $this->perfil_modal = false;
     }
 
     public function crear()

@@ -7,25 +7,21 @@
 
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
 
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full"
+        <div class="inline-block align-bottom bg-gray-100 dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full"
             role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <div
-                class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-gray-300 border-opacity-100 p-4 dark:border-opacity-50">
                 <!--Modal title-->
-                <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-800"
+                <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
-                    @if ($modo_edicion)
-                        Editar registro
-                    @else
-                        Nuevo registro
-                    @endif
+                    {{ $modo_edicion ? 'Editar registro' : 'Nuevo registro' }}
                 </h5>
                 <!--Close button-->
-                <button type="button" wire:click='cerrarModal()'
+                <button type="button" wire:click='cerrarModal'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-6 w-6">
+                        stroke="currentColor" class="h-6 w-6 dark:text-gray-200">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -36,8 +32,9 @@
                 <form id="candidatoForm" method="POST" wire:submit='guardar'>
                     @csrf
                     <div class="space-y-12">
-                        <div class="border-b border-gray-900/10 pb-6">
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Información personal</h2>
+                        <div class="border-b border-gray-900/10 dark:border-gray-500 pb-6">
+                            <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">Información
+                                personal</h2>
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
                                 <div class="sm:col-span-6 mx-auto">
                                     <div class="mb-3" x-data="{ isUploading: false, progress: 0 }"
@@ -69,7 +66,7 @@
                                         <div x-show="isUploading" class="mt-2">
                                             <progress max="100" x-bind:value="progress"
                                                 class="w-full h-2 bg-blue-500"></progress>
-                                            <p class="mt-2 text-sm font-semibold text-gray-700"
+                                            <p class="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-200"
                                                 x-text="'Cargando: ' + progress + '%'"></p>
                                         </div>
                                     </div>
@@ -84,11 +81,10 @@
                             </div>
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-2">
-                                    <label for="dpi"
-                                        class="block text-sm font-medium leading-6 text-gray-900">DPI</label>
+                                    <x-label for="dpi" value="{{ __('DPI') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='dpi' type="text" name="dpi" id="dpi" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='dpi' type="text" name="dpi" id="dpi" required
+                                            class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -100,11 +96,10 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="nit"
-                                        class="block text-sm font-medium leading-6 text-gray-900">NIT</label>
+                                    <x-label for="nit" value="{{ __('NIT') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='nit' type="text" name="nit" id="nit" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='nit' type="text" name="nit" id="nit" required
+                                            class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -116,11 +111,10 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="igss"
-                                        class="block text-sm font-medium leading-6 text-gray-900">IGSS</label>
+                                    <x-label for="igss" value="{{ __('IGSS') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='igss' type="text" name="igss" id="igss"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='igss' type="text" name="igss" id="igss"
+                                            class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -132,13 +126,10 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    <label for="nombre"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Nombre
-                                        completo</label>
+                                    <x-label for="nombre" value="{{ __('Nombre completo') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='nombre' type="text" name="nombre" id="nombre"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='nombre' type="text" name="nombre" id="nombre"
+                                            required class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -150,13 +141,10 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    <label for="email"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Correo
-                                        electrónico</label>
+                                    <x-label for="email" value="{{ __('Correo electrónico') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='email' type="email" name="email" id="email"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='email' type="email" name="email" id="email"
+                                            required class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -168,14 +156,12 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="fecha_nacimiento"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Fecha de
-                                        nacimiento</label>
+                                    <x-label for="fecha_nacimiento" value="{{ __('Fecha de nacimiento') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='fecha_nacimiento' type="date"
+                                        <x-input wire:model='fecha_nacimiento' type="date"
                                             max="{{ now()->subYears(18)->format('Y-m-d') }}"
                                             name="fecha_de_nacimiento" id="fecha_nacimiento" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -187,19 +173,17 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="estado_civil"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Estado civil</label>
+                                    <x-label for="estado_civil" value="{{ __('Estado civil') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='estado_civil' id="estado_civil" name="estado_civil"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='estado_civil' id="estado_civil" name="estado_civil"
+                                            required class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($estados_civiles ?? [] as $estado_civil)
                                                 <option value="{{ $estado_civil->id }}">
                                                     {{ $estado_civil->estado_civil }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -211,13 +195,10 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="fecha_registro"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Fecha de
-                                        registro</label>
+                                    <x-label for="fecha_registro" value="{{ __('Fecha de registgro') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='fecha_registro' type="date" name="fecha_de_registro"
-                                            id="fecha_registro" readonly disabled
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='fecha_registro' type="date" name="fecha_de_registro"
+                                            id="fecha_registro" readonly disabled class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -229,12 +210,10 @@
                                 </div>
 
                                 <div class="sm:col-span-4">
-                                    <label for="direccion_domicilio"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
+                                    <x-label for="direccion_domicilio" value="{{ __('Dirección') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='direccion_domicilio' type="text" name="dirección"
-                                            id="direccion_domicilio" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='direccion_domicilio' type="text" name="dirección"
+                                            id="direccion_domicilio" required class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -246,12 +225,10 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="telefono"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Teléfono</label>
+                                    <x-label for="telefono" value="{{ __('Teléfono') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='telefono' type="text" name="teléfono" id="telefono"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='telefono' type="text" name="teléfono" id="telefono"
+                                            required class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -263,19 +240,17 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    <label for="departamento_origen"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
+                                    <x-label for="departamento_origen" value="{{ __('Departamento') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='departamento_origen'
+                                        <x-select wire:model='departamento_origen'
                                             wire:change='getMunicipiosByDepartamento' id="departamento_origen"
-                                            name="departamento_origen" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            name="departamento_origen" required class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($departamentos_origen ?? [] as $departamento)
                                                 <option value="{{ $departamento->id }}">{{ $departamento->nombre }}
                                                 </option>_origen
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -287,17 +262,16 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    <label for="municipio"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Municipio</label>
+                                    <x-label for="municipio" value="{{ __('Municipio') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='municipio' id="municipio" name="municipio" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='municipio' id="municipio" name="municipio" required
+                                            class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($municipios ?? [] as $municipio)
                                                 <option value="{{ $municipio->id }}">{{ $municipio->nombre }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -310,25 +284,23 @@
                             </div>
                         </div>
 
-                        <div class="border-b border-gray-900/10 pb-12">
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Información académica</h2>
+                        <div class="border-b border-gray-900/10 dark:border-gray-500 pb-6">
+                            <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">Información
+                                académica</h2>
                             <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
 
                                 <div class="sm:col-span-1">
-                                    <label for="registro_academico"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Registro
-                                        académico</label>
+                                    <x-label for="registro_academico" value="{{ __('Registro académico') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='registro_academico' id="registro_academico"
-                                            name="registro_académico" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='registro_academico' id="registro_academico"
+                                            name="registro_académico" required class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($registros_academicos ?? [] as $registro_academico)
                                                 <option value="{{ $registro_academico->id }}">
                                                     {{ $registro_academico->nivel }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -340,13 +312,10 @@
                                 </div>
 
                                 <div class="sm:col-span-4">
-                                    <label for="titulo"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Profesión
-                                    </label>
+                                    <x-label for="titulo" value="{{ __('Título') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='titulo' type="text" name="título" id="titulo"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='titulo' type="text" name="título" id="titulo"
+                                            required class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -358,16 +327,15 @@
                                 </div>
 
                                 <div class="sm:col-span-1">
-                                    <label for="registro_academico_estado"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Estado</label>
+                                    <x-label for="registro_academico_estado" value="{{ __('Estado') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='registro_academico_estado' id="registro_academico_estado"
-                                            name="registro_académico" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='registro_academico_estado'
+                                            id="registro_academico_estado" name="registro_académico" required
+                                            class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             <option value="1">En curso</option>
                                             <option value="2">Finalizado</option>
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -379,18 +347,17 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    <label for="colegio"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Colegio</label>
+                                    <x-label for="colegio" value="{{ __('Colegio') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='colegio' id="colegio" name="colegio"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='colegio' id="colegio" name="colegio"
+                                            class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($colegios ?? [] as $colegio)
                                                 <option value="{{ $colegio->id }}">
                                                     {{ $colegio->nombre }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -402,12 +369,10 @@
                                 </div>
 
                                 <div class="sm:col-span-3">
-                                    <label for="colegiado"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Colegiado
-                                    </label>
+                                    <x-label for="colegiado" value="{{ __('Colegiado') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='colegiado' type="number" name="colegiado" id="colegiado"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='colegiado' type="number" name="colegiado"
+                                            id="colegiado" class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -421,25 +386,23 @@
                             </div>
                         </div>
 
-                        <div class="border-b border-gray-900/10 pb-12">
-                            <h2 class="text-base font-semibold leading-7 text-gray-900">Información laboral</h2>
-                            <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
+                        <div class="pb-6">
+                            <h2 class="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">Información
+                                laboral</h2>
+                            <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
 
                                 <div class="sm:col-span-2">
-                                    <label for="tipo_contratacion"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Tipo de
-                                        contratación</label>
+                                    <x-label for="tipo_contratacion" value="{{ __('Tipo de contratación') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='tipo_contratacion' id="tipo_contratacion"
-                                            name="tipo_contratación" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='tipo_contratacion' id="tipo_contratacion"
+                                            name="tipo_contratación" required class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($tipos_contrataciones ?? [] as $contratacion)
                                                 <option value="{{ $contratacion->id }}">
                                                     {{ $contratacion->tipo }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -451,20 +414,17 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="tipo_servicio"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Tipo de
-                                        servicio</label>
+                                    <x-label for="tipo_servicio" value="{{ __('Tipo de servicio') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='tipo_servicio' wire:change='getPuestosByTipoServicio'
-                                            id="tipo_servicio" name="tipo_servicio" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='tipo_servicio' wire:change='getPuestosByTipoServicio'
+                                            id="tipo_servicio" name="tipo_servicio" required class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($tipos_servicios ?? [] as $servicio)
                                                 <option value="{{ $servicio->id }}">
                                                     {{ $servicio->tipo_servicio }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -476,13 +436,11 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="fecha_aplicacion"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Fecha de
-                                        aplicación</label>
+                                    <x-label for="fecha_aplicacion" value="{{ __('Fecha de aplicación') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='fecha_aplicacion' type="date"
+                                        <x-input wire:model='fecha_aplicacion' type="date"
                                             name="fecha_de_aplicación" id="fecha_aplicacion" readonly disabled
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            class="block w-full" />
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -494,19 +452,17 @@
                                 </div>
 
                                 <div class="sm:col-span-full">
-                                    <label for="secretaria"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Secretaría</label>
+                                    <x-label for="secretaria" value="{{ __('Secretaría') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='secretaria' wire:change='getSubsecretariasBySecretaria'
-                                            id="secretaria" name="secretaria" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='secretaria' wire:change='getSubsecretariasBySecretaria'
+                                            id="secretaria" name="secretaria" required class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($dependencias as $dependencia)
                                                 <option value="{{ $dependencia->id }}">
                                                     {{ $dependencia->dependencia }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -519,20 +475,18 @@
 
                                 @if ($subsecretarias)
                                     <div class="sm:col-span-full">
-                                        <label for="subsecretaria"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Subsecretaría</label>
+                                        <x-label for="subsecretaria" value="{{ __('Subsecretaría') }}" />
                                         <div class="mt-2">
-                                            <select wire:model='subsecretaria'
+                                            <x-select wire:model='subsecretaria'
                                                 wire:change='getDireccionesBySubsecretaria' id="subsecretaria"
-                                                name="subsecretaria"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                name="subsecretaria" class="block w-full">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($subsecretarias as $subsecretaria)
                                                     <option value="{{ $subsecretaria->id }}">
                                                         {{ $subsecretaria->dependencia }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                         <div>
                                             <span class="text-red-600 text-sm">
@@ -547,19 +501,18 @@
 
                                 @if (count($direcciones) > 0)
                                     <div class="sm:col-span-full">
-                                        <label for="direccion"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
+                                        <x-label for="direccion" value="{{ __('Dirección') }}" />
                                         <div class="mt-2">
-                                            <select wire:model='direccion' wire:change='getSubdireccionesByDireccion'
-                                                id="direccion" name="direccion"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <x-select wire:model='direccion'
+                                                wire:change='getSubdireccionesByDireccion' id="direccion"
+                                                name="direccion" class="block w-full">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($direcciones as $direccion)
                                                     <option value="{{ $direccion->id }}">
                                                         {{ $direccion->dependencia }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                         <div>
                                             <span class="text-red-600 text-sm">
@@ -573,20 +526,18 @@
 
                                 @if (count($subdirecciones) > 0)
                                     <div class="sm:col-span-full">
-                                        <label for="subdireccion"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Subdirección</label>
+                                        <x-label for="subdireccion" value="{{ __('Subdirección') }}" />
                                         <div class="mt-2">
-                                            <select wire:model='subdireccion'
+                                            <x-select wire:model='subdireccion'
                                                 wire:change='getDepartamentosBySubdireccion' id="subdireccion"
-                                                name="subdireccion"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                name="subdireccion" class="block w-full">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($subdirecciones as $subdireccion)
                                                     <option value="{{ $subdireccion->id }}">
                                                         {{ $subdireccion->dependencia }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                         <div>
                                             <span class="text-red-600 text-sm">
@@ -601,20 +552,18 @@
 
                                 @if (count($departamentos) > 0)
                                     <div class="sm:col-span-full">
-                                        <label for="departamento"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Departamento</label>
+                                        <x-label for="departamento" value="{{ __('Departamento') }}" />
                                         <div class="mt-2">
-                                            <select wire:model='departamento'
+                                            <x-select wire:model='departamento'
                                                 wire:change='getDelegacionesByDepartamento' id="departamento"
-                                                name="departamento"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                name="departamento" class="block w-full">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($departamentos as $departamento)
                                                     <option value="{{ $departamento->id }}">
                                                         {{ $departamento->dependencia }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                         <div>
                                             <span class="text-red-600 text-sm">
@@ -628,18 +577,17 @@
 
                                 @if (count($delegaciones) > 0)
                                     <div class="sm:col-span-full">
-                                        <label for="delegacion"
-                                            class="block text-sm font-medium leading-6 text-gray-900">Delegación</label>
+                                        <x-label for="delegacion" value="{{ __('Delegación') }}" />
                                         <div class="mt-2">
-                                            <select wire:model='delegacion' id="delegacion" name="delegacion"
-                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <x-select wire:model='delegacion' id="delegacion" name="delegacion"
+                                                class="block w-full">
                                                 <option value="">Seleccionar...</option>
                                                 @foreach ($delegaciones as $delegacion)
                                                     <option value="{{ $delegacion->id }}">
                                                         {{ $delegacion->dependencia }}
                                                     </option>
                                                 @endforeach
-                                            </select>
+                                            </x-select>
                                         </div>
                                         <div>
                                             <span class="text-red-600 text-sm">
@@ -652,18 +600,17 @@
                                 @endif
 
                                 <div class="sm:col-span-full">
-                                    <label for="puesto"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Puesto</label>
+                                    <x-label for="puesto" value="{{ __('Puesto') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='puesto' id="puesto" name="puesto" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='puesto' id="puesto" name="puesto" required
+                                            class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($puestos ?? [] as $psto)
                                                 <option value="{{ $psto->id }}">
                                                     {{ $psto->codigo }} - {{ $psto->puesto }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -675,13 +622,13 @@
                                 </div>
 
                                 <div class="col-span-full">
-                                    <label for="observacion"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Observación</label>
+                                    <x-label for="observacion" value="{{ __('Observación') }}" />
                                     <div class="mt-2">
-                                        <textarea wire:model='observacion' id="observacion" name="observación" rows="3"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                                        <x-textarea wire:model='observacion' id="observacion" name="observación"
+                                            rows="3" class="block w-full"></x-textarea>
                                     </div>
-                                    <p class="mt-3 text-sm leading-6 text-gray-600">Breve descripción para la
+                                    <p class="mt-3 text-sm leading-6 dark:text-gray-200 text-gray-600">Breve
+                                        descripción para la
                                         contratación.</p>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -694,12 +641,13 @@
 
                             </div>
                         </div>
+                    </div>
                 </form>
             </div>
             <!--Modal footer-->
             <div
-                class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
-                <button type="button" wire:click='cerrarModal()'
+                class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-gray-300 border-opacity-100 p-4 dark:border-opacity-50">
+                <button type="button" wire:click='cerrarModal'
                     class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                     data-te-ripple-init data-te-ripple-color="light">
                     {{ __('Cancel') }}

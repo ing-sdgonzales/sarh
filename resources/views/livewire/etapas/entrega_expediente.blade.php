@@ -7,17 +7,17 @@
 
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
 
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
+        <div class="inline-block align-bottom bg-gray-100 dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full"
             role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <div
-                class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-gray-300 border-opacity-100 p-4 dark:border-opacity-50">
                 <!--Modal title-->
                 <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
                     Confirmar recepción de expediente
                 </h5>
                 <!--Close button-->
-                <button type="button" wire:click='cerrarExpedienteModal()'
+                <button type="button" wire:click='cerrarExpedienteModal'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -35,14 +35,14 @@
                             <div class="sm:col-span-full">
                                 <div class="flex w-full justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="#E67E22" class="w-24 h-24">
+                                        stroke-width="1.5" stroke="#FF921F" class="w-24 h-24">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                                     </svg>
                                 </div>
                             </div>
                             <div class="sm:col-span-full">
-                                <p class="text-justify text-lg">
+                                <p class="text-justify text-lg dark:text-gray-200">
                                     Por favor, confirma que el candidato ha presentado su expediente completo. Esta
                                     etapa es
                                     crucial para el proceso. Verifique que todos los requisitos tengan su fecha de
@@ -50,9 +50,10 @@
                                     procederemos con la siguiente etapa.
                                 </p>
 
-                                <p class="mt-4 text-center text-lg"><b>¡Gracias por tu colaboración!</b></p>
+                                <p class="mt-4 text-center text-lg dark:text-gray-200"><b>¡Gracias por tu
+                                        colaboración!</b></p>
 
-                                <div class="mt-8 mb-3 inline-flex w-full items-center rounded-lg bg-warning-300 px-6 py-5 text-base text-warning-800"
+                                <div class="mt-8 mb-3 inline-flex w-full items-center rounded-lg bg-warning px-6 py-5 text-base text-warning-900"
                                     role="alert">
                                     <span class="mr-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -72,12 +73,12 @@
             <!--Modal footer-->
             <div
                 class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
-                <button type="button" wire:click='cerrarExpedienteModal()'
+                <button type="button" wire:click='cerrarExpedienteModal'
                     class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                     data-te-ripple-init data-te-ripple-color="light">
                     {{ __('Cancel') }}
                 </button>
-                <button type="button" wire:click='aprobarExpediente()'
+                <button type="button" wire:click='aprobarExpediente'
                     class="ml-1 inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                     data-te-ripple-init data-te-ripple-color="light">
                     {{ __('Aprobar') }}

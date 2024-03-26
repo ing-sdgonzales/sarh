@@ -4,7 +4,8 @@
             {{ __('Consulta médica') }}
         </h2>
     </x-slot>
-    <div class="py-12 bg-gray-200">
+
+    <div class="py-12 h-full">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-2">
                 <div class="sm:col-span-6 mx-auto">
@@ -13,14 +14,16 @@
                     <label
                         class="block text-sm font-medium leading-6 text-gray-900">{{ $empleado->nombres . ' ' . $empleado->apellidos }}</label>
                 </div>
-                <div class="sm:col-span-full bg-white rounded-lg mb-4">
+                <div class="sm:col-span-full bg-gray-100 dark:bg-gray-800 rounded-lg mb-4">
                     <ul class="w-full p-4">
-                        <li class="w-ful border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                        <li
+                            class="w-ful border-b-2 bg-gray-100 dark:bg-gray-400 border-opacity-100 py-2 dark:border-opacity-50">
                             <b class="mr-2">Grupo sanguíneo:</b> {{ $empleado->grupo_sanguineo }}
                         </li>
                         {{-- <hr
                             class="my-1 h-0.5 border-t-0 bg-transparent bg-gradient-to-r from-gray-200 via-neutral-500 to-gray-200 opacity-25 dark:opacity-100" /> --}}
-                        <li class="w-full border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                        <li
+                            class="w-full border-b-2 bg-gray-100 dark:bg-gray-400 border-opacity-100 py-2 dark:border-opacity-50">
                             <b class="mr-2">Alergias a medicamentos:</b>
                             @if ($empleado->alergia_medicamento == 0)
                                 Ninguno
@@ -28,7 +31,8 @@
                                 {{ $empleado->tipo_medicamento }}
                             @endif
                         </li>
-                        <li class="w-full border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                        <li
+                            class="w-full border-b-2 bg-gray-100 dark:bg-gray-400 border-opacity-100 py-2 dark:border-opacity-50">
                             <b class="mr-2">Padecimientos de salud:</b>
                             @if ($empleado->padecimiento_salud == 0)
                                 Ninguno
@@ -36,7 +40,8 @@
                                 {{ $empleado->tipo_enfermedad }}
                             @endif
                         </li>
-                        <li class="w-full border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                        <li
+                            class="w-full border-b-2 bg-gray-100 dark:bg-gray-400 border-opacity-100 py-2 dark:border-opacity-50">
                             <b class="mr-2">Intervenciones quirúrgicas:</b>
                             @if ($empleado->intervencion_quirurgica == 0)
                                 Ninguno
@@ -44,7 +49,8 @@
                                 {{ $empleado->tipo_intervencion }}
                             @endif
                         </li>
-                        <li class="w-full border-b-2 border-neutral-200 border-opacity-100 py-2 dark:border-opacity-50">
+                        <li
+                            class="w-full border-b-2 bg-gray-100 dark:bg-gray-400 border-opacity-100 py-2 dark:border-opacity-50">
                             <b class="mr-2">Accidentes:</b>
                             @if ($empleado->sufrido_accidente == 0)
                                 Ninguno
@@ -52,7 +58,7 @@
                                 {{ $empleado->tipo_accidente }}
                             @endif
                         </li>
-                        <li class="w-full py-2">
+                        <li class="w-full py-2 bg-gray-100 dark:bg-gray-400">
                             <b class="mr-2">Contacto de emergencia:</b> {{ $empleado->nombre_emergencia }} <b
                                 class="ml-2 mr-2">Teléfono:</b> {{ $empleado->telefono_emergencia }}
                         </li>
@@ -77,11 +83,12 @@
                 @endif
             @endcanany
 
-            <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white rounded-lg text-center">
-                        <thead class="bg-gray-100 text-center">
-                            <tr>
+            <div {{-- class="overflow-x-auto" --}}>
+                <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-md">
+                    <table
+                        class="min-w-full border-2 border-separate border-spacing-0 text-center shadow-lg rounded-md border-solid border-gray-300 dark:border-gray-800">
+                        <thead class="bg-gray-300 dark:bg-gray-800 text-center">
+                            <tr class="text-gray-800 dark:text-gray-300">
                                 <th class="w-1/12 py-2 px-4">Consulta</th>
                                 <th class="w-1/4 py-2 px-4">Síntomas</th>
                                 <th class="w-1/4 py-2 px-4">Receta</th>
@@ -89,16 +96,25 @@
                                 <th class="w-1/12 py-2 px-4">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="bg-white dark:bg-gray-600">
                             @foreach ($registros_medicos as $registro)
-                                <tr>
-                                    <td class="py-2 px-4">
+                                <tr
+                                    class="text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         {{ date('d-m-Y', strtotime($registro->fecha_consulta)) }}</td>
-                                    <td class="py-2 px-4">{{ $registro->consulta }}</td>
-                                    <td class="py-2 px-4">{{ $registro->receta }}</td>
-                                    <td class="py-2 px-4">{{ date('d-m-Y', strtotime($registro->proxima_consulta)) }}
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $registro->consulta }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $registro->receta }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ date('d-m-Y', strtotime($registro->proxima_consulta)) }}
                                     </td>
-                                    <td class="py-2 px-4">
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         <div class="relative" data-te-dropdown-position="dropstart">
                                             <button
                                                 class="flex items-center mx-auto whitespace-nowrap rounded bg-gray-400 px-2 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-gray-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-gray-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-gray-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
@@ -129,7 +145,9 @@
                                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                                         d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                                                 </svg>
-                                                                <h6 class="text-sm font-normal text-neutral-700">Editar</h6>
+                                                                <h6
+                                                                    class="text-sm font-normal text-neutral-700 dark:text-gray-200">
+                                                                    Editar</h6>
                                                             </div>
                                                         </button>
                                                     </li>

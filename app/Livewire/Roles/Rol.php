@@ -12,7 +12,7 @@ class Rol extends Component
     use WithPagination;
 
     public $id, $rol, $permiso = [];
-    public $modal = false;
+    public $modal = false, $modo_edicion = false;
     public function render()
     {
         activity()
@@ -58,6 +58,7 @@ class Rol extends Component
             ->where('role_id', '=', $id)
             ->pluck('permission_id')
             ->toArray();
+        $this->modo_edicion = true;
         $this->abrirModal();
     }
 
@@ -74,6 +75,7 @@ class Rol extends Component
     public function cerrarModal()
     {
         $this->modal = false;
+        $this->modo_edicion = false;
         $this->limpiarModal();
         $this->resetPage(pageName: 'permisos-page');
         return redirect()->route('roles');

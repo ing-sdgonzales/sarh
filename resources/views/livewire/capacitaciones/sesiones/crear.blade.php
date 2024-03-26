@@ -7,21 +7,21 @@
 
         <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
 
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
+        <div class="inline-block align-bottom bg-gray-100 dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full"
             role="dialog" aria-modal="true" aria-labelledby="modal-headline">
             <div
-                class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-gray-300 border-opacity-100 p-4 dark:border-opacity-50">
                 <!--Modal title-->
                 <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                     id="exampleModalCenterTitle">
-                    Nuevo registro
+                    {{ $modo_edicion ? 'Editar registro' : 'Nuevo registro' }}
                 </h5>
                 <!--Close button-->
                 <button type="button" wire:click='cerrarModal'
                     class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                     aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="h-6 w-6">
+                        stroke="currentColor" class="h-6 w-6 dark:text-gray-200">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -33,15 +33,13 @@
                 @csrf
                 <div class="relative p-4">
                     <div class="space-y-12">
-                        <div class="border-b border-gray-900/10 pb-4">
+                        <div>
                             <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
                                 <div class="sm:col-span-2">
-                                    <label for="fecha"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Fecha</label>
+                                    <x-label for="fecha" value="{{ __('Fecha') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='fecha' type="date" name="fecha" id="fecha" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='fecha' type="date" name="fecha" id="fecha"
+                                            required class="block w-full" />
                                         <div>
                                             <span class="text-red-600 text-sm">
                                                 @error('fecha')
@@ -53,12 +51,10 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="hora_inicio"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Hora de inicio</label>
+                                    <x-label for="hora_inicio" value="{{ __('Hora de inicio') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='hora_inicio' type="time" name="hora_inicio"
-                                            id="hora_inicio" required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='hora_inicio' type="time" name="hora_inicio"
+                                            id="hora_inicio" required class="block w-full" />
                                         <div>
                                             <span class="text-red-600 text-sm">
                                                 @error('hora_inicio')
@@ -70,12 +66,10 @@
                                 </div>
 
                                 <div class="sm:col-span-2">
-                                    <label for="hora_fin" class="block text-sm font-medium leading-6 text-gray-900">Hora
-                                        de finalización</label>
+                                    <x-label for="hora_fin" value="{{ __('Hora de finalización') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='hora_fin' type="time" name="hora_fin" id="hora_fin"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='hora_fin' type="time" name="hora_fin" id="hora_fin"
+                                            required class="block w-full" />
                                         <div>
                                             <span class="text-red-600 text-sm">
                                                 @error('hora_fin')
@@ -87,12 +81,10 @@
                                 </div>
 
                                 <div class="sm:col-span-full">
-                                    <label for="ubicacion"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Ubicación</label>
+                                    <x-label for="ubicacion" value="{{ __('Ubicación') }}" />
                                     <div class="mt-2">
-                                        <input wire:model='ubicacion' type="text" name="ubicacion" id="ubicacion"
-                                            required
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-input wire:model='ubicacion' type="text" name="ubicacion" id="ubicacion"
+                                            required class="block w-full" />
                                         <div>
                                             <span class="text-red-600 text-sm">
                                                 @error('ubicacion')
@@ -105,30 +97,27 @@
                             </div>
                         </div>
 
-                        <div class="border-b border-gray-900/10 pb-6">
-                            <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
+                        <div class="pb-6">
+                            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                 <div class="sm:col-span-6">
-                                    <p class="text-sm leading-6 text-gray-600">
+                                    <p class="text-sm leading-6 text-gray-600 dark:text-gray-200">
                                         <strong>Participantes</strong>
                                     </p>
                                     <hr>
                                 </div>
-
                                 <div class="sm:col-span-6">
-                                    <label for="dependencia_nominal"
-                                        class="block text-sm font-medium leading-6 text-gray-900">Dependencia</label>
+                                    <x-label for="dependencia_nominal" value="{{ __('Dependencia') }}" />
                                     <div class="mt-2">
-                                        <select wire:model='dependencia_nominal' wire:change='getEmpleadosByDependencia'
-                                            id="dependencia_nominal" name="dependencia_nominal"
-                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <x-select wire:model='dependencia_nominal'
+                                            wire:change='getEmpleadosByDependencia' id="dependencia_nominal"
+                                            name="dependencia_nominal" class="block w-full">
                                             <option value="">Seleccionar...</option>
                                             @foreach ($dependencias_nominales ?? [] as $dependencia_nominal)
                                                 <option value="{{ $dependencia_nominal->id }}">
                                                     {{ $dependencia_nominal->dependencia }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                        </x-select>
                                     </div>
                                     <div>
                                         <span class="text-red-600 text-sm">
@@ -152,23 +141,22 @@
                                                 </svg>
                                             </span>
                                         </div>
-                                        <input wire:model.live="busqueda_empleado" type="text" name="search"
-                                            id="search" style="height: 42px;" autocomplete="off"
-                                            class="inline-block w-full rounded-lg border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                            placeholder="Buscar">
+                                        <x-input wire:model.live="busqueda_empleado" type="text" name="search"
+                                            id="search" class="inline-block w-full pl-10" autocomplete="off"
+                                            placeholder="Buscar" />
                                     </div>
                                 </div>
 
                                 <div class="sm:col-span-6">
                                     <div>
                                         <!-- Otra parte de tu interfaz -->
-                                        <p>Número de empleados seleccionados:
+                                        <p class="dark:text-gray-200">Empleados seleccionados:
                                             {{ count($participante) }}</p>
                                     </div>
                                     <table
-                                        class="min-w-full bg-white rounded-lg overflow-hidden text-center ring-1 ring-gray-300">
-                                        <thead class="bg-gray-100 text-center">
-                                            <tr>
+                                        class="min-w-full border-2 border-separate border-spacing-0 text-center shadow-lg rounded-md border-solid border-gray-300 dark:border-gray-600">
+                                        <thead class="bg-gray-300 dark:bg-gray-800 text-center">
+                                            <tr class="text-gray-800 dark:text-gray-300">
                                                 <th class="w-1/12 py-2 px-4">
                                                     @if (empty($filtro))
                                                         @if ($marcador == false)
@@ -247,10 +235,11 @@
                                                 <th class="w-1/3 py-2 px-4">Nombre</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="bg-white dark:bg-gray-600">
                                             @foreach ($empleados as $empleado)
-                                                <tr>
-                                                    <td class="py-2 px-4 items-center">
+                                                <tr class="text-gray-800 dark:text-gray-200">
+                                                    <td
+                                                        class="py-2 px-4 items-center {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                                         <div class="relative flex gap-x-2 justify-center">
                                                             <div class="flex h-6 items-center">
                                                                 <input wire:model.live='participante' type="checkbox"
@@ -260,7 +249,8 @@
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td class="py-2 px-4">
+                                                    <td
+                                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                                         <label for="empleado-{{ $empleado->id }}">
                                                             {{ $empleado->nombres . ' ' . $empleado->apellidos }}
                                                         </label>
@@ -280,7 +270,7 @@
 
                 <!--Modal footer-->
                 <div
-                    class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                    class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-gray-300 border-opacity-100 p-4 dark:border-opacity-50">
                     <button type="button" wire:click='cerrarModal'
                         class="inline-block rounded-lg bg-danger-200 px-6 pb-2 pt-2.5 font-medium leading-normal text-danger-700 transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                         data-te-ripple-init data-te-ripple-color="light">

@@ -5,14 +5,10 @@
         </h2>
     </x-slot>
 
-    <div class="py-12 bg-gray-200 h-full">
+    <div class="py-12 h-full">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-2">
                 @can('Ver expediente')
-                    {{--                     <button type="button" wire:click="crear()" style="background-color: #3b71ca;"
-                        class="inline-block rounded-lg bg-success px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
-                        
-                    </button> --}}
                     <a type="button" href="{{ route('expedientes', ['candidato_id' => $id_candidato]) }}">
                         <div
                             class="inline-block rounded-lg bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
@@ -35,11 +31,6 @@
                                             <!-- Icon -->
                                             <div
                                                 class="flex items-center justify-center w-10 h-10 rounded-full border border-yellow-500 bg-slate-300 group-[.is-active]:bg-yellow-400 text-slate-500 group-[.is-active]:text-emerald-50 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                                                {{-- <svg class="fill-current" xmlns="http://www.w3.org/2000/svg"
-                                                    width="12" height="10">
-                                                    <path fill-rule="nonzero"
-                                                        d="M10.422 1.257 4.655 7.025 2.553 4.923A.916.916 0 0 0 1.257 6.22l2.75 2.75a.916.916 0 0 0 1.296 0l6.415-6.416a.916.916 0 0 0-1.296-1.296Z" />
-                                                </svg> --}}
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                     class="w-7 h-7">
@@ -49,11 +40,11 @@
                                             </div>
                                             <!-- Card -->
                                             <div
-                                                class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-lg border border-slate-200 shadow">
+                                                class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-gray-600 dark:border-none p-4 rounded-lg border border-slate-200 shadow">
                                                 <div class="flex items-center justify-between space-x-2 mb-1">
-                                                    <div class="font-bold text-slate-900">{{ $etapa['etapa'] }}</div>
+                                                    <div class="font-bold text-slate-900 dark:text-gray-200">{{ $etapa['etapa'] }}</div>
                                                     <time
-                                                        class="font-caveat font-medium text-indigo-500">{{ date('d-m-Y', strtotime($etapa['fecha_inicio'])) }}</time>
+                                                        class="font-caveat font-medium text-indigo-500 dark:text-gray-200">{{ date('d-m-Y', strtotime($etapa['fecha_inicio'])) }}</time>
                                                 </div>
                                                 {{-- <div class="text-slate-500">Pretium lectus quam id leo. Urna et pharetra aliquam
                                         vestibulum morbi blandit cursus risus.</div> --}}
@@ -74,11 +65,11 @@
                                             </div>
                                             <!-- Card -->
                                             <div
-                                                class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-lg border border-slate-200 shadow">
+                                                class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-gray-600 dark:border-none p-4 rounded-lg border border-slate-200 shadow">
                                                 <div class="flex items-center justify-between space-x-2 mb-1">
-                                                    <div class="font-bold text-slate-900">{{ $etapa['etapa'] }}</div>
+                                                    <div class="font-bold text-slate-900 dark:text-gray-200">{{ $etapa['etapa'] }}</div>
                                                     <time
-                                                        class="font-caveat font-medium text-indigo-500">{{ date('d-m-Y', strtotime($etapa['fecha_fin'])) }}</time>
+                                                        class="font-caveat font-medium text-indigo-500 dark:text-gray-200">{{ date('d-m-Y', strtotime($etapa['fecha_fin'])) }}</time>
                                                 </div>
                                                 {{-- <div class="text-slate-500">Pretium lectus quam id leo. Urna et pharetra aliquam
                                 vestibulum morbi blandit cursus risus.</div> --}}
@@ -105,11 +96,11 @@
                                             </div>
                                             <!-- Card -->
                                             <div
-                                                class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-lg border border-slate-200 shadow">
+                                                class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-gray-600 dark:border-none p-4 rounded-lg border border-slate-200 shadow">
                                                 <div class="flex items-center justify-between space-x-2 mb-1">
-                                                    <div class="font-bold text-slate-900">{{ $etapa['etapa'] }}</div>
+                                                    <div class="font-bold text-slate-900 dark:text-gray-200">{{ $etapa['etapa'] }}</div>
                                                     {{-- <time
-                                                        class="font-caveat font-medium text-indigo-500">{{ $etapa['fecha_inicio'] }}</time> --}}
+                                                        class="font-caveat font-medium text-indigo-500 dark:text-gray-200">{{ $etapa['fecha_inicio'] }}</time> --}}
                                                 </div>
                                                 {{-- <div class="text-slate-500">Pretium lectus quam id leo. Urna et pharetra aliquam
                                 vestibulum morbi blandit cursus risus.</div> --}}
