@@ -49,7 +49,6 @@
                 </button>
             </div>
         @endcan
-
         <div class="sm:col-span-1">
             <button type="button" wire:click="generarFromularioPIR"
                 class="inline-block w-full rounded-md h-[42px] bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
@@ -114,6 +113,7 @@
                                                 <th class="w-1/12 py-2 px-4">No.</th>
                                                 <th class="w-1/4 py-2 px-4">Nombre</th>
                                                 <th class="w-1/6 py-2 px-4">Reporte</th>
+                                                <th class="w-1/6 py-2 px-4">Departamento</th>
                                                 <th class="w-1/12 py-2 px-4">Grupo</th>
                                                 <th class="w-1/6 py-2 px-4">Observación</th>
                                             </tr>
@@ -125,11 +125,12 @@
                                                     <td class="py-2 px-4">{{ $loop->iteration . '.' }}</td>
                                                     <td class="py-2 px-4"><x-input
                                                             wire:model='personal.{{ $key }}.nombre'
-                                                            type="text" required class="text-center block w-full"
-                                                            disabled readonly /></td>
+                                                            type="text" required
+                                                            class="text-center block w-full border-none" disabled
+                                                            readonly /></td>
                                                     <td class="py-2 px-4"><x-select
                                                             wire:model='personal.{{ $key }}.pir_reporte_id'
-                                                            class="block w-full text-center">
+                                                            class="block w-full text-center border-none">
                                                             @foreach ($reportes ?? [] as $reporte)
                                                                 <option value="{{ $reporte->id }}">
                                                                     {{ $reporte->reporte }}
@@ -137,8 +138,17 @@
                                                             @endforeach
                                                         </x-select></td>
                                                     <td class="py-2 px-4"><x-select
+                                                            wire:model='personal.{{ $key }}.departamento_id'
+                                                            class="block w-full text-center border-none">
+                                                            @foreach ($departamentos ?? [] as $depto)
+                                                                <option value="{{ $depto->id }}">
+                                                                    {{ $depto->nombre }}
+                                                                </option>
+                                                            @endforeach
+                                                        </x-select></td>
+                                                    <td class="py-2 px-4"><x-select
                                                             wire:model='personal.{{ $key }}.pir_grupo_id'
-                                                            class="block w-full text-center">
+                                                            class="block w-full text-center border-none">
                                                             @foreach ($grupos ?? [] as $grupo)
                                                                 <option value="{{ $grupo->id }}">
                                                                     {{ $grupo->grupo }}
@@ -178,6 +188,7 @@
                                                 <th class="w-1/12 py-2 px-4">No.</th>
                                                 <th class="w-1/4 py-2 px-4">Nombre</th>
                                                 <th class="w-1/6 py-2 px-4">Reporte</th>
+                                                <th class="w-1/6 py-2 px-4">Departamento</th>
                                                 <th class="w-1/12 py-2 px-4">Grupo</th>
                                                 <th class="w-1/6 py-2 px-4">Observación</th>
                                             </tr>
@@ -189,11 +200,12 @@
                                                     <td class="py-2 px-4">{{ $loop->iteration . '.' }}</td>
                                                     <td class="py-2 px-4"><x-input
                                                             wire:model='contratista.{{ $key }}.nombre'
-                                                            type="text" required class="text-center block w-full"
-                                                            disabled readonly /></td>
+                                                            type="text" required
+                                                            class="text-center block w-full border-none" disabled
+                                                            readonly /></td>
                                                     <td class="py-2 px-4"><x-select
                                                             wire:model='contratista.{{ $key }}.pir_reporte_id'
-                                                            class="block w-full text-center">
+                                                            class="block w-full text-center border-none">
                                                             @foreach ($reportes ?? [] as $reporte)
                                                                 <option value="{{ $reporte->id }}">
                                                                     {{ $reporte->reporte }}
@@ -201,8 +213,17 @@
                                                             @endforeach
                                                         </x-select></td>
                                                     <td class="py-2 px-4"><x-select
+                                                            wire:model='contratista.{{ $key }}.departamento_id'
+                                                            class="block w-full text-center border-none">
+                                                            @foreach ($departamentos as $depto)
+                                                                <option value="{{ $depto->id }}">
+                                                                    {{ $depto->nombre }}
+                                                                </option>
+                                                            @endforeach
+                                                        </x-select></td>
+                                                    <td class="py-2 px-4"><x-select
                                                             wire:model='contratista.{{ $key }}.pir_grupo_id'
-                                                            class="block w-full text-center">
+                                                            class="block w-full text-center border-none">
                                                             @foreach ($grupos ?? [] as $grupo)
                                                                 <option value="{{ $grupo->id }}">
                                                                     {{ $grupo->grupo }}

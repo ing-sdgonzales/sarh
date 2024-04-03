@@ -10,5 +10,7 @@ class PirEmpleado extends Model
     use HasFactory;
 
     protected $table = 'pir_empleados';
-    protected $fillable = ['nombre', 'observacion', 'pir_reporte_id', 'pir_grupo_id', 'tipo_servicio_id', 'pir_direccion_id', 'renglon_id'];
+    protected $fillable = [
+        'nombre', 'observacion', 'pir_reporte_id', 'pir_grupo_id', 'pir_direccion_id', 'region_id', 'departamento_id'
+    ];
 }

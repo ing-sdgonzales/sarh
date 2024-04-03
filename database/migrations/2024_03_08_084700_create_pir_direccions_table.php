@@ -19,7 +19,7 @@ return new class extends Migration
             $table->dateTime('hora_actualizacion');
 
             /* fks */
-            $table->unsignedTinyInteger('pir_seccion_id');
+            $table->unsignedTinyInteger('pir_seccion_id')->nullable();
 
             /* references */
             $table->foreign('pir_seccion_id')->references('id')->on('pir_secciones')->onUpdate('cascade');
