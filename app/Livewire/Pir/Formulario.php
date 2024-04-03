@@ -173,6 +173,10 @@ class Formulario extends Component
             session()->flash('message');
             $reporte = new EstadoFuerzaController();
             $path = $reporte->generateDisponibilidadReport($this->id_direccion, $this->region);
+            activity()
+                ->causedBy(auth()->user())
+                ->withProperties(['user_id' => auth()->id()])
+                ->log("El usuario " . auth()->user()->name . " guardó el formulario PIR.");
             $this->dispatch('download', ['message' => 'El formulario se ha actualizado correctamente']);
             return response()->download($path)->deleteFileAfterSend(true);
         } catch (QueryException $exception) {
