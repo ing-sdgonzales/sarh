@@ -32,6 +32,7 @@ class EstadoFuerzaController extends Controller
                 ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
                 ->where('regiones.region', $region)
                 ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+                ->where('pir_empleados.activo', 1)
                 ->orderBy('pir_empleados.nombre')
                 ->get();
 
@@ -53,6 +54,7 @@ class EstadoFuerzaController extends Controller
                 ->join('departamentos', 'pir_empleados.departamento_id', '=', 'departamentos.id')
                 ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
                 ->where('renglones.renglon', '029')
+                ->where('pir_empleados.activo', 1)
                 ->where('regiones.region', $region)
                 ->orderBy('pir_empleados.nombre')
                 ->get();
@@ -172,6 +174,7 @@ class EstadoFuerzaController extends Controller
                 ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
                 ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
                 ->where('pir_direccion_id', $id_direccion)
+                ->where('pir_empleados.activo', 1)
                 ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
                 ->orderBy('pir_empleados.id', 'asc')
                 ->get();
@@ -190,6 +193,7 @@ class EstadoFuerzaController extends Controller
                 ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
                 ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
                 ->where('pir_direccion_id', $id_direccion)
+                ->where('pir_empleados.activo', 1)
                 ->where('renglones.renglon', '029')
                 ->orderBy('pir_empleados.id', 'asc')
                 ->get();
@@ -390,8 +394,8 @@ class EstadoFuerzaController extends Controller
             $contratista = $contratista->where('pir_direccion_id', $id_direccion);
         }
 
-        $personal = $personal->whereIn('renglones.renglon', ['011', '021', '022', '031'])->get();
-        $contratista = $contratista->where('renglones.renglon', '029')->orderBy('pir_empleados.id', 'asc')->get();
+        $personal = $personal->whereIn('renglones.renglon', ['011', '021', '022', '031'])->where('pir_empleados.activo', 1)->get();
+        $contratista = $contratista->where('renglones.renglon', '029')->where('pir_empleados.activo', 1)->orderBy('pir_empleados.id', 'asc')->get();
 
         $fecha = date('d/m/Y');
         $hora = date('H:i:s');
@@ -509,7 +513,8 @@ class EstadoFuerzaController extends Controller
                 $join->on('pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
                     ->leftJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
                     ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
-                    ->where('regiones.region', 'Región I');
+                    ->where('regiones.region', 'Región I')
+                    ->where('pir_empleados.activo', 1);
             })
             ->whereIn('pir_direcciones.id', $orden_direcciones)
             ->groupBy('pir_direcciones.direccion')
@@ -535,6 +540,7 @@ class EstadoFuerzaController extends Controller
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Ausente (Justificar)" THEN 1 ELSE NULL END) AS ausente')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Vacaciones" THEN 1 ELSE NULL END) AS vacaciones')
             ->groupBy('regiones.region')
+            ->where('pir_empleados.activo', 1)
             ->orderBy('regiones.id', 'asc')
             ->get();
 
@@ -737,6 +743,7 @@ class EstadoFuerzaController extends Controller
             ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
             ->whereIn('pir_reportes.id', [2, 3, 4, 5, 7, 9, 10])
+            ->where('pir_empleados.activo', 1)
             ->get();
 
         $comisiones = PirEmpleado::select(
@@ -757,6 +764,7 @@ class EstadoFuerzaController extends Controller
             ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
             ->where('reporte', 'Comisión')
+            ->wheree('pir_empleados.activo', 1)
             ->get();
 
         $capacitaciones = PirEmpleado::select(
@@ -777,6 +785,7 @@ class EstadoFuerzaController extends Controller
             ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
             ->where('reporte', 'Capacitación en el extranjero')
+            ->where('pir_empleados.activo', 1)
             ->get();
 
         if (count($ausentes) > 2) {
@@ -869,15 +878,17 @@ class EstadoFuerzaController extends Controller
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS asignacion_especial')
-            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte != "Capacitación en el extranjero" AND pir_reportes.reporte != "Presente en sedes" AND pir_reportes.reporte != "Comisión" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Capacitación en el extranjero", "Presente en sedes", "Comisión") THEN 1 ELSE NULL END) AS ausente')
             ->leftJoin('pir_empleados', function ($join) {
                 $join->on('pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
                     ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
                     ->leftJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
                     ->leftJoin('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
                     ->leftJoin('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
-                    ->whereIn('renglones.renglon', ['011', '021', '022', '031']);
+                    ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+                    ->where('pir_empleados.activo', 1);
             })
+            ->whereIn('pir_direcciones.id', $orden_direcciones)
             ->groupBy('pir_direcciones.id', 'pir_direcciones.direccion')
             ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
             ->get();
@@ -889,15 +900,17 @@ class EstadoFuerzaController extends Controller
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS asignacion_especial')
-            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte != "Capacitación en el extranjero" AND pir_reportes.reporte != "Presente en sedes" AND pir_reportes.reporte != "Comisión" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Capacitación en el extranjero", "Presente en sedes", "Comisión") THEN 1 ELSE NULL END) AS ausente')
             ->leftJoin('pir_empleados', function ($join) {
                 $join->on('pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
                     ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
                     ->leftJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
                     ->leftJoin('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
                     ->leftJoin('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
-                    ->where('renglones.renglon', '029');
+                    ->where('renglones.renglon', '029')
+                    ->where('pir_empleados.activo', 1);
             })
+            ->whereIn('pir_direcciones.id', $orden_direcciones)
             ->groupBy('pir_direcciones.id', 'pir_direcciones.direccion')
             ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
             ->get();
@@ -1142,6 +1155,7 @@ class EstadoFuerzaController extends Controller
             ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
             ->where('pir_reportes.id', $id_reporte)
+            ->where('pir_empleados.activo', 1)
             ->where('pir_direcciones.id', $id_direccion)
             ->get();
 

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integerIncrements('id');
             $table->text('nombre');
             $table->text('observacion')->nullable();
+            $table->unsignedTinyInteger('activo')->default(1)->min(0)->max(1);
 
             /* fks */
             $table->unsignedTinyInteger('pir_direccion_id');

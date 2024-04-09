@@ -11,6 +11,6 @@ class PirEmpleado extends Model
 
     protected $table = 'pir_empleados';
     protected $fillable = [
-        'nombre', 'observacion', 'pir_reporte_id', 'pir_grupo_id', 'pir_direccion_id', 'region_id', 'departamento_id'
+        'nombre', 'observacion', 'activo', 'pir_reporte_id', 'pir_grupo_id', 'pir_direccion_id', 'region_id', 'departamento_id'
     ];
 }

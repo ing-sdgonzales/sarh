@@ -91,6 +91,7 @@ class Formulario extends Component
             $this->personal = $this->personal->where('pir_direccion_id', $this->id_direccion);
         }
         $this->personal = $this->personal->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+            ->where('pir_empleados.activo', 1)
             ->orderBy('pir_empleados.nombre')
             ->get()
             ->toArray();
@@ -120,6 +121,7 @@ class Formulario extends Component
         }
 
         $this->contratista = $this->contratista->where('renglones.renglon', '029')
+            ->where('pir_empleados.activo', 1)
             ->orderBy('pir_empleados.nombre')
             ->get()
             ->toArray();

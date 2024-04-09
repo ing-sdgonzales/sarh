@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PirReporteSeeder::class);
         $this->call(PirSeccionSeeder::class);
         $this->call(PirDireccionSeeder::class);
-        $this->call(RecursosHumanosSeeder::class);
+        /* $this->call(RecursosHumanosSeeder::class); */
 
         \App\Models\User::factory()->create([
             'name' => 'Sergio Daniel Gonzáles López',
