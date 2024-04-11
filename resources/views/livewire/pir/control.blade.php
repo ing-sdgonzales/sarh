@@ -47,7 +47,8 @@
                                         class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         @if (\Carbon\Carbon::parse($dir->hora_actualizacion)->isToday())
                                             <span
-                                                class="inline-block whitespace-nowrap rounded-[0.27rem] bg-success-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-lg align-baseline text-[0.75em] font-bold leading-none text-success-800">SÍ</span>
+                                                class="inline-block whitespace-nowrap rounded-[0.27rem] bg-success-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-lg align-baseline text-[0.75em] font-bold leading-none text-success-800"
+                                                style="width: 51.4333px;">SÍ</span>
                                         @else
                                             <span
                                                 class="inline-block whitespace-nowrap rounded-[0.27rem] bg-danger-400 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center text-lg align-baseline text-[0.75em] font-bold leading-none text-danger-800">NO</span>
@@ -55,7 +56,7 @@
                                     </td>
                                     <td
                                         class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
-                                        {{ \Carbon\Carbon::parse($dir->hora_actualizacion)->translatedFormat('l, d \\de F \\de Y') }}
+                                        {{ \Carbon\Carbon::parse($dir->hora_actualizacion)->translatedFormat('l, d \\de F \\de Y H:i:s') }}
                                     </td>
                                 </tr>
                             @endforeach
