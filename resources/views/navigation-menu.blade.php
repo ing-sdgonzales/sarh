@@ -971,6 +971,10 @@
                     {{ __('Formulario PIR') }}
                 </x-responsive-nav-link>
                 @role('Dirección de Recursos Humanos')
+                    <x-responsive-nav-link href="{{ route('control_pir') }}" :active="request()->routeIs('control_pir')">
+                        {{ __('Control de reportes') }}
+                    </x-responsive-nav-link>
+                    
                     <x-dropdown>
                         <x-slot name="trigger">
                             <x-responsive-nav-link href="#">
