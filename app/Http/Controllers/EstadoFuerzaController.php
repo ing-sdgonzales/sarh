@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\PirDireccion;
 use App\Models\PirEmpleado;
 use App\Models\PirSeccion;
+use App\Models\Region;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class EstadoFuerzaController extends Controller
@@ -30,11 +32,17 @@ class EstadoFuerzaController extends Controller
                 ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
                 ->join('departamentos', 'pir_empleados.departamento_id', '=', 'departamentos.id')
                 ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
-                ->where('regiones.region', $region)
-                ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
                 ->where('pir_empleados.activo', 1)
-                ->orderBy('pir_empleados.nombre')
-                ->get();
+                ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+                ->where('regiones.region', $region);
+
+            if ($region == 'Región I') {
+                $personal->where('pir_empleados.is_regional_i', 1);
+            } else {
+                $personal->where('pir_empleados.is_regional_i', 0);
+            }
+
+            $personal = $personal->orderBy('pir_empleados.nombre')->get();
 
             $contratista = PirEmpleado::select(
                 'pir_empleados.nombre',
@@ -55,9 +63,16 @@ class EstadoFuerzaController extends Controller
                 ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
                 ->where('renglones.renglon', '029')
                 ->where('pir_empleados.activo', 1)
-                ->where('regiones.region', $region)
-                ->orderBy('pir_empleados.nombre')
-                ->get();
+                ->where('regiones.region', $region);
+
+
+            if ($region == 'Región I') {
+                $contratista->where('pir_empleados.is_regional_i', 1);
+            } else {
+                $contratista->where('pir_empleados.is_regional_i', 0);
+            }
+
+            $contratista = $contratista->orderBy('pir_empleados.nombre')->get();
 
             $fecha = date('d/m/Y');
             $hora = date('H:i:s');
@@ -176,6 +191,7 @@ class EstadoFuerzaController extends Controller
                 ->where('pir_direccion_id', $id_direccion)
                 ->where('pir_empleados.activo', 1)
                 ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+                ->where('pir_empleados.is_regional_i', 0)
                 ->orderBy('pir_empleados.id', 'asc')
                 ->get();
 
@@ -195,6 +211,7 @@ class EstadoFuerzaController extends Controller
                 ->where('pir_direccion_id', $id_direccion)
                 ->where('pir_empleados.activo', 1)
                 ->where('renglones.renglon', '029')
+                ->where('pir_empleados.is_regional_i', 0)
                 ->orderBy('pir_empleados.id', 'asc')
                 ->get();
 
@@ -386,8 +403,13 @@ class EstadoFuerzaController extends Controller
 
         if (!empty($region)) {
             $direccion = PirDireccion::where('direccion', $region)->first();
-            $personal = $personal->where('region', $region);
-            $contratista = $contratista->where('region', $region);
+            if ($region == 'Región I') {
+                $personal->where('pir_empleados.is_regional_i', 1)->where('region', $region);
+                $contratista->where('pir_empleados.is_regional_i', 1)->where('region', $region);
+            } else {
+                $personal->where('region', $region);
+                $contratista->where('region', $region);
+            }
         } else {
             $direccion = PirDireccion::findOrFail($id_direccion);
             $personal = $personal->where('pir_direccion_id', $id_direccion);
@@ -494,6 +516,34 @@ class EstadoFuerzaController extends Controller
 
         $orden_direcciones = [1, 13, 9, 8, 12, 15, 14, 11, 2, 6, 4, 5, 7, 10, 22, 3, 16, 18, 17, 20, 19, 21];
 
+        $respuesta = PirDireccion::select(
+            'pir_direcciones.id as id_direccion',
+            'pir_direcciones.direccion as direccion',
+            'pir_direcciones.hora_actualizacion as actualizacion'
+        )
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente_sedes')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por el IGSS" THEN 1 ELSE NULL END) AS suspendidos_igss')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por la Clínica Médica" THEN 1 ELSE NULL END) AS suspendidos_clinica')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Licencia con goce de salario" THEN 1 ELSE NULL END) AS licencia')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Permiso autorizado" THEN 1 ELSE NULL END) AS permiso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Descanso por turno" THEN 1 ELSE NULL END) AS descanso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS capacitacion')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Ausente (Justificar)" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Vacaciones" THEN 1 ELSE NULL END) AS vacaciones')
+            ->leftJoin('pir_empleados', function ($join) {
+                $join->on('pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
+                    ->leftJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
+                    ->leftJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+                    ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+                    ->where('regiones.region', 'Región I')
+                    ->where('pir_empleados.is_regional_i', 1)
+                    ->where('pir_empleados.activo', 1);
+            })
+            ->where('pir_direcciones.direccion', 'Dirección de Respuesta')
+            ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
+            ->get();
+
         $direcciones = PirDireccion::select(
             'pir_direcciones.id as id_direccion',
             'pir_direcciones.direccion as direccion',
@@ -514,6 +564,7 @@ class EstadoFuerzaController extends Controller
                     ->leftJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
                     ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
                     ->where('regiones.region', 'Región I')
+                    ->where('pir_empleados.is_regional_i', 0)
                     ->where('pir_empleados.activo', 1);
             })
             ->whereIn('pir_direcciones.id', $orden_direcciones)
@@ -521,7 +572,33 @@ class EstadoFuerzaController extends Controller
             ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
             ->get();
 
-        $regionales = PirDireccion::select(
+        $region_i = PirDireccion::select(
+            'regiones.region as region',
+            'regiones.nombre as nombre',
+            'pir_direcciones.hora_actualizacion as actualizacion'
+        )
+            ->rightJoin('pir_empleados', 'pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
+            ->rightJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+            ->rightJoin('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+            ->rightJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
+            ->leftjoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente_sedes')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por el IGSS" THEN 1 ELSE NULL END) AS suspendidos_igss')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por la Clínica Médica" THEN 1 ELSE NULL END) AS suspendidos_clinica')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Licencia con goce de salario" THEN 1 ELSE NULL END) AS licencia')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Permiso autorizado" THEN 1 ELSE NULL END) AS permiso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Descanso por turno" THEN 1 ELSE NULL END) AS descanso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS capacitacion')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Ausente (Justificar)" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Vacaciones" THEN 1 ELSE NULL END) AS vacaciones')
+            ->groupBy('regiones.region')
+            ->where('pir_empleados.activo', 1)
+            ->where('regiones.region', 'Región I')
+            ->where('pir_empleados.is_regional_i', 1)
+            ->orderBy('regiones.id', 'asc');
+
+        $region_otras = PirDireccion::select(
             'regiones.region as region',
             'regiones.nombre as nombre',
             'pir_direcciones.hora_actualizacion as actualizacion'
@@ -541,8 +618,10 @@ class EstadoFuerzaController extends Controller
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Vacaciones" THEN 1 ELSE NULL END) AS vacaciones')
             ->groupBy('regiones.region')
             ->where('pir_empleados.activo', 1)
-            ->orderBy('regiones.id', 'asc')
-            ->get();
+            ->where('regiones.region', 'NOT LIKE', 'Región I')
+            ->orderBy('regiones.id', 'asc');
+
+        $regionales = $region_i->union($region_otras)->get();
 
         /* PLANTILLA */
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('templates/reporte.xlsx');

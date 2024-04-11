@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('nombre');
             $table->text('observacion')->nullable();
             $table->unsignedTinyInteger('activo')->default(1)->min(0)->max(1);
+            $table->unsignedTinyInteger('is_regional_i')->default(0);
 
             /* fks */
             $table->unsignedTinyInteger('pir_direccion_id');

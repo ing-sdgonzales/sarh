@@ -26,7 +26,7 @@ class Formulario extends Component
     public $grupos, $reportes;
 
     #[Validate([
-        'personal.*.nombre' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+        'personal.*.nombre' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ.\s]+$/'],
         'personal.*.pir_reporte_id' => 'required|integer|min:1',
         'personal.*.departamento_id' => 'required|integer|min:1',
         'personal.*.observacion' => ['nullable', 'required_if:personal.*.pir_reporte_id,2,3,4,5,6,7,9', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'],
@@ -43,7 +43,7 @@ class Formulario extends Component
     ];
 
     #[Validate([
-        'contratista.*.nombre' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/'],
+        'contratista.*.nombre' => ['required', 'filled', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ.\s]+$/'],
         'contratista.*.pir_reporte_id' => 'required|integer|min:1',
         'contratista.*.departamento_id' => 'required|integer|min:1',
         'contratista.*.observacion' => ['nullable', 'required_if:contratista.*.pir_reporte_id,2,3,4,5,6,7,9', 'regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.,;:-]+$/'],
@@ -86,7 +86,11 @@ class Formulario extends Component
             ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id');
 
         if (!empty($this->id_region)) {
-            $this->personal = $this->personal->where('region_id', $this->id_region);
+            if ($this->region == 'Región I') {
+                $this->personal->where('pir_empleados.is_regional_i', 1);
+            } else {
+                $this->personal = $this->personal->where('region_id', $this->id_region);
+            }
         } else {
             $this->personal = $this->personal->where('pir_direccion_id', $this->id_direccion);
         }
@@ -115,7 +119,11 @@ class Formulario extends Component
             ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id');
 
         if (!empty($this->id_region)) {
-            $this->contratista = $this->contratista->where('region_id', $this->id_region);
+            if ($this->region == 'Región I') {
+                $this->contratista->where('pir_empleados.is_regional_i', 1);
+            } else {
+                $this->contratista = $this->contratista->where('region_id', $this->id_region);
+            }
         } else {
             $this->contratista = $this->contratista->where('pir_direccion_id', $this->id_direccion);
         }
@@ -184,7 +192,7 @@ class Formulario extends Component
         } catch (QueryException $exception) {
             $error = $exception->errorInfo;
             session()->flash('error', implode($error));
-            return redirect()->route('postularse.formulario.index', ['id_puesto' => $this->id_puesto]);
+            return redirect()->route('formulario_pir');
         } catch (Exception $e) {
             $errorMessages = "Ocurrió un error: " . $e->getMessage();
             session()->flash('error', $errorMessages);

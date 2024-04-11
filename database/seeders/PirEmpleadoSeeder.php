@@ -313,9 +313,9 @@ class PirEmpleadoSeeder extends Seeder
             ['nombre' => 'Lourdes Carolina Dardon Barillas', 'dir' => 19, 'puesto' => 85],
             ['nombre' => 'Erick Eduardo Castro Cas', 'dir' => 19, 'puesto' => 85],
             ['nombre' => 'Juan Jilmar Delgado Zacarías', 'dir' => 19, 'puesto' => 85],
-            ['nombre' => 'Jorge Mario Jr. Herrera Escobar', 'dir' => 19, 'puesto' => 87],
-            ['nombre' => 'José Antonio Benitez Colomo', 'dir' => 19, 'puesto' => 88],
-            ['nombre' => 'Edgar Anibal Aguirre Sanoval', 'dir' => 19, 'puesto' => 90],
+            ['nombre' => 'Jorge Mario Jr. Herrera Escobar', 'dir' => 19, 'puesto' => 87, 'regional' => 1],
+            ['nombre' => 'José Antonio Benitez Colomo', 'dir' => 19, 'puesto' => 88, 'regional' => 1, 'regional' => 1],
+            ['nombre' => 'Edgar Anibal Aguirre Sandoval', 'dir' => 19, 'puesto' => 90, 'regional' => 1],
             ['nombre' => 'Oliver José Castañeda Barrera', 'dir' => 19, 'puesto' => 85],
             ['nombre' => 'Jorge Jafeth Rodríguez López', 'dir' => 19, 'puesto' => 84],
             ['nombre' => 'Juan Gabriel Samayoa Bolaños', 'dir' => 19, 'puesto' => 65],
@@ -330,11 +330,11 @@ class PirEmpleadoSeeder extends Seeder
             ['nombre' => 'Jorge Alfredo Rivas Zeceña ', 'dir' => 19, 'puesto' => 95],
             ['nombre' => 'Ingrid Geraldina Sagastume Reyes', 'dir' => 19, 'puesto' => 95],
             ['nombre' => 'Myrna Angélica Mejía Alonzo', 'dir' => 19, 'puesto' => 95],
-            ['nombre' => 'Kevin Estuardo Escobar Solares', 'dir' => 19, 'puesto' => 95],
-            ['nombre' => 'Ana Luisa Hernández Cardona', 'dir' => 19, 'puesto' => 94],
+            ['nombre' => 'Kevin Estuardo Escobar Solares', 'dir' => 19, 'puesto' => 95, 'regional' => 1],
+            ['nombre' => 'Ana Luisa Hernández Cardona', 'dir' => 19, 'puesto' => 94, 'regional' => 1],
             ['nombre' => 'Gustavo Anibal Archila Paz', 'dir' => 19, 'puesto' => 95],
             ['nombre' => 'Karen Daniela Oliva Guerra', 'dir' => 19, 'puesto' => 95],
-            ['nombre' => 'Juan Luis Santos Caceres', 'dir' => 19, 'puesto' => 95],
+            ['nombre' => 'Juan Luis Santos Caceres', 'dir' => 19, 'puesto' => 95, 'regional' => 1],
             ['nombre' => 'Roberto Antonio Recinos Morales', 'dir' => 19, 'puesto' => 95],
             ['nombre' => 'Hugo Alfredo García Leiva', 'dir' => 19, 'puesto' => 95],
             ['nombre' => 'Grisselda Carolina Arévalo Guzmán', 'dir' => 19, 'puesto' => 95],
@@ -682,11 +682,13 @@ class PirEmpleadoSeeder extends Seeder
 
         foreach ($empleados as $emp) {
             $regionId = isset($emp['reg']) ? $emp['reg'] : 1;
+            $regional = isset($emp['regional']) ? $emp['regional'] : 0;
 
             $empleado = PirEmpleado::create([
                 'nombre' => $emp['nombre'],
                 'pir_direccion_id' => $emp['dir'],
-                'region_id' => $regionId
+                'region_id' => $regionId,
+                'is_regional_i' => $regional
             ]);
 
             PirPuesto::create([
