@@ -18,7 +18,7 @@ class Control extends Component
             'hora_actualizacion'
         );
         if (!empty($this->filtro)) {
-            $direcciones->where('direccion', 'NOT LIKE', '%' . $this->filtro . '%');
+            $direcciones->where('direccion', 'LIKE', '%' . $this->filtro . '%');
         }
         return view('livewire.pir.control', [
             'direcciones' => $direcciones->paginate(10)
