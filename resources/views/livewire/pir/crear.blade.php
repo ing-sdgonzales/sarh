@@ -160,6 +160,29 @@
                                     </div>
                                 </div>
 
+                                <div class="sm:col-span-full">
+                                    <x-label for="regional"
+                                        value="{{ __('¿Pertenece al Estado de Fuerza de la Región I - Metropolitana?') }}" />
+                                    <div class="mt-2">
+                                        <x-select wire:model='regional' id="regional" name="regional" required
+                                            class="block w-full">
+                                            <option value="0" selected>No</option>
+                                            <option value="1" selected>Sí</option>
+                                        </x-select>
+                                    </div>
+                                    <p class="text-sm leading-6 text-gray-600 dark:text-gray-200">Este campo debe
+                                        marcarse si el empleado o contratista se incluye en el Estado de Fuerza de
+                                        la Región I.
+                                    </p>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('regional')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

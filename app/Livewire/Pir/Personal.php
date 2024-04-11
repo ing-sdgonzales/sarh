@@ -25,7 +25,7 @@ class Personal extends Component
     public $modal = false, $delete_modal = false, $modo_edicion = false, $busqueda, $filtro;
 
     /* Variables del modal */
-    public $id_empleado, $nombre, $region, $direccion, $departamento, $puesto, $renglon;
+    public $id_empleado, $nombre, $region, $direccion, $departamento, $puesto, $renglon, $regional;
 
     public function render()
     {
@@ -82,6 +82,7 @@ class Personal extends Component
                     'pir_direccion_id' => $validated['direccion'],
                     'region_id' => $validated['region'],
                     'departamento_id' => $validated['departamento'],
+                    'is_regional_i' => ($this->regional) ? 1 : 0
                 ]);
 
                 PirPuesto::updateOrCreate(['pir_empleado_id' => $empleado->id], [
