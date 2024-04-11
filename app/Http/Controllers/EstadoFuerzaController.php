@@ -686,9 +686,9 @@ class EstadoFuerzaController extends Controller
                 }
             }
             $doc->getCell('W' . $fila_actual)->setValue($dir->vacaciones);
-            if ($dir->actualizacion >= $dia_actual . ' 07:45:00' && $dir->actualizacion <= $dia_actual . ' 09:45:00') {
-                $doc->getCell('Z' . $fila_actual)->setValue($observacion);
-            } else {
+            /* if ($dir->actualizacion >= $dia_actual . ' 07:45:00' && $dir->actualizacion <= $dia_actual . ' 09:45:00') { */
+            $doc->getCell('Z' . $fila_actual)->setValue($observacion);
+            /* } else {
                 $doc->getStyle('Z' . $fila_actual)->applyFromArray([
                     'fill' => [
                         'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -699,7 +699,7 @@ class EstadoFuerzaController extends Controller
                     ],
                 ]);
                 $doc->getCell('Z' . $fila_actual)->setValue('NO PRESENTÓ INFORME');
-            }
+            } */
         }
 
         foreach ($regionales as $indice => $region) {
@@ -753,9 +753,9 @@ class EstadoFuerzaController extends Controller
                 }
             }
             $doc->getCell('W' . $fila_actual)->setValue($region->vacaciones);
-            if ($region->actualizacion >= $dia_actual . ' 07:45:00' && $region->actualizacion <= $dia_actual . ' 09:45:00') {
-                $doc->getCell('Z' . $fila_actual)->setValue($observacion);
-            } else {
+            /* if ($region->actualizacion >= $dia_actual . ' 07:45:00' && $region->actualizacion <= $dia_actual . ' 09:45:00') { */
+            $doc->getCell('Z' . $fila_actual)->setValue($observacion);
+            /* } else {
                 $doc->getStyle('Z' . $fila_actual)->applyFromArray([
                     'fill' => [
                         'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -766,7 +766,7 @@ class EstadoFuerzaController extends Controller
                     ],
                 ]);
                 $doc->getCell('Z' . $fila_actual)->setValue('NO PRESENTÓ INFORME');
-            }
+            } */
         }
 
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
@@ -843,7 +843,7 @@ class EstadoFuerzaController extends Controller
             ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
             ->where('reporte', 'Comisión')
-            ->wheree('pir_empleados.activo', 1)
+            ->where('pir_empleados.activo', 1)
             ->get();
 
         $capacitaciones = PirEmpleado::select(
@@ -936,7 +936,7 @@ class EstadoFuerzaController extends Controller
             Storage::makeDirectory('templates/procesed/');
         }
 
-        $writer->save('templates/procesed/' . $fecha_hora . 'CONTROL_AUSENCIAS.xlsx');
+        $writer->save('templates/procesed/' . $fecha_hora . '_CONTROL_AUSENCIAS.xlsx');
 
         // Descargar el archivo
         return 'templates/procesed/' . $fecha_hora . '_CONTROL_AUSENCIAS.xlsx';
