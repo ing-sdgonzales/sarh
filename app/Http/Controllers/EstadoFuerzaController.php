@@ -5,176 +5,357 @@ namespace App\Http\Controllers;
 use App\Models\PirDireccion;
 use App\Models\PirEmpleado;
 use App\Models\PirSeccion;
+use App\Models\Region;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class EstadoFuerzaController extends Controller
 {
-    public function generarFormularioPIR($id_direccion)
+    public function generarFormularioPIR($id_direccion, $region)
     {
-        $direccion = PirDireccion::findOrFail($id_direccion);
-        $seccion = PirSeccion::findOrFail($direccion->pir_seccion_id);
+        if (!empty($region)) {
+            $personal = PirEmpleado::select(
+                'pir_empleados.nombre',
+                'pir_empleados.observacion',
+                'pir_empleados.pir_reporte_id',
+                'pir_reportes.reporte as reporte',
+                'pir_empleados.pir_grupo_id',
+                'pir_grupos.grupo as grupo',
+                'pir_direcciones.direccion as direccion'
+            )
+                ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+                ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+                ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
+                ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+                ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
+                ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
+                ->join('departamentos', 'pir_empleados.departamento_id', '=', 'departamentos.id')
+                ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
+                ->where('pir_empleados.activo', 1)
+                ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+                ->where('regiones.region', $region);
 
-        $personal = PirEmpleado::select(
-            'pir_empleados.nombre',
-            'pir_empleados.observacion',
-            'pir_empleados.pir_reporte_id',
-            'pir_reportes.reporte as reporte',
-            'pir_empleados.pir_grupo_id',
-            'pir_grupos.grupo as grupo'
-        )
-            ->join('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
-            ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
-            ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
-            ->where('pir_direccion_id', $id_direccion)
-            ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
-            ->orderBy('pir_empleados.id', 'asc')
-            ->get();
+            if ($region == 'Región I') {
+                $personal->where('pir_empleados.is_regional_i', 1);
+            } else {
+                $personal->where('pir_empleados.is_regional_i', 0);
+            }
 
-        $contratista = PirEmpleado::select(
-            'pir_empleados.nombre',
-            'pir_empleados.observacion',
-            'pir_empleados.pir_reporte_id',
-            'pir_reportes.reporte as reporte',
-            'pir_empleados.pir_grupo_id',
-            'pir_grupos.grupo as grupo'
-        )
-            ->join('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
-            ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
-            ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
-            ->where('pir_direccion_id', $id_direccion)
-            ->where('renglones.renglon', '029')
-            ->orderBy('pir_empleados.id', 'asc')
-            ->get();
+            $personal = $personal->orderBy('pir_empleados.nombre')->get();
 
-        $fecha = date('d/m/Y');
-        $hora = date('H:i:s');
-        $fecha_hora = date('d_m_Y H_i_s');
+            $contratista = PirEmpleado::select(
+                'pir_empleados.nombre',
+                'pir_empleados.observacion',
+                'pir_empleados.pir_reporte_id',
+                'pir_reportes.reporte as reporte',
+                'pir_empleados.pir_grupo_id',
+                'pir_grupos.grupo as grupo',
+                'pir_direcciones.direccion as direccion'
+            )
+                ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+                ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+                ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
+                ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+                ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
+                ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
+                ->join('departamentos', 'pir_empleados.departamento_id', '=', 'departamentos.id')
+                ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
+                ->where('renglones.renglon', '029')
+                ->where('pir_empleados.activo', 1)
+                ->where('regiones.region', $region);
 
-        /* PLANTILLA */
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('templates/pir001.xlsx');
-        $doc = $spreadsheet->getActiveSheet();
-        $doc->getCell('C6')->setValue($fecha);
-        $doc->getCell('G6')->setValue($hora);
-        $doc->getCell('C19')->setValue($direccion->direccion);
-        $doc->getCell('D19')->setValue($seccion->seccion);
-        $fila = 31 + ((count($personal) + count($contratista)) - 4);
 
-        switch ($seccion->seccion) {
-            case 'Comando':
-                $doc->getCell('B9')->setValue('X');
-                break;
-            case 'Información':
-                $doc->getCell('C9')->setValue('X');
-                break;
-            case 'Enlace':
-                $doc->getCell('D9')->setValue('X');
-                break;
-            case 'Seguridad':
-                $doc->getCell('E9')->setValue('X');
-                break;
-            case 'Jurídico':
-                $doc->getCell('F9')->setValue('X');
-                break;
-            case 'Protocolo':
-                $doc->getCell('G9')->setValue('X');
-                break;
-            case 'Inspectoría':
-                $doc->getCell('H9')->setValue('X');
-                break;
-            case 'Auditoría':
-                $doc->getCell('I9')->setValue('X');
-                break;
-            case 'Operaciones Estratégicas':
-                $doc->getCell('C12')->setValue('X');
-                break;
-            case 'Operaciones Tácticas':
-                $doc->getCell('D12')->setValue('X');
-                break;
-            case 'Logística':
-                $doc->getCell('E12')->setValue('X');
-                break;
-            case 'Planificación':
-                $doc->getCell('F12')->setValue('X');
-                break;
-            case 'Administración y Finanzas':
-                $doc->getCell('G12')->setValue('X');
-                break;
-        }
+            if ($region == 'Región I') {
+                $contratista->where('pir_empleados.is_regional_i', 1);
+            } else {
+                $contratista->where('pir_empleados.is_regional_i', 0);
+            }
 
-        $fila_inicial_personal = 19;
-        $fila_inicial_contratistas = 25;
+            $contratista = $contratista->orderBy('pir_empleados.nombre')->get();
 
-        if (count($personal) > 2) {
-            $doc->insertNewRowBefore($fila_inicial_personal + 1, count($personal) - 2);
-            $fila_inicial_contratistas += count($personal) - 2;
-        } elseif (count($personal) == 1) {
-            $doc->removeRow($fila_inicial_personal);
-        }
+            $fecha = date('d/m/Y');
+            $hora = date('H:i:s');
+            $fecha_hora = date('Y_m_d H_i_s');
 
-        if (count($contratista) > 2) {
-            $doc->insertNewRowBefore($fila_inicial_contratistas + 1, count($contratista) - 2);
-        } elseif (count($contratista) == 1) {
-            $doc->removeRow($fila_inicial_contratistas);
-        }
+            /* PLANTILLA */
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('templates/pir001_regionales.xlsx');
+            $doc = $spreadsheet->getActiveSheet();
+            $doc->getCell('B3')->setValue('INFORME DE ESTADO DE FUERZA - ' . $region);
+            $doc->getCell('C6')->setValue($fecha);
+            $doc->getCell('G6')->setValue($hora);
+            $fila = 31 + ((count($personal) + count($contratista)) - 4);
 
-        foreach ($personal as $indice => $emp) {
-            $fila_actual = $fila_inicial_personal + $indice;
-            $doc->getCell('A' . $fila_actual)->setValue($indice + 1);
-            $doc->getCell('B' . $fila_actual)->setValue($emp->nombre);
-            switch ($emp->reporte) {
-                case 'Presente en sedes':
-                    $doc->getCell('E' . $fila_actual)->setValue('X');
+            $fila_inicial_personal = 19;
+            $fila_inicial_contratistas = 25;
+
+            if (count($personal) > 2) {
+                $doc->insertNewRowBefore($fila_inicial_personal + 1, count($personal) - 2);
+                $fila_inicial_contratistas += count($personal) - 2;
+            } elseif (count($personal) == 1) {
+                $doc->removeRow($fila_inicial_personal);
+            } elseif (count($personal) == 0) {
+                $doc->removeRow($fila_inicial_personal, 2);
+            }
+
+            if (count($contratista) > 2) {
+                $doc->insertNewRowBefore($fila_inicial_contratistas + 1, count($contratista) - 2);
+            } elseif (count($contratista) == 1) {
+                $doc->removeRow($fila_inicial_contratistas);
+            } elseif (count($contratista) == 0) {
+                $doc->removeRow($fila_inicial_contratistas, 2);
+            }
+
+            foreach (range($fila_inicial_personal, count($personal) - 2) as $row) {
+                $doc->getRowDimension($row)->setRowHeight(-1);
+            }
+
+            foreach (range($fila_inicial_contratistas, count($contratista) - 2) as $row) {
+                $doc->getRowDimension($row)->setRowHeight(-1);
+            }
+
+            foreach ($personal as $indice => $emp) {
+                $fila_actual = $fila_inicial_personal + $indice;
+                $doc->getCell('A' . $fila_actual)->setValue($indice + 1);
+                $doc->getCell('B' . $fila_actual)->setValue($emp->nombre);
+                $doc->getCell('C' . $fila_actual)->setValue($emp->direccion);
+                switch ($emp->reporte) {
+                    case 'Presente en sedes':
+                        $doc->getCell('E' . $fila_actual)->setValue('X');
+                        break;
+                    case 'Comisión':
+                        $doc->getCell('F' . $fila_actual)->setValue('X');
+                        break;
+                    case 'Capacitación en el extranjero':
+                        $doc->getCell('G' . $fila_actual)->setValue('X');
+                        break;
+                    default:
+                        $doc->getCell('H' . $fila_actual)->setValue('X');
+                        break;
+                }
+                $doc->getCell('I' . $fila_actual)->setValue($emp->grupo);
+                $doc->getCell('J' . $fila_actual)->setValue($emp->observacion);
+            }
+
+            foreach ($contratista as $indice => $emp) {
+                $fila_actual = $fila_inicial_contratistas + $indice;
+                $doc->getCell('A' . $fila_actual)->setValue($indice + 1);
+                $doc->getCell('B' . $fila_actual)->setValue($emp->nombre);
+                $doc->getCell('C' . $fila_actual)->setValue($emp->direccion);
+                switch ($emp->reporte) {
+                    case 'Presente en sedes':
+                        $doc->getCell('E' . $fila_actual)->setValue('X');
+                        break;
+                    case 'Comisión':
+                        $doc->getCell('F' . $fila_actual)->setValue('X');
+                        break;
+                    case 'Permiso autorizado' || 'Capacitación en el extranjero':
+                        $doc->getCell('G' . $fila_actual)->setValue('X');
+                        break;
+                    default:
+                        $doc->getCell('H' . $fila_actual)->setValue('X');
+                        break;
+                }
+                $doc->getCell('I' . $fila_actual)->setValue($emp->grupo);
+                $doc->getCell('J' . $fila_actual)->setValue($emp->observacion);
+            }
+            $doc->getCell('C' . $fila)->setValue($region);
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+            if (!Storage::exists('templates/procesed/')) {
+                Storage::makeDirectory('templates/procesed/');
+            }
+
+            $writer->save('templates/procesed/' . $fecha_hora . '_PIR.xlsx');
+
+            // Descargar el archivo
+            return 'templates/procesed/' . $fecha_hora . '_PIR.xlsx';
+        } else {
+
+            $direccion = PirDireccion::findOrFail($id_direccion);
+            $seccion = PirSeccion::findOrFail($direccion->pir_seccion_id);
+
+            $personal = PirEmpleado::select(
+                'pir_empleados.nombre',
+                'pir_empleados.observacion',
+                'pir_empleados.pir_reporte_id',
+                'pir_reportes.reporte as reporte',
+                'pir_empleados.pir_grupo_id',
+                'pir_grupos.grupo as grupo'
+            )
+                ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+                ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+                ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
+                ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+                ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
+                ->where('pir_direccion_id', $id_direccion)
+                ->where('pir_empleados.activo', 1)
+                ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+                ->where('pir_empleados.is_regional_i', 0)
+                ->orderBy('pir_empleados.id', 'asc')
+                ->get();
+
+            $contratista = PirEmpleado::select(
+                'pir_empleados.nombre',
+                'pir_empleados.observacion',
+                'pir_empleados.pir_reporte_id',
+                'pir_reportes.reporte as reporte',
+                'pir_empleados.pir_grupo_id',
+                'pir_grupos.grupo as grupo'
+            )
+                ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+                ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+                ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
+                ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+                ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
+                ->where('pir_direccion_id', $id_direccion)
+                ->where('pir_empleados.activo', 1)
+                ->where('renglones.renglon', '029')
+                ->where('pir_empleados.is_regional_i', 0)
+                ->orderBy('pir_empleados.id', 'asc')
+                ->get();
+
+            $fecha = date('d/m/Y');
+            $hora = date('H:i:s');
+            $fecha_hora = date('Y_m_d H_i_s');
+
+            /* PLANTILLA */
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('templates/pir001.xlsx');
+            $doc = $spreadsheet->getActiveSheet();
+            $doc->getCell('C6')->setValue($fecha);
+            $doc->getCell('G6')->setValue($hora);
+            $doc->getCell('C19')->setValue($direccion->direccion);
+            $doc->getCell('D19')->setValue($seccion->seccion);
+            $fila = 31 + ((count($personal) + count($contratista)) - 4);
+
+            switch ($seccion->seccion) {
+                case 'Comando':
+                    $doc->getCell('B9')->setValue('X');
                     break;
-                case 'Comisión':
-                    $doc->getCell('F' . $fila_actual)->setValue('X');
+                case 'Información':
+                    $doc->getCell('C9')->setValue('X');
                     break;
-                case 'Capacitación en el extranjero':
-                    $doc->getCell('G' . $fila_actual)->setValue('X');
+                case 'Enlace':
+                    $doc->getCell('D9')->setValue('X');
                     break;
-                default:
-                    $doc->getCell('H' . $fila_actual)->setValue('X');
+                case 'Seguridad':
+                    $doc->getCell('E9')->setValue('X');
+                    break;
+                case 'Jurídico':
+                    $doc->getCell('F9')->setValue('X');
+                    break;
+                case 'Protocolo':
+                    $doc->getCell('G9')->setValue('X');
+                    break;
+                case 'Inspectoría':
+                    $doc->getCell('H9')->setValue('X');
+                    break;
+                case 'Auditoría':
+                    $doc->getCell('I9')->setValue('X');
+                    break;
+                case 'Operaciones Estratégicas':
+                    $doc->getCell('C12')->setValue('X');
+                    break;
+                case 'Operaciones Tácticas':
+                    $doc->getCell('D12')->setValue('X');
+                    break;
+                case 'Logística':
+                    $doc->getCell('E12')->setValue('X');
+                    break;
+                case 'Planificación':
+                    $doc->getCell('F12')->setValue('X');
+                    break;
+                case 'Administración y Finanzas':
+                    $doc->getCell('G12')->setValue('X');
                     break;
             }
-            $doc->getCell('I' . $fila_actual)->setValue($emp->grupo);
-            $doc->getCell('J' . $fila_actual)->setValue($emp->observacion);
-        }
 
-        foreach ($contratista as $indice => $emp) {
-            $fila_actual = $fila_inicial_contratistas + $indice;
-            $doc->getCell('A' . $fila_actual)->setValue($indice + 1);
-            $doc->getCell('B' . $fila_actual)->setValue($emp->nombre);
-            switch ($emp->reporte) {
-                case 'Presente en sedes':
-                    $doc->getCell('E' . $fila_actual)->setValue('X');
-                    break;
-                case 'Comisión':
-                    $doc->getCell('F' . $fila_actual)->setValue('X');
-                    break;
-                case 'Permiso autorizado' || 'Capacitación en el extranjero':
-                    $doc->getCell('G' . $fila_actual)->setValue('X');
-                    break;
-                default:
-                    $doc->getCell('H' . $fila_actual)->setValue('X');
-                    break;
+            $fila_inicial_personal = 19;
+            $fila_inicial_contratistas = 25;
+
+            if (count($personal) > 2) {
+                $doc->insertNewRowBefore($fila_inicial_personal + 1, count($personal) - 2);
+                $fila_inicial_contratistas += count($personal) - 2;
+            } elseif (count($personal) == 1) {
+                $doc->removeRow($fila_inicial_personal);
             }
-            $doc->getCell('I' . $fila_actual)->setValue($emp->grupo);
-            $doc->getCell('J' . $fila_actual)->setValue($emp->observacion);
-        }
-        $doc->getCell('C' . (25 + count($personal) - 2))->setValue($direccion->direccion);
-        $doc->getCell('D' . (25 + count($personal) - 2))->setValue($seccion->seccion);
-        $doc->getCell('C' . $fila)->setValue($direccion->direccion);
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save('templates/procesed/pir_' . $fecha_hora . '.xlsx');
 
-        // Descargar el archivo
-        return 'templates/procesed/pir_' . $fecha_hora . '.xlsx';
-        /* return response()->download('templates/procesed/pir_' . $fecha_hora . '.xlsx')->deleteFileAfterSend(true); */
+            if (count($contratista) > 2) {
+                $doc->insertNewRowBefore($fila_inicial_contratistas + 1, count($contratista) - 2);
+            } elseif (count($contratista) == 1) {
+                $doc->removeRow($fila_inicial_contratistas);
+            }
+
+            foreach (range($fila_inicial_personal, count($personal) - 2) as $row) {
+                $doc->getRowDimension($row)->setRowHeight(-1);
+            }
+
+            foreach (range($fila_inicial_contratistas, count($contratista) - 2) as $row) {
+                $doc->getRowDimension($row)->setRowHeight(-1);
+            }
+
+            foreach ($personal as $indice => $emp) {
+                $fila_actual = $fila_inicial_personal + $indice;
+                $doc->getCell('A' . $fila_actual)->setValue($indice + 1);
+                $doc->getCell('B' . $fila_actual)->setValue($emp->nombre);
+                switch ($emp->reporte) {
+                    case 'Presente en sedes':
+                        $doc->getCell('E' . $fila_actual)->setValue('X');
+                        break;
+                    case 'Comisión':
+                        $doc->getCell('F' . $fila_actual)->setValue('X');
+                        break;
+                    case 'Capacitación en el extranjero':
+                        $doc->getCell('G' . $fila_actual)->setValue('X');
+                        break;
+                    default:
+                        $doc->getCell('H' . $fila_actual)->setValue('X');
+                        break;
+                }
+                $doc->getCell('I' . $fila_actual)->setValue($emp->grupo);
+                $doc->getCell('J' . $fila_actual)->setValue($emp->observacion);
+            }
+
+            foreach ($contratista as $indice => $emp) {
+                $fila_actual = $fila_inicial_contratistas + $indice;
+                $doc->getCell('A' . $fila_actual)->setValue($indice + 1);
+                $doc->getCell('B' . $fila_actual)->setValue($emp->nombre);
+                switch ($emp->reporte) {
+                    case 'Presente en sedes':
+                        $doc->getCell('E' . $fila_actual)->setValue('X');
+                        break;
+                    case 'Comisión':
+                        $doc->getCell('F' . $fila_actual)->setValue('X');
+                        break;
+                    case 'Permiso autorizado' || 'Capacitación en el extranjero':
+                        $doc->getCell('G' . $fila_actual)->setValue('X');
+                        break;
+                    default:
+                        $doc->getCell('H' . $fila_actual)->setValue('X');
+                        break;
+                }
+                $doc->getCell('I' . $fila_actual)->setValue($emp->grupo);
+                $doc->getCell('J' . $fila_actual)->setValue($emp->observacion);
+            }
+            $doc->getCell('C' . (25 + count($personal) - 2))->setValue($direccion->direccion);
+            $doc->getCell('D' . (25 + count($personal) - 2))->setValue($seccion->seccion);
+            $doc->getCell('C' . $fila)->setValue($direccion->direccion);
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+
+            if (!Storage::exists('templates/procesed/')) {
+                Storage::makeDirectory('templates/procesed/');
+            }
+
+            $writer->save('templates/procesed/' . $fecha_hora . '_PIR.xlsx');
+
+            // Descargar el archivo
+            return 'templates/procesed/' . $fecha_hora . '_PIR.xlsx';
+            /* return response()->download('templates/procesed/pir_' . $fecha_hora . '.xlsx')->deleteFileAfterSend(true); */
+        }
     }
 
-    public function generateDisponibilidadReport($id_direccion)
+    public function generateDisponibilidadReport($id_direccion, $region)
     {
-        $direccion = PirDireccion::findOrFail($id_direccion);
-        $seccion = PirSeccion::findOrFail($direccion->pir_seccion_id);
 
         $personal = PirEmpleado::select(
             'pir_empleados.nombre',
@@ -183,17 +364,20 @@ class EstadoFuerzaController extends Controller
             'pir_reportes.reporte as reporte',
             'pir_empleados.pir_grupo_id',
             'pir_grupos.grupo as grupo',
+            'pir_direcciones.direccion as direccion',
+            'regiones.region as region',
+            'departamentos.nombre as departamento',
             'catalogo_puestos.puesto as puesto',
             'renglones.renglon as renglon'
         )
-            ->join('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
-            ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
-            ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
             ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
             ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
-            ->where('pir_direccion_id', $id_direccion)
-            ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
-            ->get();
+            ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
+            ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+            ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
+            ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
+            ->join('departamentos', 'pir_empleados.departamento_id', '=', 'departamentos.id')
+            ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id');
 
         $contratista = PirEmpleado::select(
             'pir_empleados.nombre',
@@ -203,21 +387,41 @@ class EstadoFuerzaController extends Controller
             'pir_empleados.pir_grupo_id',
             'pir_grupos.grupo as grupo',
             'catalogo_puestos.puesto as puesto',
+            'regiones.region as region',
+            'departamentos.nombre as departamento',
+            'pir_direcciones.direccion as direccion',
             'renglones.renglon as renglon'
         )
-            ->join('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
-            ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
-            ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
             ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
             ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
-            ->where('pir_direccion_id', $id_direccion)
-            ->where('renglones.renglon', '029')
-            ->orderBy('pir_empleados.id', 'asc')
-            ->get();
+            ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
+            ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+            ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
+            ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
+            ->join('departamentos', 'pir_empleados.departamento_id', '=', 'departamentos.id')
+            ->join('regiones', 'pir_empleados.region_id', '=', 'regiones.id');
+
+        if (!empty($region)) {
+            $direccion = PirDireccion::where('direccion', $region)->first();
+            if ($region == 'Región I') {
+                $personal->where('pir_empleados.is_regional_i', 1)->where('region', $region);
+                $contratista->where('pir_empleados.is_regional_i', 1)->where('region', $region);
+            } else {
+                $personal->where('region', $region);
+                $contratista->where('region', $region);
+            }
+        } else {
+            $direccion = PirDireccion::findOrFail($id_direccion);
+            $personal = $personal->where('pir_direccion_id', $id_direccion);
+            $contratista = $contratista->where('pir_direccion_id', $id_direccion);
+        }
+
+        $personal = $personal->whereIn('renglones.renglon', ['011', '021', '022', '031'])->where('pir_empleados.activo', 1)->get();
+        $contratista = $contratista->where('renglones.renglon', '029')->where('pir_empleados.activo', 1)->orderBy('pir_empleados.id', 'asc')->get();
 
         $fecha = date('d/m/Y');
         $hora = date('H:i:s');
-        $fecha_hora = date('d_m_Y H_i_s');
+        $fecha_hora = date('Y_m_d H_i_s');
 
         /* PLANTILLA */
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('templates/disponibilidad.xlsx');
@@ -253,9 +457,10 @@ class EstadoFuerzaController extends Controller
             $formatoPersonal->getCell('B' . $fila_actual)->setValue($emp->nombre);
             $formatoPersonal->getCell('C' . $fila_actual)->setValue($emp->renglon);
             $formatoPersonal->getCell('D' . $fila_actual)->setValue($emp->puesto);
-            $formatoPersonal->getCell('E' . $fila_actual)->setValue($direccion->direccion);
-            $formatoPersonal->getCell('F' . $fila_actual)->setValue('I');
-            $formatoPersonal->getCell('G' . $fila_actual)->setValue('Guatemala/Guatemala');
+            $formatoPersonal->getCell('E' . $fila_actual)->setValue($emp->direccion);
+            $cadena = explode(' ', $emp->region);
+            $formatoPersonal->getCell('F' . $fila_actual)->setValue($cadena[1]);
+            $formatoPersonal->getCell('G' . $fila_actual)->setValue($emp->departamento);
             $formatoPersonal->getCell('H' . $fila_actual)->setValue($emp->pir_reporte_id);
             $formatoPersonal->getCell('I' . $fila_actual)->setValue($emp->observacion);
         }
@@ -266,9 +471,10 @@ class EstadoFuerzaController extends Controller
             $formatoContratista->getCell('B' . $fila_actual)->setValue($emp->nombre);
             $formatoContratista->getCell('C' . $fila_actual)->setValue($emp->renglon);
             $formatoContratista->getCell('D' . $fila_actual)->setValue($emp->puesto);
-            $formatoContratista->getCell('E' . $fila_actual)->setValue($direccion->direccion);
-            $formatoContratista->getCell('F' . $fila_actual)->setValue('I');
-            $formatoContratista->getCell('G' . $fila_actual)->setValue('Guatemala/Guatemala');
+            $cadena = explode(' ', $emp->region);
+            $formatoContratista->getCell('E' . $fila_actual)->setValue($emp->direccion);
+            $formatoContratista->getCell('F' . $fila_actual)->setValue($cadena[1]);
+            $formatoContratista->getCell('G' . $fila_actual)->setValue($emp->departamento);
             switch ($emp->reporte) {
                 case 'Presente en sedes':
                     $formatoContratista->getCell('H' . $fila_actual)->setValue(1);
@@ -291,26 +497,90 @@ class EstadoFuerzaController extends Controller
         }
 
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save('templates/procesed/disponibilidad_' . $fecha_hora . '.xlsx');
+
+        if (!Storage::exists('templates/procesed/')) {
+            Storage::makeDirectory('templates/procesed/');
+        }
+
+        $writer->save('templates/procesed/' . $fecha_hora . '_DISPONIBILIDAD.xlsx');
 
         // Descargar el archivo
-        return 'templates/procesed/disponibilidad_' . $fecha_hora . '.xlsx';
+        return 'templates/procesed/' . $fecha_hora . '_DISPONIBILIDAD.xlsx';
     }
 
     public function generarReporteDiario()
     {
         $dia_actual = date('Y-m-d');
         $fecha = Carbon::now()->translatedFormat('l, d \\de F \\de Y');
-        $fecha_hora = date('d_m_Y H_i_s');
+        $fecha_hora = date('Y_m_d H_i_s');
 
         $orden_direcciones = [1, 13, 9, 8, 12, 15, 14, 11, 2, 6, 4, 5, 7, 10, 22, 3, 16, 18, 17, 20, 19, 21];
+
+        $respuesta = PirDireccion::select(
+            'pir_direcciones.id as id_direccion',
+            'pir_direcciones.direccion as direccion',
+            'pir_direcciones.hora_actualizacion as actualizacion'
+        )
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente_sedes')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por el IGSS" THEN 1 ELSE NULL END) AS suspendidos_igss')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por la Clínica Médica" THEN 1 ELSE NULL END) AS suspendidos_clinica')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Licencia con goce de salario" THEN 1 ELSE NULL END) AS licencia')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Permiso autorizado" THEN 1 ELSE NULL END) AS permiso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Descanso por turno" THEN 1 ELSE NULL END) AS descanso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS capacitacion')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Ausente (Justificar)" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Vacaciones" THEN 1 ELSE NULL END) AS vacaciones')
+            ->leftJoin('pir_empleados', function ($join) {
+                $join->on('pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
+                    ->leftJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
+                    ->leftJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+                    ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+                    ->where('regiones.region', 'Región I')
+                    ->where('pir_empleados.is_regional_i', 1)
+                    ->where('pir_empleados.activo', 1);
+            })
+            ->where('pir_direcciones.direccion', 'Dirección de Respuesta')
+            ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
+            ->get();
 
         $direcciones = PirDireccion::select(
             'pir_direcciones.id as id_direccion',
             'pir_direcciones.direccion as direccion',
             'pir_direcciones.hora_actualizacion as actualizacion'
         )
-            ->leftjoin('pir_empleados', 'pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente_sedes')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por el IGSS" THEN 1 ELSE NULL END) AS suspendidos_igss')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por la Clínica Médica" THEN 1 ELSE NULL END) AS suspendidos_clinica')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Licencia con goce de salario" THEN 1 ELSE NULL END) AS licencia')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Permiso autorizado" THEN 1 ELSE NULL END) AS permiso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Descanso por turno" THEN 1 ELSE NULL END) AS descanso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS capacitacion')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Ausente (Justificar)" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Vacaciones" THEN 1 ELSE NULL END) AS vacaciones')
+            ->leftJoin('pir_empleados', function ($join) {
+                $join->on('pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
+                    ->leftJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
+                    ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+                    ->where('regiones.region', 'Región I')
+                    ->where('pir_empleados.is_regional_i', 0)
+                    ->where('pir_empleados.activo', 1);
+            })
+            ->whereIn('pir_direcciones.id', $orden_direcciones)
+            ->groupBy('pir_direcciones.direccion')
+            ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
+            ->get();
+
+        $region_i = PirDireccion::select(
+            'regiones.region as region',
+            'regiones.nombre as nombre',
+            'pir_direcciones.hora_actualizacion as actualizacion'
+        )
+            ->rightJoin('pir_empleados', 'pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
+            ->rightJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+            ->rightJoin('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+            ->rightJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
             ->leftjoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente_sedes')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por el IGSS" THEN 1 ELSE NULL END) AS suspendidos_igss')
@@ -322,9 +592,36 @@ class EstadoFuerzaController extends Controller
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS capacitacion')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Ausente (Justificar)" THEN 1 ELSE NULL END) AS ausente')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Vacaciones" THEN 1 ELSE NULL END) AS vacaciones')
-            ->groupBy('pir_direcciones.direccion')
-            ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
-            ->get();
+            ->groupBy('regiones.region')
+            ->where('pir_empleados.activo', 1)
+            ->where('regiones.region', 'Región I')
+            ->where('pir_empleados.is_regional_i', 1)
+            ->orderBy('regiones.id', 'asc');
+
+        $region_otras = PirDireccion::select(
+            'regiones.region as region',
+            'regiones.nombre as nombre',
+            'pir_direcciones.hora_actualizacion as actualizacion'
+        )
+            ->rightJoin('pir_empleados', 'pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
+            ->rightJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
+            ->leftjoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente_sedes')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por el IGSS" THEN 1 ELSE NULL END) AS suspendidos_igss')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Suspendidos por la Clínica Médica" THEN 1 ELSE NULL END) AS suspendidos_clinica')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Licencia con goce de salario" THEN 1 ELSE NULL END) AS licencia')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Permiso autorizado" THEN 1 ELSE NULL END) AS permiso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Descanso por turno" THEN 1 ELSE NULL END) AS descanso')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS capacitacion')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Ausente (Justificar)" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Vacaciones" THEN 1 ELSE NULL END) AS vacaciones')
+            ->groupBy('regiones.region')
+            ->where('pir_empleados.activo', 1)
+            ->where('regiones.region', 'NOT LIKE', 'Región I')
+            ->orderBy('regiones.id', 'asc');
+
+        $regionales = $region_i->union($region_otras)->get();
 
         /* PLANTILLA */
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('templates/reporte.xlsx');
@@ -337,6 +634,8 @@ class EstadoFuerzaController extends Controller
         $doc->getCell('Z1')->setValue($fecha);
 
         $fila_inicial = 3;
+        $fila_inicial_regionales = 25;
+
         foreach ($direcciones as $indice => $dir) {
             $observacion = '';
             $fila_actual = $fila_inicial + $indice;
@@ -387,9 +686,9 @@ class EstadoFuerzaController extends Controller
                 }
             }
             $doc->getCell('W' . $fila_actual)->setValue($dir->vacaciones);
-            if ($dir->actualizacion >= $dia_actual . ' 07:45:00' && $dir->actualizacion <= $dia_actual . ' 09:45:00') {
-                $doc->getCell('Z' . $fila_actual)->setValue($observacion);
-            } else {
+            /* if ($dir->actualizacion >= $dia_actual . ' 07:45:00' && $dir->actualizacion <= $dia_actual . ' 09:45:00') { */
+            $doc->getCell('Z' . $fila_actual)->setValue($observacion);
+            /* } else {
                 $doc->getStyle('Z' . $fila_actual)->applyFromArray([
                     'fill' => [
                         'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
@@ -400,21 +699,93 @@ class EstadoFuerzaController extends Controller
                     ],
                 ]);
                 $doc->getCell('Z' . $fila_actual)->setValue('NO PRESENTÓ INFORME');
+            } */
+        }
+
+        foreach ($regionales as $indice => $region) {
+            $observacion = '';
+            $fila_actual = $fila_inicial_regionales + $indice;
+
+            $doc->getCell('A' . $fila_actual)->setValue($indice + 1);
+            $doc->getCell('B' . $fila_actual)->setValue($region->region . ' - ' . $region->nombre);
+            $doc->getCell('M' . $fila_actual)->setValue($region->presente_sedes);
+            $doc->getCell('N' . $fila_actual)->setValue($region->suspendidos_igss);
+            if ($region->suspendidos_igss > 0) {
+                $empleados = $this->getEmpleados($region->id_direccion, 2);
+                $observacion .= "2. Suspendidos por el IGSS\n";
+                foreach ($empleados as $emp) {
+                    $observacion .= "{$emp->nombre} {$emp->renglon} / {$emp->observacion}\n";
+                }
             }
+            $doc->getCell('O' . $fila_actual)->setValue($region->suspendidos_clinica);
+            if ($region->suspendidos_clinica > 0) {
+                $empleados = $this->getEmpleados($region->id_direccion, 3);
+                $observacion .= "3. Suspendidos por la Clínica Médica\n";
+                foreach ($empleados as $emp) {
+                    $observacion .= "{$emp->nombre} {$emp->renglon} / {$emp->observacion}\n";
+                }
+            }
+            $doc->getCell('P' . $fila_actual)->setValue($region->licencia);
+            if ($region->licencia > 0) {
+                $empleados = $this->getEmpleados($region->id_direccion, 4);
+                $observacion .= "4. Licencia con goce de salario\n";
+                foreach ($empleados as $emp) {
+                    $observacion .= "{$emp->nombre} {$emp->renglon} / {$emp->observacion}\n";
+                }
+            }
+            $doc->getCell('Q' . $fila_actual)->setValue($region->permiso);
+            if ($region->permiso > 0) {
+                $empleados = $this->getEmpleados($region->id_direccion, 5);
+                $observacion .= "5. Permiso autorizado\n";
+                foreach ($empleados as $emp) {
+                    $observacion .= "{$emp->nombre} {$emp->renglon} / {$emp->observacion}\n";
+                }
+            }
+            $doc->getCell('R' . $fila_actual)->setValue($region->comision);
+            $doc->getCell('S' . $fila_actual)->setValue($region->descanso);
+            $doc->getCell('T' . $fila_actual)->setValue($region->capacitacion);
+            $doc->getCell('U' . $fila_actual)->setValue($region->ausente);
+            if ($region->ausente > 0) {
+                $empleados = $this->getEmpleados($region->id_direccion, 9);
+                $observacion .= "9. Ausente (justificar)\n";
+                foreach ($empleados as $emp) {
+                    $observacion .= "- {$emp->nombre} {$emp->renglon} / {$emp->observacion}\n";
+                }
+            }
+            $doc->getCell('W' . $fila_actual)->setValue($region->vacaciones);
+            /* if ($region->actualizacion >= $dia_actual . ' 07:45:00' && $region->actualizacion <= $dia_actual . ' 09:45:00') { */
+            $doc->getCell('Z' . $fila_actual)->setValue($observacion);
+            /* } else {
+                $doc->getStyle('Z' . $fila_actual)->applyFromArray([
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => 'FF0000'],
+                    ],
+                    'font' => [
+                        'color' => ['rgb' => 'FFFFFF'],
+                    ],
+                ]);
+                $doc->getCell('Z' . $fila_actual)->setValue('NO PRESENTÓ INFORME');
+            } */
         }
 
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save('templates/procesed/reporte_diario_' . $fecha_hora . '.xlsx');
+
+        if (!Storage::exists('templates/procesed/')) {
+            Storage::makeDirectory('templates/procesed/');
+        }
+
+        $writer->save('templates/procesed/' . $fecha_hora . '_REPORTE_DIARIO.xlsx');
 
         // Descargar el archivo
-        return 'templates/procesed/reporte_diario_' . $fecha_hora . '.xlsx';
+        return 'templates/procesed/' . $fecha_hora . '_REPORTE_DIARIO.xlsx';
     }
 
     public function generarReporteAusencias()
     {
         $fecha = date('d/m/Y');
         $hora = date('H:i:s');
-        $fecha_hora = date('d_m_Y H_i_s');
+        $fecha_hora = date('Y_m_d H_i_s');
 
         /* PLANTILLA */
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('templates/ausencias.xlsx');
@@ -444,13 +815,14 @@ class EstadoFuerzaController extends Controller
             'renglones.renglon as renglon',
             'pir_direcciones.direccion as direccion'
         )
-            ->join('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
+            ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+            ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+            ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
             ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
             ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
-            ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
-            ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
             ->whereIn('pir_reportes.id', [2, 3, 4, 5, 7, 9, 10])
+            ->where('pir_empleados.activo', 1)
             ->get();
 
         $comisiones = PirEmpleado::select(
@@ -464,13 +836,14 @@ class EstadoFuerzaController extends Controller
             'renglones.renglon as renglon',
             'pir_direcciones.direccion as direccion'
         )
-            ->join('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
+            ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+            ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+            ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
             ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
             ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
-            ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
-            ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
             ->where('reporte', 'Comisión')
+            ->where('pir_empleados.activo', 1)
             ->get();
 
         $capacitaciones = PirEmpleado::select(
@@ -484,20 +857,21 @@ class EstadoFuerzaController extends Controller
             'renglones.renglon as renglon',
             'pir_direcciones.direccion as direccion'
         )
-            ->join('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
+            ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+            ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+            ->join('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
             ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
             ->join('pir_grupos', 'pir_empleados.pir_grupo_id', '=', 'pir_grupos.id')
-            ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
-            ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
             ->where('reporte', 'Capacitación en el extranjero')
+            ->where('pir_empleados.activo', 1)
             ->get();
 
         if (count($ausentes) > 2) {
             $ausente->insertNewRowBefore($fila_inicial + 1, count($ausentes) - 2);
         } elseif (count($ausentes) == 1) {
             $ausente->removeRow($fila_inicial);
-        } else {
+        } elseif (count($comisiones) <= 0) {
             $ausente->removeRow($fila_inicial, 2);
         }
 
@@ -505,7 +879,7 @@ class EstadoFuerzaController extends Controller
             $comision->insertNewRowBefore($fila_inicial + 1, count($comisiones) - 2);
         } elseif (count($comisiones) == 1) {
             $comision->removeRow($fila_inicial);
-        } else {
+        } elseif (count($comisiones) <= 0) {
             $comision->removeRow($fila_inicial, 2);
         }
 
@@ -513,7 +887,7 @@ class EstadoFuerzaController extends Controller
             $capacitacion->insertNewRowBefore($fila_inicial + 1, count($capacitaciones) - 2);
         } elseif (count($capacitaciones) == 1) {
             $capacitacion->removeRow($fila_inicial);
-        } else {
+        } elseif (count($comisiones) <= 0) {
             $capacitacion->removeRow($fila_inicial, 2);
         }
 
@@ -557,17 +931,22 @@ class EstadoFuerzaController extends Controller
         }
 
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save('templates/procesed/control_ausencias_' . $fecha_hora . '.xlsx');
+
+        if (!Storage::exists('templates/procesed/')) {
+            Storage::makeDirectory('templates/procesed/');
+        }
+
+        $writer->save('templates/procesed/' . $fecha_hora . '_CONTROL_AUSENCIAS.xlsx');
 
         // Descargar el archivo
-        return 'templates/procesed/control_ausencias_' . $fecha_hora . '.xlsx';
+        return 'templates/procesed/' . $fecha_hora . '_CONTROL_AUSENCIAS.xlsx';
     }
 
     public function consolidarPIR()
     {
         $fecha = Carbon::now()->translatedFormat('l, d \\de F \\de Y');
         $hora = date('H:i');
-        $fecha_hora = date('d_m_Y H_i_s');
+        $fecha_hora = date('Y_m_d H_i_s');
 
         $orden_direcciones = [1, 3, 2, 8, 22, 12, 6, 13, 9, 14, 17, 19, 20, 21, 7, 11, 16, 18, 15, 5, 4, 10];
 
@@ -578,13 +957,17 @@ class EstadoFuerzaController extends Controller
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS asignacion_especial')
-            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte != "Capacitación en el extranjero" AND pir_reportes.reporte != "Presente en sedes" AND pir_reportes.reporte != "Comisión" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Capacitación en el extranjero", "Presente en sedes", "Comisión") THEN 1 ELSE NULL END) AS ausente')
             ->leftJoin('pir_empleados', function ($join) {
                 $join->on('pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
                     ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
-                    ->leftJoin('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
-                    ->whereIn('renglones.renglon', ['011', '021', '022', '031']);
+                    ->leftJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+                    ->leftJoin('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+                    ->leftJoin('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
+                    ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+                    ->where('pir_empleados.activo', 1);
             })
+            ->whereIn('pir_direcciones.id', $orden_direcciones)
             ->groupBy('pir_direcciones.id', 'pir_direcciones.direccion')
             ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
             ->get();
@@ -596,13 +979,17 @@ class EstadoFuerzaController extends Controller
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Presente en sedes" THEN 1 ELSE NULL END) AS presente')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Comisión" THEN 1 ELSE NULL END) AS comision')
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte = "Capacitación en el extranjero" THEN 1 ELSE NULL END) AS asignacion_especial')
-            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte != "Capacitación en el extranjero" AND pir_reportes.reporte != "Presente en sedes" AND pir_reportes.reporte != "Comisión" THEN 1 ELSE NULL END) AS ausente')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Capacitación en el extranjero", "Presente en sedes", "Comisión") THEN 1 ELSE NULL END) AS ausente')
             ->leftJoin('pir_empleados', function ($join) {
                 $join->on('pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
                     ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
-                    ->leftJoin('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
-                    ->where('renglones.renglon', '029');
+                    ->leftJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+                    ->leftJoin('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+                    ->leftJoin('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
+                    ->where('renglones.renglon', '029')
+                    ->where('pir_empleados.activo', 1);
             })
+            ->whereIn('pir_direcciones.id', $orden_direcciones)
             ->groupBy('pir_direcciones.id', 'pir_direcciones.direccion')
             ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
             ->get();
@@ -823,10 +1210,15 @@ class EstadoFuerzaController extends Controller
         $formatoContratista->setCellValue('G46', $direcciones_contratistas[21]->ausente);
 
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $writer->save('templates/procesed/PIRConsolidado_' . $fecha_hora . '.xlsx');
+
+        if (!Storage::exists('templates/procesed/')) {
+            Storage::makeDirectory('templates/procesed/');
+        }
+
+        $writer->save('templates/procesed/' . $fecha_hora . '_PIR_CONSOLIDADO.xlsx');
 
         // Descargar el archivo
-        return 'templates/procesed/PIRConsolidado_' . $fecha_hora . '.xlsx';
+        return 'templates/procesed/' . $fecha_hora . '_PIR_CONSOLIDADO.xlsx';
     }
 
     private function getEmpleados($id_direccion, $id_reporte)
@@ -836,10 +1228,13 @@ class EstadoFuerzaController extends Controller
             'pir_empleados.observacion as observacion',
             'renglones.renglon as renglon'
         )
-            ->join('renglones', 'pir_empleados.renglon_id', '=', 'renglones.id')
+            ->leftJoin('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
+            ->leftJoin('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
+            ->leftJoin('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
             ->join('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
             ->join('pir_direcciones', 'pir_empleados.pir_direccion_id', '=', 'pir_direcciones.id')
             ->where('pir_reportes.id', $id_reporte)
+            ->where('pir_empleados.activo', 1)
             ->where('pir_direcciones.id', $id_direccion)
             ->get();
 

@@ -140,12 +140,12 @@ class ControlSeeder extends Seeder
         $controlesData = [
             'Secretaría Ejecutiva',
             'Subsecretaría de Coordinación y Administración',
-            'Subsecretaría de Gestion de Reducción del Riesgo',
+            'Subsecretaría de Gestión de Reducción del Riesgo',
             'Dirección Administrativa',
-            'Direccion Financiera',
-            'Direccion de Coordinacion',
-            'Direccion de Logística',
-            'Inspectoria General',
+            'Dirección Financiera',
+            'Dirección de Coordinación',
+            'Dirección de Logística',
+            'Inspectoría General',
             'Unidad de Auditoría Interna',
             'Dirección de Recursos Humanos',
             'Dirección de Planificación y Desarrollo Institucional',
@@ -153,13 +153,13 @@ class ControlSeeder extends Seeder
             'Unidad de Asesoria Específica',
             'Dirección de Asesoria Jurídica',
             'Unidad de Género',
-            'Dirección de Gestion Integral de Reduccion de Riesgos a Desastres',
+            'Dirección de Gestión Integral de Reducción de Riesgos a Desastres',
             'Dirección de Mitigación',
             'Dirección de Preparación',
             'Dirección de Respuesta',
             'Dirección de Recuperación',
             'Dirección de Sistema de Comando de Incidentes - SCI',
-            'Dirección de Comunicacion Social'
+            'Dirección de Comunicación Social'
         ];
 
         foreach ($dependencias as $dependencia) {

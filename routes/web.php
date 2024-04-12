@@ -22,7 +22,10 @@ use App\Livewire\Formularios\Formulario;
 use App\Livewire\Formularios\Formulario029;
 use App\Livewire\ListarRequisitos;
 use App\Livewire\Permisos\Permiso;
+use App\Livewire\Pir\Contratistas;
+use App\Livewire\Pir\Control;
 use App\Livewire\Pir\Formulario as PirFormulario;
+use App\Livewire\Pir\Personal;
 use App\Livewire\Puesto\Catalogo\CatalogoPuestos;
 use App\Livewire\Puesto\Puestos;
 use App\Livewire\Requisitos\Requisitos;
@@ -112,4 +115,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     /* Ruta de formulario PIR */
     Route::get('/pir', PirFormulario::class)->name('formulario_pir');
+
+    /* Ruta de personal PIR */
+    Route::get('/pir/personal', Personal::class)->name('personal_pir');
+    /* Ruta de contratistas PIR */
+    Route::get('/pir/contratistas', Contratistas::class)->name('contratistas_pir');
+    /* Ruta de contratistas PIR */
+    Route::get('/pir/control', Control::class)->name('control_pir');
 });
