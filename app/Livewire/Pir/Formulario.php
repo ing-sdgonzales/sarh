@@ -204,10 +204,12 @@ class Formulario extends Component
 
     public function generarFromularioPIR()
     {
-        $formulario = new EstadoFuerzaController();
-        $path = $formulario->generarFormularioPIR($this->id_direccion, $this->region);
+        if ($this->actualizado) {
+            $formulario = new EstadoFuerzaController();
+            $path = $formulario->generarFormularioPIR($this->id_direccion, $this->region);
 
-        return response()->download($path)->deleteFileAfterSend(true);
+            return response()->download($path)->deleteFileAfterSend(true);
+        }
     }
 
     public function generarReporteDiario()
