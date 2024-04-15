@@ -92,5 +92,6 @@
     "Use an authentication code": "Utilizar un código de autenticación",
     "For your security, please confirm your password to continue.": "Por su seguridad, confirme su contraseña para continuar.",
     "Finish enabling two factor authentication.": "Termine de habilitar la autenticación de dos factores.",
-    "To finish enabling two factor authentication, scan the following QR code using your phone's authenticator application or enter the setup key and provide the generated OTP code.": "Para terminar de habilitar la autenticación de dos factores, escanee el siguiente código QR usando la aplicación de autenticación de su teléfono o ingrese la clave de configuración y proporcione el código OTP generado."
+    "To finish enabling two factor authentication, scan the following QR code using your phone's authenticator application or enter the setup key and provide the generated OTP code.": "Para terminar de habilitar la autenticación de dos factores, escanee el siguiente código QR usando la aplicación de autenticación de su teléfono o ingrese la clave de configuración y proporcione el código OTP generado.",
+    "Service Unavailable" : "Servicio no disponible"
 }
