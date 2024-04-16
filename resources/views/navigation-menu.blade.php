@@ -674,11 +674,12 @@
                                                     </div>
                                                     <div>
                                                         <a href="{{ route('personal_pir') }}"
-                                                            class="font-semibold text-gray-900">
+                                                            class="font-semibold text-gray-900 dark:text-gray-400">
                                                             {{ __('Personal') }}
                                                             <span class="absolute inset-0"></span>
                                                         </a>
-                                                        <p class="mt-1 text-gray-600">Personal de renglones 011, 021,
+                                                        <p class="mt-1 text-gray-600 dark:text-gray-200">Personal de
+                                                            renglones 011, 021,
                                                             022 y
                                                             031
                                                         </p>
@@ -700,11 +701,12 @@
                                                     </div>
                                                     <div>
                                                         <a href="{{ route('contratistas_pir') }}"
-                                                            class="font-semibold text-gray-900">
+                                                            class="font-semibold text-gray-900 dark:text-gray-400">
                                                             {{ __('Contratistas') }}
                                                             <span class="absolute inset-0"></span>
                                                         </a>
-                                                        <p class="mt-1 text-gray-600">Prestadores de servicio de
+                                                        <p class="mt-1 text-gray-600 dark:text-gray-200">Prestadores de
+                                                            servicio de
                                                             renglón 029
                                                         </p>
                                                     </div>
