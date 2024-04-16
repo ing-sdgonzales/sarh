@@ -10,6 +10,7 @@ use App\Models\PirGrupo;
 use App\Models\PirReporte;
 use App\Models\PirSeccion;
 use App\Models\Region;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -59,6 +60,7 @@ class Formulario extends Component
         'observacion'
     ];
 
+    public $actualizado = false;
     public $seccion, $id_direccion, $direccion, $region, $default_depto, $id_region, $departamentos, $reporte, $observacion, $grupo, $fecha, $hora;
 
     public function render()
@@ -202,10 +204,12 @@ class Formulario extends Component
 
     public function generarFromularioPIR()
     {
-        $formulario = new EstadoFuerzaController();
-        $path = $formulario->generarFormularioPIR($this->id_direccion, $this->region);
+        if ($this->actualizado) {
+            $formulario = new EstadoFuerzaController();
+            $path = $formulario->generarFormularioPIR($this->id_direccion, $this->region);
 
-        return response()->download($path)->deleteFileAfterSend(true);
+            return response()->download($path)->deleteFileAfterSend(true);
+        }
     }
 
     public function generarReporteDiario()
@@ -245,6 +249,12 @@ class Formulario extends Component
             $this->id_direccion = $direccion->id;
             $seccion = PirSeccion::findOrFail($direccion->pir_seccion_id);
             $this->seccion = $seccion->seccion;
+        }
+        $direccion = PirDireccion::where('direccion', $rol)->first();
+        if (Carbon::parse($direccion->hora_actualizacion)->isToday()) {
+            $this->actualizado = true;
+        } else {
+            $this->actualizado = false;
         }
     }
 }
