@@ -93,7 +93,7 @@ class PirEmpleadoSeeder extends Seeder
             ['nombre' => 'María Candelaria Gómez Patzán', 'dir' => 5, 'puesto' => 95],
             ['nombre' => 'Luis Humberto López Salas', 'dir' => 5, 'puesto' => 95],
             ['nombre' => 'Maynor Israel Rivera Acuña', 'dir' => 5, 'puesto' => 94],
-            ['nombre' => 'Hebelyn Verónica Escobedo Reynoso de Talo', 'dir' => 4, 'puesto' => 95],
+            ['nombre' => 'Hebelyn Verónica Escobedo Reynoso de Talo', 'dir' => 5, 'puesto' => 95],
 
             /* Dirección de Coordinacion */
             ['nombre' => 'Kelly Clemencia Lily Argueta Flores', 'dir' => 6, 'puesto' => 93],
@@ -211,7 +211,7 @@ class PirEmpleadoSeeder extends Seeder
 
             /* Dirección de Planificación y Desarrollo Institucional */
             ['nombre' => 'Carlota Lucía Cordón González', 'dir' => 11, 'puesto' => 93],
-            ['nombre' => 'Sergio Estuardo Muñoz Rodriguez', 'dir' => 11, 'puesto' => 94],
+            ['nombre' => 'Sergio Estuardo Muñoz Rodriguez', 'dir' => 11, 'puesto' => 41],
             ['nombre' => 'Aleyda Noemi de León Pérez de López', 'dir' => 11, 'puesto' => 94],
             ['nombre' => 'Boris Rodrigo Gil Rivera', 'dir' => 11, 'puesto' => 95],
             ['nombre' => 'Luis Fernando Orozco Díaz', 'dir' => 11, 'puesto' => 95],
@@ -444,9 +444,9 @@ class PirEmpleadoSeeder extends Seeder
             ['nombre' => 'Franklin Yovany Maldonado López', 'reg' => 3, 'dir' => 19, 'puesto' => 90],
             ['nombre' => 'Mayra Violeta Arévalo Gómez', 'reg' => 3, 'dir' => 19, 'puesto' => 90],
             ['nombre' => 'Andrea Massiell León Chacón', 'reg' => 3, 'dir' => 19, 'puesto' => 88],
-            ['nombre' => 'Marvin Omar Lemus Paiz', 'reg' => 3, 'dir' => 19, 'puesto' => 86],
-            ['nombre' => 'Alberto Augusto Palma Ramírez', 'reg' => 3, 'dir' => 19, 'puesto' => 88],
-            ['nombre' => 'Elsa María Morales Chacón', 'reg' => 3, 'dir' => 19, 'puesto' => 81],
+            ['nombre' => 'Marvin Omar Lemus Paiz', 'reg' => 3, 'dir' => 19, 'puesto' => 95],
+            ['nombre' => 'Alberto Augusto Palma Ramírez', 'reg' => 3, 'dir' => 19, 'puesto' => 95],
+            ['nombre' => 'Elsa María Morales Chacón', 'reg' => 3, 'dir' => 16, 'puesto' => 94],
             ['nombre' => 'María Fernanda Ordóñez Polanco', 'reg' => 3, 'dir' => 21, 'puesto' => 95],
             ['nombre' => 'Luisa Karina Rossal Aragón', 'reg' => 3, 'dir' => 17, 'puesto' => 94],
             ['nombre' => 'Julio Alberto Franco Flores', 'reg' => 3, 'dir' => 17, 'puesto' => 95],
@@ -589,7 +589,7 @@ class PirEmpleadoSeeder extends Seeder
             ['nombre' => 'Erwin Federico Wellmann Gómez', 'reg' => 7, 'dir' => 7, 'puesto' => 80],
             ['nombre' => 'Alejandro Carillo Mendoza', 'reg' => 7, 'dir' => 7, 'puesto' => 95],
             ['nombre' => 'Hugo David Natarenos Barrios', 'reg' => 7, 'dir' => 17, 'puesto' => 94],
-            ['nombre' => 'Walter Francisco López Ramos', 'reg' => 7, 'dir' => 18, 'puesto' => 95],
+            ['nombre' => 'Francisco Walter López Ramos', 'reg' => 7, 'dir' => 18, 'puesto' => 95],
             ['nombre' => 'César Ariel Beltrán Herrera', 'reg' => 7, 'dir' => 21, 'puesto' => 95],
             ['nombre' => 'Juan Carlos Palacios Féliz', 'reg' => 7, 'dir' => 20, 'puesto' => 94],
             ['nombre' => 'Gustavo Adolfo Rojas López', 'reg' => 7, 'dir' => 19, 'puesto' => 88],
