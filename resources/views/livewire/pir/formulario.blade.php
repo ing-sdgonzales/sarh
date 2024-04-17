@@ -51,8 +51,7 @@
         @endcan
         <div class="sm:col-span-1">
             <button type="button" wire:click="generarFromularioPIR"
-                class="inline-block w-full rounded-md h-[42px] bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                @if ($actualizado == false) disabled @endif>
+                class="inline-block w-full rounded-md h-[42px] bg-primary px-6 pb-2 pt-2.5 text-md font-medium leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
                 <div class="flex items-end space-x-2 justify-center">
                     <h6 class="text-sm font-normal text-gray-200">PIR</h6>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -244,9 +243,15 @@
                     </div>
                 </div>
             </div>
-            <div class="flex gap-x-2 mt-2 justify-end">
-                <x-button type="submit">{{ __('Guardar') }}</x-button>
-            </div>
+            @if ($habilitado == 1)
+                <div class="flex gap-x-2 mt-2 justify-end">
+                    <x-button type="submit">{{ __('Guardar') }}</x-button>
+                </div>
+            @elseif(auth()->user()->hasRole('Dirección de Recursos Humanos'))
+                <div class="flex gap-x-2 mt-2 justify-end">
+                    <x-button type="submit">{{ __('Guardar') }}</x-button>
+                </div>
+            @endif
         </form>
         <div wire:loading.flex
             wire:target="guardar,generarFromularioPIR,consolidarPIR,generarReporteDiario,generarReporteAusencias"
@@ -263,6 +268,18 @@
                         title: '¡Hecho!',
                         text: data[0].message,
                         icon: 'success',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#1F2937'
+                    });
+
+                    window.location.href = "/pir";
+                });
+
+                Livewire.on('info_download', data => {
+                    Swal.fire({
+                        title: '¡Ups!',
+                        text: data[0].message,
+                        icon: 'warning',
                         confirmButtonText: 'Aceptar',
                         confirmButtonColor: '#1F2937'
                     });
