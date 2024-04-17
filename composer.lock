@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf18fd6e70d9643ffb9b6a434251dd04",
+    "content-hash": "8be7276056f997bf1e93f6d90bff37f0",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -765,6 +765,77 @@
                 }
             ],
             "time": "2023-10-06T06:47:41+00:00"
+        },
+        {
+            "name": "fidum/laravel-dashboard-chart-tile",
+            "version": "6.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fidum/laravel-dashboard-chart-tile.git",
+                "reference": "0f15e5e8a75120782086a29247fe7b6b4890123f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fidum/laravel-dashboard-chart-tile/zipball/0f15e5e8a75120782086a29247fe7b6b4890123f",
+                "reference": "0f15e5e8a75120782086a29247fe7b6b4890123f",
+                "shasum": ""
+            },
+            "require": {
+                "consoletvs/charts": "^6.6.0",
+                "php": "^8.1",
+                "spatie/laravel-dashboard": "^3.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^8.0|^9.0",
+                "phpunit/phpunit": "^10.5",
+                "vimeo/psalm": "^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Fidum\\ChartTile\\ChartTileServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fidum\\ChartTile\\": "src",
+                    "Fidum\\ChartTile\\Examples\\": "examples"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Mason",
+                    "email": "fidum.dev@gmail.com",
+                    "homepage": "https://fidum.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Generic chart tiles for laravel dashboard",
+            "homepage": "https://github.com/fidum/laravel-dashboard-chart-tile",
+            "keywords": [
+                "chart",
+                "fidum",
+                "laravel-dashboard",
+                "laravel-dashboard-chart-tile"
+            ],
+            "support": {
+                "issues": "https://github.com/fidum/laravel-dashboard-chart-tile/issues",
+                "source": "https://github.com/fidum/laravel-dashboard-chart-tile/tree/6.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dmason30",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-13T13:00:17+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -4944,6 +5015,82 @@
             "time": "2024-03-08T22:28:17+00:00"
         },
         {
+            "name": "spatie/laravel-dashboard",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-dashboard.git",
+                "reference": "218d83d8130231e78dd5591cb3abdd7c1e9e1a5d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-dashboard/zipball/218d83d8130231e78dd5591cb3abdd7c1e9e1a5d",
+                "reference": "218d83d8130231e78dd5591cb3abdd7c1e9e1a5d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^8.0|^9.0|^10.0|^11.0",
+                "illuminate/view": "^8.0|^9.0|^10.0|^11.0",
+                "livewire/livewire": "^3.0",
+                "php": "^7.4|^8.0",
+                "spatie/sun": "^1.1.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.3|^10.5",
+                "spatie/phpunit-snapshot-assertions": "^4.2|^5.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Dashboard\\DashboardServiceProvider"
+                    ],
+                    "aliases": {
+                        "Dashboard": "Spatie\\Dashboard\\Facades\\Dashboard"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Dashboard\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A dashboard for Laravel",
+            "homepage": "https://github.com/spatie/laravel-dashboard",
+            "keywords": [
+                "laravel-dashboard",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-dashboard/issues",
+                "source": "https://github.com/spatie/laravel-dashboard/tree/3.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-02T05:54:28+00:00"
+        },
+        {
             "name": "spatie/laravel-package-tools",
             "version": "1.16.4",
             "source": {
@@ -5084,6 +5231,70 @@
                 }
             ],
             "time": "2023-10-25T05:12:01+00:00"
+        },
+        {
+            "name": "spatie/sun",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/sun.git",
+                "reference": "12d195e38adab756c067f04f3a0b07a5d18f018a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/sun/zipball/12d195e38adab756c067f04f3a0b07a5d18f018a",
+                "reference": "12d195e38adab756c067f04f3a0b07a5d18f018a",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "^2.32",
+                "php": "^8.0|^7.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "pestphp/pest": "^1.0",
+                "spatie/test-time": "^1.2",
+                "symfony/var-dumper": "^4.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Sun\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Get information on the position of the sun",
+            "homepage": "https://github.com/spatie/sun",
+            "keywords": [
+                "spatie",
+                "sun"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/sun/issues",
+                "source": "https://github.com/spatie/sun/tree/1.1.2"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-07-22T08:48:57+00:00"
         },
         {
             "name": "symfony/console",

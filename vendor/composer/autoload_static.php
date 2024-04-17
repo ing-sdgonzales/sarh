@@ -11,20 +11,21 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
-        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
+        'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '0b47d6d4a00ca9112ba3953b49e7c9a4' => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src/helper.php',
+        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '3bd81c9b8fcc150b69d8b63b4d2ccf23' => __DIR__ . '/..' . '/spatie/flare-client-php/src/helpers.php',
         'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
+        '40275907c8566c390185147049ef6e5d' => __DIR__ . '/..' . '/livewire/livewire/src/helpers.php',
         '35a6ad97d21e794e7e22a17d806652e4' => __DIR__ . '/..' . '/nunomaduro/termwind/src/Functions.php',
         '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
-        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'b46ad4fe52f4d1899a2951c7e6ea56b0' => __DIR__ . '/..' . '/voku/portable-utf8/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '47e1160838b5e5a10346ac4084b58c23' => __DIR__ . '/..' . '/laravel/prompts/src/helpers.php',
@@ -36,7 +37,6 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         'f57d353b41eb2e234b26064d63d8c5dd' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Filesystem/functions.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
-        '40275907c8566c390185147049ef6e5d' => __DIR__ . '/..' . '/livewire/livewire/src/helpers.php',
         'c72349b1fe8d0deeedd3a52e8aa814d8' => __DIR__ . '/..' . '/mockery/mockery/library/helpers.php',
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'a1cfe24d14977df6878b9bf804af2d1c' => __DIR__ . '/..' . '/nunomaduro/collision/src/Adapters/Phpunit/Autoload.php',
@@ -107,11 +107,13 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Svg\\' => 4,
+            'Spatie\\Sun\\' => 11,
             'Spatie\\Permission\\' => 18,
             'Spatie\\LaravelPackageTools\\' => 27,
             'Spatie\\LaravelIgnition\\' => 23,
             'Spatie\\Ignition\\' => 16,
             'Spatie\\FlareClient\\' => 19,
+            'Spatie\\Dashboard\\' => 17,
             'Spatie\\Backtrace\\' => 17,
             'Spatie\\Activitylog\\' => 19,
             'Sabberworm\\CSS\\' => 15,
@@ -186,6 +188,8 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         array (
             'Fruitcake\\Cors\\' => 15,
             'FontLib\\' => 8,
+            'Fidum\\ChartTile\\Examples\\' => 25,
+            'Fidum\\ChartTile\\' => 16,
             'Faker\\' => 6,
         ),
         'E' => 
@@ -245,11 +249,11 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         ),
         'Yajra\\DataTables\\' => 
         array (
-            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
-            1 => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src',
+            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
+            1 => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src',
             2 => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src',
-            3 => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src',
-            4 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
+            3 => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src',
+            4 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
         ),
         'Whoops\\' => 
         array (
@@ -391,6 +395,10 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         array (
             0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
         ),
+        'Spatie\\Sun\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/sun/src',
+        ),
         'Spatie\\Permission\\' => 
         array (
             0 => __DIR__ . '/..' . '/spatie/laravel-permission/src',
@@ -410,6 +418,10 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         'Spatie\\FlareClient\\' => 
         array (
             0 => __DIR__ . '/..' . '/spatie/flare-client-php/src',
+        ),
+        'Spatie\\Dashboard\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-dashboard/src',
         ),
         'Spatie\\Backtrace\\' => 
         array (
@@ -445,8 +457,8 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -613,6 +625,14 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
+        'Fidum\\ChartTile\\Examples\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/examples',
+        ),
+        'Fidum\\ChartTile\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/src',
         ),
         'Faker\\' => 
         array (
@@ -1929,6 +1949,16 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         'Faker\\Provider\\zh_TW\\Text' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/Provider/zh_TW/Text.php',
         'Faker\\UniqueGenerator' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/UniqueGenerator.php',
         'Faker\\ValidGenerator' => __DIR__ . '/..' . '/fakerphp/faker/src/Faker/ValidGenerator.php',
+        'Fidum\\ChartTile\\ChartTileServiceProvider' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/src/ChartTileServiceProvider.php',
+        'Fidum\\ChartTile\\Charts\\Chart' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/src/Charts/Chart.php',
+        'Fidum\\ChartTile\\Components\\ChartComponent' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/src/Components/ChartComponent.php',
+        'Fidum\\ChartTile\\Components\\ChartRefreshComponent' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/src/Components/ChartRefreshComponent.php',
+        'Fidum\\ChartTile\\Contracts\\ChartFactory' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/src/Contracts/ChartFactory.php',
+        'Fidum\\ChartTile\\Examples\\ExampleBarChart' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/examples/ExampleBarChart.php',
+        'Fidum\\ChartTile\\Examples\\ExampleDoughnutChart' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/examples/ExampleDoughnutChart.php',
+        'Fidum\\ChartTile\\Examples\\ExampleLineChart' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/examples/ExampleLineChart.php',
+        'Fidum\\ChartTile\\Examples\\ExamplePieChart' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/examples/ExamplePieChart.php',
+        'Fidum\\ChartTile\\Factories\\DefaultChartFactory' => __DIR__ . '/..' . '/fidum/laravel-dashboard-chart-tile/src/Factories/DefaultChartFactory.php',
         'FontLib\\AdobeFontMetrics' => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib/AdobeFontMetrics.php',
         'FontLib\\BinaryStream' => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib/BinaryStream.php',
         'FontLib\\EOT\\File' => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib/EOT/File.php',
@@ -7276,6 +7306,13 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         'Spatie\\Backtrace\\CodeSnippet' => __DIR__ . '/..' . '/spatie/backtrace/src/CodeSnippet.php',
         'Spatie\\Backtrace\\File' => __DIR__ . '/..' . '/spatie/backtrace/src/File.php',
         'Spatie\\Backtrace\\Frame' => __DIR__ . '/..' . '/spatie/backtrace/src/Frame.php',
+        'Spatie\\Dashboard\\Components\\DashboardComponent' => __DIR__ . '/..' . '/spatie/laravel-dashboard/src/Components/DashboardComponent.php',
+        'Spatie\\Dashboard\\Components\\DashboardTileComponent' => __DIR__ . '/..' . '/spatie/laravel-dashboard/src/Components/DashboardTileComponent.php',
+        'Spatie\\Dashboard\\Components\\UpdateModeComponent' => __DIR__ . '/..' . '/spatie/laravel-dashboard/src/Components/UpdateModeComponent.php',
+        'Spatie\\Dashboard\\Dashboard' => __DIR__ . '/..' . '/spatie/laravel-dashboard/src/Dashboard.php',
+        'Spatie\\Dashboard\\DashboardServiceProvider' => __DIR__ . '/..' . '/spatie/laravel-dashboard/src/DashboardServiceProvider.php',
+        'Spatie\\Dashboard\\Facades\\Dashboard' => __DIR__ . '/..' . '/spatie/laravel-dashboard/src/Facades/Dashboard.php',
+        'Spatie\\Dashboard\\Models\\Tile' => __DIR__ . '/..' . '/spatie/laravel-dashboard/src/Models/Tile.php',
         'Spatie\\FlareClient\\Api' => __DIR__ . '/..' . '/spatie/flare-client-php/src/Api.php',
         'Spatie\\FlareClient\\Concerns\\HasContext' => __DIR__ . '/..' . '/spatie/flare-client-php/src/Concerns/HasContext.php',
         'Spatie\\FlareClient\\Concerns\\UsesTime' => __DIR__ . '/..' . '/spatie/flare-client-php/src/Concerns/UsesTime.php',
@@ -7465,6 +7502,7 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         'Spatie\\Permission\\Traits\\HasRoles' => __DIR__ . '/..' . '/spatie/laravel-permission/src/Traits/HasRoles.php',
         'Spatie\\Permission\\Traits\\RefreshesPermissionCache' => __DIR__ . '/..' . '/spatie/laravel-permission/src/Traits/RefreshesPermissionCache.php',
         'Spatie\\Permission\\WildcardPermission' => __DIR__ . '/..' . '/spatie/laravel-permission/src/WildcardPermission.php',
+        'Spatie\\Sun\\Sun' => __DIR__ . '/..' . '/spatie/sun/src/Sun.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Svg\\CssLength' => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg/CssLength.php',
         'Svg\\DefaultStyle' => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg/DefaultStyle.php',

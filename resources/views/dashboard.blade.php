@@ -8,21 +8,12 @@
     <div class="py-12 h-full">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-6">
-                    <div class="sm:col-span-3">
-                        <span class="block text-sm font-medium leading-6 text-gray-600 text-center">Cantidad de puestos
-                            por
-                            renglón</span>
-                        <div class="chart-container">
-                            <canvas class="p-2" id="puestos_por_renglon_chart"></canvas>
-                        </div>
-                    </div>
-                </div>
                 {{-- <x-welcome /> --}}
+                <livewire:dashboard.contratistas-regionales position="a1" />
             </div>
         </div>
     </div>
-    @push('js')
+    {{-- @push('js')
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             var puestos_renglon = @json($puestos_renglon)
@@ -72,5 +63,5 @@
                 }
             });
         </script>
-    @endpush
+    @endpush --}}
 </x-app-layout>

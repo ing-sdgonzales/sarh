@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '688a20481065d05b8016da16639475bb1d1ced32',
+        'reference' => 'd39ee5fabf69c0c0700a43bb7a158be38467cdbf',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -138,6 +138,15 @@
             'install_path' => __DIR__ . '/../fakerphp/faker',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'fidum/laravel-dashboard-chart-tile' => array(
+            'pretty_version' => '6.1.0',
+            'version' => '6.1.0.0',
+            'reference' => '0f15e5e8a75120782086a29247fe7b6b4890123f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../fidum/laravel-dashboard-chart-tile',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'filp/whoops' => array(
             'pretty_version' => '2.15.4',
@@ -463,7 +472,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '688a20481065d05b8016da16639475bb1d1ced32',
+            'reference' => 'd39ee5fabf69c0c0700a43bb7a158be38467cdbf',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -964,8 +973,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '3.0.0',
+                0 => '3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache' => array(
@@ -1223,6 +1232,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'spatie/laravel-dashboard' => array(
+            'pretty_version' => '3.1.0',
+            'version' => '3.1.0.0',
+            'reference' => '218d83d8130231e78dd5591cb3abdd7c1e9e1a5d',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-dashboard',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'spatie/laravel-ignition' => array(
             'pretty_version' => '2.5.2',
             'version' => '2.5.2.0',
@@ -1247,6 +1265,15 @@
             'reference' => '7090824cca57e693b880ce3aaf7ef78362e28bbd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spatie/laravel-permission',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'spatie/sun' => array(
+            'pretty_version' => '1.1.2',
+            'version' => '1.1.2.0',
+            'reference' => '12d195e38adab756c067f04f3a0b07a5d18f018a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/sun',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
