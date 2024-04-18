@@ -10,5 +10,5 @@ class PirDireccion extends Model
     use HasFactory;
 
     protected $table = 'pir_direcciones';
-    protected $fillable = ['direccion', 'pir_seccion_id'];
+    protected $fillable = ['direccion', 'hora_actualizacion', 'habilitado', 'pir_seccion_id'];
 }

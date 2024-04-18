@@ -60,9 +60,8 @@ class Formulario extends Component
         'observacion'
     ];
 
-    public $actualizado = false;
     public $seccion, $id_direccion, $direccion, $region, $default_depto, $id_region, $departamentos, $reporte, $observacion, $grupo, $fecha, $hora;
-
+    public $habilitado;
     public function render()
     {
         $this->reportes = PirReporte::all();
@@ -175,10 +174,14 @@ class Formulario extends Component
                 }
 
                 if (!empty($this->id_region)) {
-                    PirDireccion::where('direccion', $this->region)->update(['hora_actualizacion' => date('Y-m-d H:i:s')]);
+                    PirDireccion::where('direccion', $this->region)->update([
+                        'hora_actualizacion' => date('Y-m-d H:i:s'),
+                        'habilitado' => 0
+                    ]);
                 } else {
                     $direccion = PirDireccion::findOrFail($this->id_direccion);
                     $direccion->hora_actualizacion = date('Y-m-d H:i:s');
+                    $direccion->habilitado = 0;
                     $direccion->save();
                 }
             });
@@ -204,11 +207,19 @@ class Formulario extends Component
 
     public function generarFromularioPIR()
     {
-        if ($this->actualizado) {
+        if (!empty($this->region)) {
+            $direccion = PirDireccion::where('direccion', $this->region)->first();
+        } else {
+            $direccion = PirDireccion::where('direccion', $this->direccion)->first();
+        }
+
+        if (Carbon::parse($direccion->hora_actualizacion)->isToday()) {
             $formulario = new EstadoFuerzaController();
             $path = $formulario->generarFormularioPIR($this->id_direccion, $this->region);
 
             return response()->download($path)->deleteFileAfterSend(true);
+        } else {
+            $this->dispatch('info_download', ['message' => '¡Debe guardar el formulario antes de descargar este reporte!']);
         }
     }
 
@@ -251,10 +262,6 @@ class Formulario extends Component
             $this->seccion = $seccion->seccion;
         }
         $direccion = PirDireccion::where('direccion', $rol)->first();
-        if (Carbon::parse($direccion->hora_actualizacion)->isToday()) {
-            $this->actualizado = true;
-        } else {
-            $this->actualizado = false;
-        }
+        $this->habilitado = $direccion->habilitado;
     }
 }

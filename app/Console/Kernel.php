@@ -14,9 +14,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->call(function () {
-            DB::table('candidatos_datos_personales_temp')->delete();
-        })->dailyAt('00:00:00');
+        /*  $schedule->call(function () {
+            DB::table('pir_direcciones')->where('habilitado', 0)->update(['habilitado' => 1]);
+        })->dailyAt('00:00:00'); */
     }
 
     /**

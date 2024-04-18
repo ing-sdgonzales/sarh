@@ -149,7 +149,7 @@ class EstadoFuerzaController extends Controller
                     case 'Comisión':
                         $doc->getCell('F' . $fila_actual)->setValue('X');
                         break;
-                    case 'Permiso autorizado' || 'Capacitación en el extranjero':
+                    case 'Capacitación en el extranjero':
                         $doc->getCell('G' . $fila_actual)->setValue('X');
                         break;
                     default:
@@ -327,7 +327,7 @@ class EstadoFuerzaController extends Controller
                     case 'Comisión':
                         $doc->getCell('F' . $fila_actual)->setValue('X');
                         break;
-                    case 'Permiso autorizado' || 'Capacitación en el extranjero':
+                    case 'Capacitación en el extranjero':
                         $doc->getCell('G' . $fila_actual)->setValue('X');
                         break;
                     default:
