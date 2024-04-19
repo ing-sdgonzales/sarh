@@ -50,12 +50,21 @@ class AusenciasDireccionRI implements ChartFactory
                     'position' => 'top',
                 ],
                 'scales' => [
-                    'xAxes' => ['display' => false],
-                    'yAxes' => ['display' => false],
+                    'xAxes' => [
+                        'barPercentage' => 2, // Ajusta el espacio entre las barras
+                        'display' => false,
+                    ],
+                    'yAxes' => [
+                        'display' => false,
+                        'ticks' => [
+                            'fontSize' => 18, // Tamaño de las etiquetas en el eje Y
+                        ],
+                    ],
                 ],
                 'title' => [
                     'display' => true,
                     'text' => $titulo,
+                    'fontSize' => 18,
                 ],
             ])
             ->dataset('Contratistas', 'bar', $data)

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2
+class ComposerStaticInite499117dcc71324d0fdb52910766d346
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -249,11 +249,11 @@ class ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2
         ),
         'Yajra\\DataTables\\' => 
         array (
-            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
-            1 => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src',
-            2 => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src',
-            3 => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src',
-            4 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
+            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src',
+            1 => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src',
+            2 => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src',
+            3 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
+            4 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
         ),
         'Whoops\\' => 
         array (
@@ -730,7 +730,9 @@ class ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2
         'App\\Actions\\Fortify\\UpdateUserPassword' => __DIR__ . '/../..' . '/app/Actions/Fortify/UpdateUserPassword.php',
         'App\\Actions\\Fortify\\UpdateUserProfileInformation' => __DIR__ . '/../..' . '/app/Actions/Fortify/UpdateUserProfileInformation.php',
         'App\\Actions\\Jetstream\\DeleteUser' => __DIR__ . '/../..' . '/app/Actions/Jetstream/DeleteUser.php',
+        'App\\Charts\\AusenciasDireccionRI' => __DIR__ . '/../..' . '/app/Charts/AusenciasDireccionRI.php',
         'App\\Charts\\ContratistasRegion' => __DIR__ . '/../..' . '/app/Charts/ContratistasRegion.php',
+        'App\\Charts\\PersonalRegion' => __DIR__ . '/../..' . '/app/Charts/PersonalRegion.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\BuscarAplicacionController' => __DIR__ . '/../..' . '/app/Http/Controllers/BuscarAplicacionController.php',
@@ -770,7 +772,6 @@ class ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2
         'App\\Livewire\\Conred\\Postularse' => __DIR__ . '/../..' . '/app/Livewire/Conred/Postularse.php',
         'App\\Livewire\\Contratos\\Contratos' => __DIR__ . '/../..' . '/app/Livewire/Contratos/Contratos.php',
         'App\\Livewire\\Contratos\\PuestosFuncionales\\HistorialPuestos' => __DIR__ . '/../..' . '/app/Livewire/Contratos/PuestosFuncionales/HistorialPuestos.php',
-        'App\\Livewire\\Dashboard\\ContratistasRegionales' => __DIR__ . '/../..' . '/app/Livewire/Dashboard/ContratistasRegionales.php',
         'App\\Livewire\\Empleados\\Empleados' => __DIR__ . '/../..' . '/app/Livewire/Empleados/Empleados.php',
         'App\\Livewire\\Employees\\DashboardEmpleados' => __DIR__ . '/../..' . '/app/Livewire/Employees/DashboardEmpleados.php',
         'App\\Livewire\\Employees\\Solicitudes\\Vacaciones\\Vacaciones' => __DIR__ . '/../..' . '/app/Livewire/Employees/Solicitudes/Vacaciones/Vacaciones.php',
@@ -782,6 +783,7 @@ class ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2
         'App\\Livewire\\Pir\\Control' => __DIR__ . '/../..' . '/app/Livewire/Pir/Control.php',
         'App\\Livewire\\Pir\\Formulario' => __DIR__ . '/../..' . '/app/Livewire/Pir/Formulario.php',
         'App\\Livewire\\Pir\\Personal' => __DIR__ . '/../..' . '/app/Livewire/Pir/Personal.php',
+        'App\\Livewire\\Prueba' => __DIR__ . '/../..' . '/app/Livewire/Prueba.php',
         'App\\Livewire\\Puesto\\Catalogo\\CatalogoPuestos' => __DIR__ . '/../..' . '/app/Livewire/Puesto/Catalogo/CatalogoPuestos.php',
         'App\\Livewire\\Puesto\\Puestos' => __DIR__ . '/../..' . '/app/Livewire/Puesto/Puestos.php',
         'App\\Livewire\\Requisitos\\Requisitos' => __DIR__ . '/../..' . '/app/Livewire/Requisitos/Requisitos.php',
@@ -8762,9 +8764,9 @@ class ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite499117dcc71324d0fdb52910766d346::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite499117dcc71324d0fdb52910766d346::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInite499117dcc71324d0fdb52910766d346::$classMap;
 
         }, null, ClassLoader::class);
     }

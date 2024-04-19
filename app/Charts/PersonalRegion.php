@@ -51,6 +51,7 @@ class PersonalRegion implements ChartFactory
                 'title' => [
                     'display' => true,
                     'text' => $titulo,
+                    'fontSize' => 18,
                 ],
             ])
             ->dataset('Contratistas', 'pie', $data)
