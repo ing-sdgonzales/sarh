@@ -9,7 +9,7 @@ return [
      * - device: follow the OS preference for determining light or dark mode
      * - auto: use light mode when the sun is up, dark mode when the sun is down
      */
-    'theme' => 'light',
+    'theme' => 'device',
 
     /*
      * When the dashboard uses the `auto` theme, these coordinates will be used
@@ -28,7 +28,7 @@ return [
     ],
 
     'tiles' => [
-        'charts' => [     
+        'charts' => [
             'refresh_interval_in_seconds' => 300, // Default: 300 seconds (5 minutes)
         ],
     ],

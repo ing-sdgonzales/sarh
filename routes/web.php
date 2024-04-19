@@ -26,6 +26,7 @@ use App\Livewire\Pir\Contratistas;
 use App\Livewire\Pir\Control;
 use App\Livewire\Pir\Formulario as PirFormulario;
 use App\Livewire\Pir\Personal;
+use App\Livewire\Prueba;
 use App\Livewire\Puesto\Catalogo\CatalogoPuestos;
 use App\Livewire\Puesto\Puestos;
 use App\Livewire\Requisitos\Requisitos;
@@ -97,6 +98,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/vacaciones/control_vacaciones/{id_empleado}', ControlVacaciones::class)->middleware('can:Ver control de vacaciones')->name('control_vacaciones');
     Route::get('/inducciones', Inducciones::class)->middleware('can:Ver inducciones')->name('inducciones'); //*
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('can: Ver dashboard')->name('dashboard');
+
+    Route::get('/prueba', Prueba::class)->name('prueba');
 });
 
 /* Grupo de rutas para el rol de Empleado */

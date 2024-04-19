@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
+class ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -730,7 +730,7 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         'App\\Actions\\Fortify\\UpdateUserPassword' => __DIR__ . '/../..' . '/app/Actions/Fortify/UpdateUserPassword.php',
         'App\\Actions\\Fortify\\UpdateUserProfileInformation' => __DIR__ . '/../..' . '/app/Actions/Fortify/UpdateUserProfileInformation.php',
         'App\\Actions\\Jetstream\\DeleteUser' => __DIR__ . '/../..' . '/app/Actions/Jetstream/DeleteUser.php',
-        'App\\Charts\\SampleChart' => __DIR__ . '/../..' . '/app/Charts/SampleChart.php',
+        'App\\Charts\\ContratistasRegion' => __DIR__ . '/../..' . '/app/Charts/ContratistasRegion.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\BuscarAplicacionController' => __DIR__ . '/../..' . '/app/Http/Controllers/BuscarAplicacionController.php',
@@ -770,6 +770,7 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
         'App\\Livewire\\Conred\\Postularse' => __DIR__ . '/../..' . '/app/Livewire/Conred/Postularse.php',
         'App\\Livewire\\Contratos\\Contratos' => __DIR__ . '/../..' . '/app/Livewire/Contratos/Contratos.php',
         'App\\Livewire\\Contratos\\PuestosFuncionales\\HistorialPuestos' => __DIR__ . '/../..' . '/app/Livewire/Contratos/PuestosFuncionales/HistorialPuestos.php',
+        'App\\Livewire\\Dashboard\\ContratistasRegionales' => __DIR__ . '/../..' . '/app/Livewire/Dashboard/ContratistasRegionales.php',
         'App\\Livewire\\Empleados\\Empleados' => __DIR__ . '/../..' . '/app/Livewire/Empleados/Empleados.php',
         'App\\Livewire\\Employees\\DashboardEmpleados' => __DIR__ . '/../..' . '/app/Livewire/Employees/DashboardEmpleados.php',
         'App\\Livewire\\Employees\\Solicitudes\\Vacaciones\\Vacaciones' => __DIR__ . '/../..' . '/app/Livewire/Employees/Solicitudes/Vacaciones/Vacaciones.php',
@@ -8761,9 +8762,9 @@ class ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8fd470326c41f87d04ccb1dc9a4d4518::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit870b293c4c05ac08de9e3f3a782b8aa2::$classMap;
 
         }, null, ClassLoader::class);
     }
