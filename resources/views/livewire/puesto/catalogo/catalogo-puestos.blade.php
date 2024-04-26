@@ -129,6 +129,7 @@
                                                         </button>
                                                     </li>
                                                 @endcan
+                                            </ul>
                                         </div>
                                     </td>
                                 </tr>

@@ -133,6 +133,7 @@
                                                         </button>
                                                     </li>
                                                 @endrole
+                                            </ul>
                                         </div>
                                     </td>
                                 </tr>

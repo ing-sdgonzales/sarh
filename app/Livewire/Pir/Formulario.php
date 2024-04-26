@@ -249,19 +249,29 @@ class Formulario extends Component
 
     public function mount()
     {
-        $rol = auth()->user()->getRoleNames()->first();
-        $this->direccion = $rol;
-        if (Str::startsWith($rol, 'Región')) {
-            $this->region = $rol;
-            $region = Region::where('region', $this->region)->first();
-            $this->id_region = $region->id;
-        } else {
-            $direccion = PirDireccion::where('direccion', $rol)->first();
-            $this->id_direccion = $direccion->id;
-            $seccion = PirSeccion::findOrFail($direccion->pir_seccion_id);
-            $this->seccion = $seccion->seccion;
+        $direcciones = PirDireccion::all()->pluck('direccion')->toArray();
+        $rol = null;
+        if (auth()->user()->hasAnyRole($direcciones)) {
+            foreach ($direcciones as $direccion) {
+                if (auth()->user()->hasRole($direccion)) {
+                    $rol = $direccion;
+                }
+            }
         }
-        $direccion = PirDireccion::where('direccion', $rol)->first();
-        $this->habilitado = $direccion->habilitado;
+        if ($rol != null) {
+            $this->direccion = $rol;
+            if (Str::startsWith($rol, 'Región')) {
+                $this->region = $rol;
+                $region = Region::where('region', $this->region)->first();
+                $this->id_region = $region->id;
+            } else {
+                $direccion = PirDireccion::where('direccion', $rol)->first();
+                $this->id_direccion = $direccion->id;
+                $seccion = PirSeccion::findOrFail($direccion->pir_seccion_id);
+                $this->seccion = $seccion->seccion;
+            }
+            $direccion = PirDireccion::where('direccion', $rol)->first();
+            $this->habilitado = $direccion->habilitado;
+        }
     }
 }

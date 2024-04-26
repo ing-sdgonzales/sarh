@@ -2,11 +2,11 @@
 
 namespace App\Charts;
 
-use App\Models\PirDireccion;
+use App\Models\PirEmpleado;
 use Fidum\ChartTile\Charts\Chart;
 use Fidum\ChartTile\Contracts\ChartFactory;
 
-class AusenciasDireccionRI implements ChartFactory
+class AusenciasRegiones implements ChartFactory
 {
     public static function make(array $settings): ChartFactory
     {
@@ -17,25 +17,19 @@ class AusenciasDireccionRI implements ChartFactory
     {
         $chart = new Chart();
 
-        $orden_direcciones = [1, 13, 9, 8, 12, 15, 14, 11, 2, 6, 4, 5, 7, 10, 22, 3, 16, 18, 17, 20, 19, 21];
-        $titulo = 'Ausencias por Dirección - Región I';
-        $direcciones = PirDireccion::select(
-            'pir_direcciones.direccion as direccion'
+        $titulo = 'Ausencias por Región';
+        $ausencias_regiones = PirEmpleado::select(
+            'regiones.region as region'
         )
             ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Presente en sedes", "Comisión", "Capacitación en el extranjero") THEN 1 ELSE NULL END) AS total')
-            ->join('pir_empleados', 'pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
             ->leftJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
             ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
-            ->where('regiones.region', 'Región I')
-            ->where('pir_empleados.is_regional_i', 0)
             ->where('pir_empleados.activo', 1)
-            ->whereIn('pir_direcciones.id', $orden_direcciones)
-            ->orderByRaw('FIELD(pir_direcciones.id,' . implode(',', $orden_direcciones) . ')')
-            ->groupBy('pir_direcciones.direccion')
+            ->groupBy('regiones.region')
             ->get();
 
-        $labels = $direcciones->pluck('direccion')->toArray();
-        $data = $direcciones->pluck('total')->toArray();
+        $labels = $ausencias_regiones->pluck('region')->toArray();
+        $data = $ausencias_regiones->pluck('total')->toArray();
 
         $chart->labels($labels)
             ->options([
@@ -50,7 +44,7 @@ class AusenciasDireccionRI implements ChartFactory
                 ],
                 'scales' => [
                     'xAxes' => [
-                        'barPercentage' => 2,
+                        'barPercentage' => 0,
                         'display' => false,
                     ],
                     'yAxes' => [

@@ -7,7 +7,7 @@
 
     <div class="py-12 h-full">
         <div class="w-full mx-auto sm:px-6 lg:px-8 h-screen">
-            <iframe class="rounded-lg" src="{{ route('prueba') }}" frameborder="0" allowfullscreen
+            <iframe class="rounded-lg" src="{{ route('dash') }}" frameborder="0" allowfullscreen
                 style="position:relative;
                 top:0;
                 left:0;

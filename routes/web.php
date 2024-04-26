@@ -15,6 +15,7 @@ use App\Livewire\Conred\Formulario\Index;
 use App\Livewire\Conred\Postularse;
 use App\Livewire\Contratos\Contratos;
 use App\Livewire\Contratos\PuestosFuncionales\HistorialPuestos;
+use App\Livewire\Dashboard as LivewireDashboard;
 use App\Livewire\Empleados\Empleados;
 use App\Livewire\Employees\DashboardEmpleados;
 use App\Livewire\Employees\Solicitudes\Vacaciones\Vacaciones as VacacionesVacaciones;
@@ -26,7 +27,6 @@ use App\Livewire\Pir\Contratistas;
 use App\Livewire\Pir\Control;
 use App\Livewire\Pir\Formulario as PirFormulario;
 use App\Livewire\Pir\Personal;
-use App\Livewire\Prueba;
 use App\Livewire\Puesto\Catalogo\CatalogoPuestos;
 use App\Livewire\Puesto\Puestos;
 use App\Livewire\Requisitos\Requisitos;
@@ -99,7 +99,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/inducciones', Inducciones::class)->middleware('can:Ver inducciones')->name('inducciones'); //*
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('can: Ver dashboard')->name('dashboard');
 
-    Route::get('/prueba', Prueba::class)->name('prueba');
+    Route::get('/dash', LivewireDashboard::class)->name('dash');
 });
 
 /* Grupo de rutas para el rol de Empleado */
