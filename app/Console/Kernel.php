@@ -13,10 +13,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
-        /*  $schedule->call(function () {
+        $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
             DB::table('pir_direcciones')->where('habilitado', 0)->update(['habilitado' => 1]);
-        })->dailyAt('00:00:00'); */
+        })->dailyAt('00:00:00');
     }
 
     /**

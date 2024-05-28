@@ -19,7 +19,32 @@
                             <x-application-mark class="block h-9 w-auto" />
                         </a>
                     </div>
+                @elseif(auth()->user()->hasRole('Súper Administrador') ||
+                        auth()->user()->hasRole('Administrador') ||
+                        auth()->user()->hasRole('Operativo'))
+                    <!-- Logo -->
+                    <div class="shrink-0 flex items-center">
+                        <a href="{{ route('dashboard') }}">
+                            <x-application-mark class="block h-9 w-auto" />
+                        </a>
+                    </div>
+                @elseif(auth()->user()->hasRole('Consultas'))
+                    <!-- Logo -->
+                    <div class="shrink-0 flex items-center">
+                        <a href="{{ route('consultas_pir') }}">
+                            <x-application-mark class="block h-9 w-auto" />
+                        </a>
+                    </div>
+                @else
+                    <!-- Logo -->
+                    <div class="shrink-0 flex items-center">
+                        <a href="{{ route('formulario_pir') }}">
+                            <x-application-mark class="block h-9 w-auto" />
+                        </a>
+                    </div>
+                @endif
 
+                @if (auth()->user()->hasRole('Empleado'))
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link href="{{ route('dashboard-empleados') }}" :active="request()->routeIs('dashboard-empleados')">
@@ -149,16 +174,10 @@
                             </div>
                         </div>
                     </div>
-                @elseif(auth()->user()->hasRole('Súper Administrador') ||
+                @endif
+                @if (auth()->user()->hasRole('Súper Administrador') ||
                         auth()->user()->hasRole('Administrador') ||
                         auth()->user()->hasRole('Operativo'))
-                    <!-- Logo -->
-                    <div class="shrink-0 flex items-center">
-                        <a href="{{ route('dashboard') }}">
-                            <x-application-mark class="block h-9 w-auto" />
-                        </a>
-                    </div>
-
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
@@ -612,113 +631,112 @@
                             </div>
                         </div>
                     </div>
-                @else
-                    <!-- Logo -->
-                    <div class="shrink-0 flex items-center">
-                        <a href="{{ route('formulario_pir') }}">
-                            <x-application-mark class="block h-9 w-auto" />
-                        </a>
-                    </div>
+                @endif
+                @if (auth()->user()->hasRole('Dirección de Recursos Humanos'))
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
                             {{ __('Formulario PIR') }}
                         </x-nav-link>
                     </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link href="{{ route('control_pir') }}" :active="request()->routeIs('control_pir')">
+                            {{ __('Control de reportes') }}
+                        </x-nav-link>
+                    </div>
 
-                    @if (auth()->user()->hasRole('Dirección de Recursos Humanos'))
-                        <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <x-nav-link href="{{ route('control_pir') }}" :active="request()->routeIs('control_pir')">
-                                {{ __('Control de reportes') }}
-                            </x-nav-link>
-                        </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <div
+                            class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out">
+                            <div x-data="{ isOpen: false }" @click.away="isOpen = false" class="relative">
+                                <button type="button" @click="isOpen = !isOpen"
+                                    class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 dark:text-gray-400"
+                                    aria-expanded="false">
+                                    <span>{{ __('Empleados') }}</span>
+                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
 
-                        <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <div
-                                class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out">
-                                <div x-data="{ isOpen: false }" @click.away="isOpen = false" class="relative">
-                                    <button type="button" @click="isOpen = !isOpen"
-                                        class="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 dark:text-gray-400"
-                                        aria-expanded="false">
-                                        <span>{{ __('Empleados') }}</span>
-                                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-                                            aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-
-                                    <div x-show="isOpen" x-transition:enter="transition ease-out duration-200"
-                                        x-transition:enter-start="opacity-0 translate-y-1"
-                                        x-transition:enter-end="opacity-100 translate-y-0"
-                                        x-transition:leave="transition ease-in duration-150"
-                                        x-transition:leave-start="opacity-100 translate-y-0"
-                                        x-transition:leave-end="opacity-0 translate-y-1"
-                                        class="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 origin-top-right">
-                                        <div
-                                            class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white dark:bg-gray-700 text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
-                                            <div class="p-4">
-                                                <!-- Item -->
+                                <div x-show="isOpen" x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 translate-y-1"
+                                    x-transition:enter-end="opacity-100 translate-y-0"
+                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave-start="opacity-100 translate-y-0"
+                                    x-transition:leave-end="opacity-0 translate-y-1"
+                                    class="absolute left-1/2 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 origin-top-right">
+                                    <div
+                                        class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
+                                        <div class="p-4">
+                                            <!-- Item -->
+                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
                                                 <div
-                                                    class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                    <div
-                                                        class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 24 24" stroke-width="1.5"
-                                                            stroke="currentColor"
-                                                            class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-                                                        </svg>
-                                                    </div>
-                                                    <div>
-                                                        <a href="{{ route('personal_pir') }}"
-                                                            class="font-semibold text-gray-900 dark:text-gray-400">
-                                                            {{ __('Personal') }}
-                                                            <span class="absolute inset-0"></span>
-                                                        </a>
-                                                        <p class="mt-1 text-gray-600 dark:text-gray-200">Personal de
-                                                            renglones 011, 021,
-                                                            022 y
-                                                            031
-                                                        </p>
-                                                    </div>
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                                                    </svg>
                                                 </div>
-
-                                                <!-- Item -->
-                                                <div
-                                                    class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                                    <div
-                                                        class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 24 24" stroke-width="1.5"
-                                                            stroke="currentColor"
-                                                            class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-                                                        </svg>
-                                                    </div>
-                                                    <div>
-                                                        <a href="{{ route('contratistas_pir') }}"
-                                                            class="font-semibold text-gray-900 dark:text-gray-400">
-                                                            {{ __('Contratistas') }}
-                                                            <span class="absolute inset-0"></span>
-                                                        </a>
-                                                        <p class="mt-1 text-gray-600 dark:text-gray-200">Prestadores de
-                                                            servicio de
-                                                            renglón 029
-                                                        </p>
-                                                    </div>
+                                                <div>
+                                                    <a href="{{ route('personal_pir') }}"
+                                                        class="font-semibold text-gray-900">
+                                                        {{ __('Personal') }}
+                                                        <span class="absolute inset-0"></span>
+                                                    </a>
+                                                    <p class="mt-1 text-gray-600">Personal de renglones 011, 021,
+                                                        022 y
+                                                        031
+                                                    </p>
                                                 </div>
-                                                <!-- Otras opciones de menú -->
                                             </div>
+
+                                            <!-- Item -->
+                                            <div class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50">
+                                                <div
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-6 h-6 text-gray-600 group-hover:text-indigo-600">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <a href="{{ route('contratistas_pir') }}"
+                                                        class="font-semibold text-gray-900">
+                                                        {{ __('Contratistas') }}
+                                                        <span class="absolute inset-0"></span>
+                                                    </a>
+                                                    <p class="mt-1 text-gray-600">Prestadores de servicio de
+                                                        renglón 029
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <!-- Otras opciones de menú -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    </div>
+                @elseif(auth()->user()->hasRole('Consultas'))
+                    <!-- Navigation Links -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link href="{{ route('consultas_pir') }}" :active="request()->routeIs('consultas_pir')">
+                            {{ __('Consultas') }}
+                        </x-nav-link>
+                    </div>
+                @else
+                    <!-- Navigation Links -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
+                            {{ __('Formulario PIR') }}
+                        </x-nav-link>
+                    </div>
                 @endif
             </div>
 
@@ -903,7 +921,8 @@
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
-            @elseif(auth()->user()->hasRole('Súper Administrador') ||
+            @endif
+            @if (auth()->user()->hasRole('Súper Administrador') ||
                     auth()->user()->hasRole('Administrador') ||
                     auth()->user()->hasRole('Operativo'))
                 <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
@@ -980,7 +999,8 @@
                         </x-dropdown-link> --}}
                     </x-slot>
                 </x-dropdown>
-            @else
+            @endif
+            @if (auth()->user()->hasRole('Dirección de Recursos Humanos'))
                 <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
                     {{ __('Formulario PIR') }}
                 </x-responsive-nav-link>
@@ -1005,6 +1025,14 @@
                         </x-slot>
                     </x-dropdown>
                 @endrole
+            @elseif(auth()->user()->hasRole('Consultas'))
+                <x-responsive-nav-link href="{{ route('consultas_pir') }}" :active="request()->routeIs('consultas_pir')">
+                    {{ __('Consultas') }}
+                </x-responsive-nav-link>
+            @else
+                <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
+                    {{ __('Formulario PIR') }}
+                </x-responsive-nav-link>
             @endif
         </div>
 

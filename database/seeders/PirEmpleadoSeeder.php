@@ -688,7 +688,8 @@ class PirEmpleadoSeeder extends Seeder
                 'nombre' => $emp['nombre'],
                 'pir_direccion_id' => $emp['dir'],
                 'region_id' => $regionId,
-                'is_regional_i' => $regional
+                'is_regional_i' => $regional,
+                'pir_reporte_id' => ($emp['puesto'] == 94 || $emp['puesto'] == 95) ? 11 : 1
             ]);
 
             PirPuesto::create([

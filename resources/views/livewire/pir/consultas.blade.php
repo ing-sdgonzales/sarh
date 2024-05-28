@@ -1,7 +1,7 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Horarios de entrega de reportes') }}
+            {{ __('Consultas') }}
         </h2>
     </x-slot>
 
@@ -31,7 +31,6 @@
                         class="min-w-full border-2 border-separate border-spacing-0 text-center shadow-lg rounded-md border-solid border-gray-300 dark:border-gray-800">
                         <thead class="bg-gray-300 dark:bg-gray-800 text-center">
                             <tr class="text-gray-800 dark:text-gray-300">
-                                <th class="w-1/12 py-2 px-4"></th>
                                 <th class="w-1/2 py-2 px-4">Dirección o Unidad</th>
                                 <th class="w-1/12 py-2 px-4">Entrega hoy</th>
                                 <th class="w-1/4 py-2 px-4">Última actualización</th>
@@ -41,17 +40,7 @@
                         <tbody class="bg-white dark:bg-gray-600">
                             @foreach ($direcciones as $dir)
                                 <tr
-                                    class="text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700 {{ $dir->cantidad_solicitudes > 0 ? 'bg-[#FF921F] bg-opacity-40' : 'bg-transparent' }}">
-                                    <td
-                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
-                                        @if ($dir->cantidad_solicitudes > 0)
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="#FF921F" class="w-6 h-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
-                                            </svg>
-                                        @endif
-                                    </td>
+                                    class="text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
                                     <td
                                         class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         {{ $dir->direccion }}
@@ -89,30 +78,48 @@
                                             </button>
                                             <ul class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-gray-200 bg-clip-padding text-center text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
                                                 aria-labelledby="dropdownMenuButton1s" data-te-dropdown-menu-ref>
-                                                @role('Dirección de Recursos Humanos')
-                                                    @if ($dir->cantidad_solicitudes > 0 && $dir->habilitado == 0)
-                                                        <li>
-                                                            <button type="button"
-                                                                wire:click='habilitar({{ $dir->id }})'
-                                                                class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                                                data-te-dropdown-item-ref>
-                                                                <div class="flex items-end space-x-2">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                        viewBox="0 0 24 24" stroke-width="1.5"
-                                                                        stroke="currentColor"
-                                                                        class="w-5 h-5 bg-transparent">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                                            d="m4.5 12.75 6 6 9-13.5" />
-                                                                    </svg>
+                                                @if (\Carbon\Carbon::parse($dir->hora_actualizacion)->isToday())
+                                                    <li>
+                                                        <button type="button"
+                                                            wire:click='descargarReporte({{ $dir->id }})'
+                                                            class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                                                            data-te-dropdown-item-ref>
+                                                            <div class="flex items-end space-x-2">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="1.5"
+                                                                    stroke="currentColor"
+                                                                    class="w-5 h-5 bg-transparent">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                                                </svg>
 
-                                                                    <h6
-                                                                        class="text-sm font-normal text-neutral-700 dark:text-gray-200">
-                                                                        Habilitar</h6>
-                                                                </div>
-                                                            </button>
-                                                        </li>
-                                                    @endif
-                                                @endrole
+                                                                <h6
+                                                                    class="text-sm font-normal text-neutral-700 dark:text-gray-200">
+                                                                    Reporte
+                                                                </h6>
+                                                            </div>
+                                                        </button>
+                                                    </li>
+                                                @endif
+                                                <li>
+                                                    <a href="{{ route('consulta_disponibilidad', ['id_direccion' => $dir->id]) }}"
+                                                        type="button"
+                                                        class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600">
+                                                        <div class="flex items-end space-x-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                viewBox="0 0 24 24" stroke-width="1.5"
+                                                                stroke="currentColor" class="w-5 h-5 bg-transparent">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+                                                            </svg>
+
+                                                            <h6
+                                                                class="text-sm font-normal text-neutral-700 dark:text-gray-200">
+                                                                Disponibilidad
+                                                            </h6>
+                                                        </div>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </td>
@@ -126,10 +133,8 @@
                 {{ $direcciones->links() }}
             </div>
         </div>
-        @if ($modal)
-            @include('livewire.pir.habilitar')
-        @endif
-        <div wire:loading.flex wire:target="habilitarDir"
+        <div wire:loading.flex
+            wire:target="descargarReporte"
             class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-[#FF921F] bg-transparent">
             </div>

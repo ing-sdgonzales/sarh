@@ -5,4 +5,4 @@
     </svg>
     <img src="img/logo.png" alt="CONRED" style="height: 200px;">
 </a> -->
-<img src="{{ asset('/img/logo.png') }}" alt="CONRED" style="height: 200px;">
+<img src="{{ asset('/img/logoalt.svg') }}" alt="CONRED" style="height: 200px;">

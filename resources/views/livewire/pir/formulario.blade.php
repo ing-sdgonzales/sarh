@@ -131,7 +131,7 @@
                                                     <td class="py-2 px-4"><x-select
                                                             wire:model='personal.{{ $key }}.pir_reporte_id'
                                                             class="block w-full text-center border-none">
-                                                            @foreach ($reportes ?? [] as $reporte)
+                                                            @foreach ($reportes_personal ?? [] as $reporte)
                                                                 <option value="{{ $reporte->id }}">
                                                                     {{ $reporte->reporte }}
                                                                 </option>
@@ -206,7 +206,7 @@
                                                     <td class="py-2 px-4"><x-select
                                                             wire:model='contratista.{{ $key }}.pir_reporte_id'
                                                             class="block w-full text-center border-none">
-                                                            @foreach ($reportes ?? [] as $reporte)
+                                                            @foreach ($reportes_contratistas ?? [] as $reporte)
                                                                 <option value="{{ $reporte->id }}">
                                                                     {{ $reporte->reporte }}
                                                                 </option>
@@ -233,6 +233,7 @@
                                                     <td class="py-2 px-4"><x-input
                                                             wire:model="contratista.{{ $key }}.observacion"
                                                             type="text" class="text-center block w-full" />
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -253,8 +254,14 @@
                 </div>
             @endif
         </form>
+        @if ($habilitado == 0 && $contador_solicitudes == 0 && !auth()->user()->hasRole('Dirección de Recursos Humanos'))
+            <div class="flex gap-x-2 mt-2 justify-end">
+                <x-button type="button"
+                    wire:click="solicitarActualizacion">{{ __('Solicitar actualización') }}</x-button>
+            </div>
+        @endif
         <div wire:loading.flex
-            wire:target="guardar,generarFromularioPIR,consolidarPIR,generarReporteDiario,generarReporteAusencias"
+            wire:target="guardar,generarFromularioPIR,consolidarPIR,generarReporteDiario,generarReporteAusencias,solicitarActualizacion"
             class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div class="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-[#FF921F] bg-transparent">
             </div>
@@ -278,6 +285,16 @@
                 Livewire.on('info_download', data => {
                     Swal.fire({
                         title: '¡Ups!',
+                        text: data[0].message,
+                        icon: 'warning',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#1F2937'
+                    });
+                });
+
+                Livewire.on('info_solicitudes', data => {
+                    Swal.fire({
+                        title: '¡Nuevas Solicitudes!',
                         text: data[0].message,
                         icon: 'warning',
                         confirmButtonText: 'Aceptar',
@@ -322,4 +339,25 @@
             </script>
         @endif
     @endpush
+    @if ($solicitudes_totales > 0 && auth()->user()->hasRole('Dirección de Recursos Humanos'))
+        @push('js')
+            <script>
+                var cs = @json($solicitudes_totales);
+                var path = @json(route('control_pir'));
+                Swal.fire({
+                    title: "¡Nuevas solicitudes!",
+                    html: `
+            <h1>Tienes <strong>` + cs + `</strong> solicitud(es) de actualización del formulario PIR.</h1>
+            <p>Ve a la página <strong><a href=` + path + `>Control de reportes</a></strong> para verificar las solicitudes.</p>
+            `,
+                    text: "Sistema de Administración de Recursos Humanos",
+                    imageUrl: "{{ asset('/img/logoalt.svg') }}",
+                    imageWidth: 85,
+                    imageHeight: 85,
+                    imageAlt: "SE-CONRED",
+                    confirmButtonColor: '#1F2937'
+                });
+            </script>
+        @endpush
+    @endif
 </div>
