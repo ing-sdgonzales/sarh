@@ -31,7 +31,7 @@
                 <p>Utiliza esta plataforma para cargar y gestionar tus requisitos de manera eficiente.</p>
                 `,
                 text: "Sistema de Administración de Recursos Humanos",
-                imageUrl: "https://conred.gob.gt/wp-content/uploads/logo-CONRED-normal.png",
+                imageUrl: "{{ asset('/img/logoalt.svg') }}",
                 imageWidth: 85,
                 imageHeight: 85,
                 imageAlt: "SE-CONRED",

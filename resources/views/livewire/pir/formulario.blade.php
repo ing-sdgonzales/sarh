@@ -351,7 +351,7 @@
             <p>Ve a la página <strong><a href=` + path + `>Control de reportes</a></strong> para verificar las solicitudes.</p>
             `,
                     text: "Sistema de Administración de Recursos Humanos",
-                    imageUrl: "https://conred.gob.gt/wp-content/uploads/logo-CONRED-normal.png",
+                    imageUrl: "{{ asset('/img/logoalt.svg') }}",
                     imageWidth: 85,
                     imageHeight: 85,
                     imageAlt: "SE-CONRED",
