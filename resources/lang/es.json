@@ -71,9 +71,10 @@
     "Permissions": "Permisos",
     "Table": "Tabla",
     "doesn't exist": "no existe",
-    "This action is unauthorized.": "Esta accion no está autorizada.",
+    "This action is unauthorized.": "Esta acción no está autorizada.",
     "today": "hoy",
     "Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.": "Ingrese su contraseña para confirmar que desea cerrar sesión en sus otras sesiones de navegador en todos sus dispositivos.",
     "Done.": "Hecho.",
-    "This password does not match our records.": "Esta contraseña no coincide con nuestros registros."
+    "This password does not match our records.": "Esta contraseña no coincide con nuestros registros.",
+    "User does not have the right roles.": "Esta acción no está autorizada."
 }

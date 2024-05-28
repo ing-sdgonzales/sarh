@@ -23,7 +23,10 @@ class PirReporteSeeder extends Seeder
             'Descanso por turno',
             'Capacitación en el extranjero',
             'Ausente (Justificar)',
-            'Vacaciones'
+            'Vacaciones',
+            'Disponible', 
+            'Problemas de salud',
+            'No disponible'
         ];
 
         foreach ($reportes as $reporte) {

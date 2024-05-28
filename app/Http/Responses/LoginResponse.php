@@ -33,6 +33,8 @@ class LoginResponse implements LoginResponseContract
                 return redirect()->route('dashboard');
             } elseif (auth()->user()->hasRole('Operativo')) {
                 return redirect()->route('dashboard');
+            } elseif (auth()->user()->hasRole('Consultas')) {
+                return redirect()->route('consultas_pir');
             } else {
                 return redirect()->route('formulario_pir');
             }

@@ -81,7 +81,8 @@ class Contratistas extends Component
                     'pir_direccion_id' => $validated['direccion'],
                     'region_id' => $validated['region'],
                     'departamento_id' => $validated['departamento'],
-                    'is_regional_i' => ($this->regional) ? 1 : 0
+                    'is_regional_i' => ($this->regional) ? 1 : 0,
+                    'pir_reporte_id' => ($validated['puesto'] == 94 || $validated['puesto'] == 95) ? 11 : 1
                 ]);
 
                 PirPuesto::updateOrCreate(['pir_empleado_id' => $empleado->id], [
