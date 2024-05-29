@@ -11,14 +11,18 @@ use App\Models\PirReporte;
 use App\Models\PirSeccion;
 use App\Models\PirSolicitud;
 use App\Models\Region;
+use App\Models\User;
+use App\Notifications\NotificacionActualizacionPIR;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class Formulario extends Component
 {
@@ -223,12 +227,19 @@ class Formulario extends Component
     public function solicitarActualizacion()
     {
         try {
-            $id = PirDireccion::where('direccion', $this->direccion)->select('id')->first()->id;
-            PirSolicitud::create([
-                'fecha_solicitud' => date('Y-m-d H:i:s'),
-                'pir_direccion_id' => $id
-            ]);
-            /* SEND EMAIL */
+            DB::transaction(function () {
+                $direccion = PirDireccion::where('direccion', $this->direccion)->select('id', 'direccion')->first();
+                PirSolicitud::create([
+                    'fecha_solicitud' => date('Y-m-d H:i:s'),
+                    'pir_direccion_id' => $direccion->id
+                ]);
+                /* SEND EMAIL */
+                $id_role = Role::where('name', 'Dirección de Recursos Humanos')->first()->id;
+                $model_id = DB::table('model_has_roles')->where('role_id', $id_role)->first()->model_id;
+                $users = User::where('id', $model_id)->get();
+                Notification::send($users, new NotificacionActualizacionPIR($direccion->direccion, auth()->user()->name));
+            });
+
             activity()
                 ->causedBy(auth()->user())
                 ->withProperties(['user_id' => auth()->id()])
