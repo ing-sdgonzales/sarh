@@ -27,6 +27,7 @@ class PersonalRegion implements ChartFactory
             ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
             ->leftJoin('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
             ->whereIn('renglones.renglon', ['011', '021', '022', '031'])
+            ->where('pir_empleados.activo', 1)
             ->groupBy('regiones.region')
             ->get();
 

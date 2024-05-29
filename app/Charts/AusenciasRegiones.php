@@ -21,7 +21,7 @@ class AusenciasRegiones implements ChartFactory
         $ausencias_regiones = PirEmpleado::select(
             'regiones.region as region'
         )
-            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Presente en sedes", "Comisión", "Capacitación en el extranjero") THEN 1 ELSE NULL END) AS total')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Presente en sedes", "Comisión", "Capacitación en el extranjero", "Disponible") THEN 1 ELSE NULL END) AS total')
             ->leftJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
             ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')
             ->where('pir_empleados.activo', 1)

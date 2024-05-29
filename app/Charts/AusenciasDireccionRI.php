@@ -22,7 +22,7 @@ class AusenciasDireccionRI implements ChartFactory
         $direcciones = PirDireccion::select(
             'pir_direcciones.direccion as direccion'
         )
-            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Presente en sedes", "Comisión", "Capacitación en el extranjero") THEN 1 ELSE NULL END) AS total')
+            ->selectRaw('COUNT(CASE WHEN pir_reportes.reporte NOT IN ("Presente en sedes", "Comisión", "Capacitación en el extranjero", "Disponible") THEN 1 ELSE NULL END) AS total')
             ->join('pir_empleados', 'pir_direcciones.id', '=', 'pir_empleados.pir_direccion_id')
             ->leftJoin('regiones', 'pir_empleados.region_id', '=', 'regiones.id')
             ->leftJoin('pir_reportes', 'pir_empleados.pir_reporte_id', '=', 'pir_reportes.id')

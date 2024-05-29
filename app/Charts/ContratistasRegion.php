@@ -27,6 +27,7 @@ class ContratistasRegion implements ChartFactory
             ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
             ->leftJoin('renglones', 'catalogo_puestos.renglones_id', '=', 'renglones.id')
             ->where('renglones.renglon', '029')
+            ->where('pir_empleados.activo', 1)
             ->groupBy('regiones.region')
             ->get();
 
