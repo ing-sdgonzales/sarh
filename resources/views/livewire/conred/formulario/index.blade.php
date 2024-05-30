@@ -17,7 +17,7 @@
                             <li>
                                 <x-button wire:click="mostrarFormulario('datos-laborales')"
                                     class="block w-full text-left text-md" :autofocus="$formulario === 'datos-laborales' ? true : false">
-                                    {{ __('Datos Académicos') }}
+                                    {{ __('Datos académicos') }}
                                 </x-button>
                             </li>
                         </div>
