@@ -312,9 +312,9 @@
                                 </div>
 
                                 <div class="sm:col-span-4">
-                                    <x-label for="titulo" value="{{ __('Título') }}" />
+                                    <x-label for="titulo" value="{{ __('Profesión') }}" />
                                     <div class="mt-2">
-                                        <x-input wire:model='titulo' type="text" name="título" id="titulo"
+                                        <x-input wire:model.live='titulo' type="text" name="título" id="titulo"
                                             required class="block w-full" />
                                     </div>
                                     <div>
@@ -346,7 +346,7 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
+                                <div class="sm:col-span-full">
                                     <x-label for="colegio" value="{{ __('Colegio') }}" />
                                     <div class="mt-2">
                                         <x-select wire:model='colegio' id="colegio" name="colegio"
@@ -368,7 +368,22 @@
                                     </div>
                                 </div>
 
-                                <div class="sm:col-span-3">
+                                <div class="sm:col-span-4">
+                                    <x-label for="titulo_universitario" value="{{ __('Título universitario') }}" />
+                                    <div class="mt-2">
+                                        <x-input wire:model='titulo_universitario' type="text"
+                                            id="titulo_universitario" class="block w-full" />
+                                    </div>
+                                    <div>
+                                        <span class="text-red-600 text-sm">
+                                            @error('titulo_universitario')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-2">
                                     <x-label for="colegiado" value="{{ __('Colegiado') }}" />
                                     <div class="mt-2">
                                         <x-input wire:model='colegiado' type="number" name="colegiado"

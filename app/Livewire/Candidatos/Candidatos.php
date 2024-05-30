@@ -37,7 +37,7 @@ class Candidatos extends Component
     public $id, $dpi, $nit, $igss, $nombre, $email, $imagen, $fecha_nacimiento, $fecha_registro, $fecha_ingreso,
         $direccion_domicilio, $tipo, $estado_civil, $municipio, $departamento_origen, $telefono, $registro_academico,
         $registro_academico_estado, $titulo, $colegio, $colegiado, $dependencia, $puesto, $tipo_contratacion,
-        $tipo_servicio, $observacion, $fecha_aplicacion, $aprobado;
+        $tipo_servicio, $observacion, $fecha_aplicacion, $aprobado, $titulo_universitario;
 
     public $entrevista, $id_puesto;
     public $control_entrevista = [['val' => 0, 'res' => 'No aprobado'], ['val' => 1, 'res' => 'Aprobado']];
@@ -144,6 +144,7 @@ class Candidatos extends Component
                 'municipio' => 'required|integer|min:1',
                 'registro_academico' => 'required|integer|min:1',
                 'titulo' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+                'titulo_universitario' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
                 'registro_academico_estado' => 'required|integer|min:1',
                 'colegio' => 'nullable|integer',
                 'colegiado' => 'nullable|regex:/^[1-9]\d*$/',
@@ -176,6 +177,7 @@ class Candidatos extends Component
                 'municipio' => 'required|integer|min:1',
                 'registro_academico' => 'required|integer|min:1',
                 'titulo' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
+                'titulo_universitario' => 'required|filled|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s]+$/',
                 'registro_academico_estado' => 'required|integer|min:1',
                 'colegio' => 'nullable|integer',
                 'colegiado' => 'nullable|regex:/^[1-9]\d*$/',
@@ -239,7 +241,7 @@ class Candidatos extends Component
                 ]);
 
                 if ($this->colegio != '') {
-                    $profesion = $validated['titulo'];
+                    $profesion = $validated['titulo_universitario'];
                     ColegioCandidato::updateOrCreate(['candidatos_id' => $this->id], [
                         'colegiado' => $validated['colegiado'],
                         'profesion' => $profesion,
@@ -273,7 +275,7 @@ class Candidatos extends Component
         $this->id = $id;
         $this->modo_edicion = true;
         $this->imagen_control = true;
-        $candidato =  DB::table('candidatos')
+        $candidato = DB::table('candidatos')
             ->join('aplicaciones_candidatos', 'candidatos.id', '=', 'aplicaciones_candidatos.candidatos_id')
             ->join('puestos_nominales', 'aplicaciones_candidatos.puestos_nominales_id', '=', 'puestos_nominales.id')
             ->join('tipos_servicios', 'puestos_nominales.tipos_servicios_id', '=', 'tipos_servicios.id')
@@ -284,7 +286,7 @@ class Candidatos extends Component
             ->join('tipos_contrataciones', 'candidatos.tipos_contrataciones_id', '=', 'tipos_contrataciones.id')
             ->join('telefonos_candidatos', 'candidatos.id', '=', 'telefonos_candidatos.candidatos_id')
             ->leftJoin('colegios_candidatos', 'candidatos.id', '=', 'colegios_candidatos.candidatos_id')
-            ->join('colegios', 'colegios_candidatos.colegios_id', '=', 'colegios.id')
+            ->leftJoin('colegios', 'colegios_candidatos.colegios_id', '=', 'colegios.id')
             ->select(
                 'candidatos.dpi as dpi',
                 'candidatos.nit as nit',
@@ -309,12 +311,11 @@ class Candidatos extends Component
                 'aplicaciones_candidatos.puestos_nominales_id as id_puesto',
                 'aplicaciones_candidatos.observacion as observacion',
                 'telefonos_candidatos.telefono as telefono',
-                'colegios_candidatos.profesion as profesion',
+                'colegios_candidatos.profesion as titulo',
                 'colegios_candidatos.colegiado as colegiado',
                 'colegios.id as id_colegio'
             )->where('candidatos.id', '=', $id)
             ->first();
-
         $this->dpi = $candidato->dpi;
         $this->nit = $candidato->nit;
         $this->igss = $candidato->igss;
@@ -336,6 +337,7 @@ class Candidatos extends Component
         $this->tipo_servicio = $candidato->id_tipo_servicio;
         $this->fecha_aplicacion = $candidato->fecha_aplicacion;
         $this->colegio = $candidato->id_colegio;
+        $this->titulo_universitario = $candidato->titulo;
         $this->colegiado = $candidato->colegiado;
 
         $nodoHoja = DependenciaNominal::findOrFail($candidato->id_dependencia);
@@ -497,6 +499,24 @@ class Candidatos extends Component
             session()->flash('error', $errorMessages);
             $this->cerrarExpedienteModal();
             return redirect()->route('candidatos');
+        }
+    }
+
+    public function updatedTitulo()
+    {
+        if ($this->registro_academico == 6) {
+            $this->titulo_universitario = $this->titulo;
+        } else {
+            $this->reset('titulo_universitario');
+        }
+    }
+
+    public function updatedRegistroAcademico()
+    {
+        if (!empty($this->titulo) && $this->registro_academico != 6) {
+            $this->reset('titulo_universitario');
+        } elseif (!empty($this->titulo) && $this->registro_academico == 6) {
+            $this->titulo_universitario = $this->titulo;
         }
     }
 

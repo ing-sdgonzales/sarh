@@ -198,13 +198,13 @@ class Index extends Component
                 ]);
 
                 AplicacionCandidato::create([
-                    'observacion' => 'prueba',
+                    'observacion' => 'El canidato se ha postulado',
                     'fecha_aplicacion' => date('Y-m-d'),
                     'candidatos_id' => $candidato->id,
                     'puestos_nominales_id' => $this->id_puesto
                 ]);
 
-                if (!empty($datos_laborales->colegio_id)) {
+                if (!empty($datos_laborales->colegios_id)) {
                     ColegioCandidato::create([
                         'colegiado' => $datos_laborales->colegiado,
                         'profesion' => $datos_laborales->titulo_universitario,

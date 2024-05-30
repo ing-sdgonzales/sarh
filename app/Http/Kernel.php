@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'verificar.estado.empleado' => \App\Http\Middleware\VerificarEstadoEmpleado::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'except.role' => \App\Http\Middleware\ExceptRole::class,
+        'verificar.estado.puesto' => \App\Http\Middleware\CheckPuestoIsAvailable::class
     ];
 }

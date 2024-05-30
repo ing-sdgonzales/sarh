@@ -410,7 +410,7 @@
                                                         <span class="absolute inset-0"></span>
                                                     </a>
                                                     <p class="mt-1 text-gray-600 dark:text-gray-200">Gestión de
-                                                        candidatos
+                                                        vacaciones del personal
                                                     </p>
                                                 </div>
                                             </div>
