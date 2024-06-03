@@ -81,5 +81,6 @@
     "User does not have the right roles.": "Esta acción no está autorizada.",
     "For your security, please confirm your password to continue.": "Por su seguridad, confirme su contraseña para continuar.",
     "To finish enabling two factor authentication, scan the following QR code using your phone's authenticator application or enter the setup key and provide the generated OTP code.": "Para terminar de habilitar la autenticación de dos factores, escanee el siguiente código QR usando la aplicación de autenticación de su teléfono o ingrese la clave de configuración y proporcione el código OTP generado.",
-    "Finish enabling two factor authentication.": "Termine de habilitar la autenticación de dos factores."
+    "Finish enabling two factor authentication.": "Termine de habilitar la autenticación de dos factores.",
+    "Code": "Código"
 }
