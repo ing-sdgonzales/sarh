@@ -130,7 +130,7 @@ class Personal extends Component
         $this->region = $empleado->region;
         $this->getDepartamentosByRegion();
         $this->departamento = $empleado->departamento;
-
+        $this->modo_edicion = true;
         $this->modal = true;
     }
 
