@@ -9,6 +9,7 @@
     "Already registered?": "¿Ya registrado?",
     "Register": "Registro",
     "Name": "Nombre",
+    "Confirm": "Confirmar",
     "Current Password": "Contraseña actual",
     "New Password": "Nueva contraseña",
     "Confirm Password": "Confirmar contraseña",
@@ -77,5 +78,6 @@
     "Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.": "Ingrese su contraseña para confirmar que desea cerrar sesión en sus otras sesiones de navegador en todos sus dispositivos.",
     "Done.": "Hecho.",
     "This password does not match our records.": "Esta contraseña no coincide con nuestros registros.",
-    "User does not have the right roles.": "Esta acción no está autorizada."
+    "User does not have the right roles.": "Esta acción no está autorizada.",
+    "For your security, please confirm your password to continue.": "Por su seguridad, confirme su contraseña para continuar."
 }
