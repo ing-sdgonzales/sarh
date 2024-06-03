@@ -86,6 +86,5 @@
     "You have enabled two factor authentication.": "Ha habilitado la autenticación de dos factores.",
     "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.": "Guarde estos códigos de recuperación en un administrador de contraseñas seguro. Se pueden utilizar para recuperar el acceso a su cuenta si pierde su dispositivo de autenticación de dos factores.",
     "Regenerate Recovery Codes": "Regenerar códigos de recuperación",
-    "Setup key": "Clave de configuración",
-    
+    "Setup key": "Clave de configuración"
 }
