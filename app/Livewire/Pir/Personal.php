@@ -113,9 +113,10 @@ class Personal extends Component
             'pir_empleados.nombre as nombre',
             'pir_empleados.pir_direccion_id as direccion',
             'pir_empleados.region_id as region',
+            'pir_empleados.is_regional_i as regional',
             'pir_empleados.departamento_id as departamento',
             'renglones.id as renglon',
-            'catalogo_puestos.id as puesto'
+            'catalogo_puestos.id as puesto',
         )
             ->join('pir_puestos', 'pir_empleados.id', '=', 'pir_puestos.pir_empleado_id')
             ->join('catalogo_puestos', 'pir_puestos.catalogo_puesto_id', '=', 'catalogo_puestos.id')
@@ -128,6 +129,7 @@ class Personal extends Component
         $this->getPuestosByRenglon();
         $this->puesto = $empleado->puesto;
         $this->region = $empleado->region;
+        $this->regional = $empleado->regional;
         $this->getDepartamentosByRegion();
         $this->departamento = $empleado->departamento;
         $this->modo_edicion = true;
