@@ -32,16 +32,17 @@ class Usuarios extends Component
         $accion = 'creó';
         try {
             $validated = $this->validate([
-                'nombre' => 'required|string|max:255',
+                'nombre' => 'required|string|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.]+$/|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $this->id_user,
                 'password' => 'required|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/',
                 'rol' => 'required|integer|min:1'
             ]);
             DB::transaction(function () use ($validated) {
+
                 $this->role = Role::select('name')->where('id', $this->rol)->first();
 
                 User::updateOrCreate(['id' => $this->id_user], [
-                    'name' => $validated['nombre'],
+                    'name' => ucwords(mb_strtolower($validated['nombre'])),
                     'email' => $validated['email'],
                     'password' => Hash::make($validated['password'])
                 ])->syncRoles($this->role->name);
