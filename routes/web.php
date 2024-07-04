@@ -31,9 +31,11 @@ use App\Livewire\Pir\Formulario as PirFormulario;
 use App\Livewire\Pir\Personal;
 use App\Livewire\Puesto\Catalogo\CatalogoPuestos;
 use App\Livewire\Puesto\Puestos;
+use App\Livewire\Renglones\Renglon;
 use App\Livewire\Requisitos\Requisitos;
 use App\Livewire\Roles\Rol;
 use App\Livewire\Usuarios\BitacoraUsuario;
+use App\Livewire\Usuarios\EquipoTrabajo;
 use App\Livewire\Usuarios\Usuarios;
 use App\Livewire\Vacaciones\ControlVacaciones;
 use App\Livewire\Vacaciones\Vacaciones;
@@ -100,6 +102,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::get('/vacaciones/control_vacaciones/{id_empleado}', ControlVacaciones::class)->middleware('can:Ver control de vacaciones')->name('control_vacaciones');
     Route::get('/inducciones', Inducciones::class)->middleware('can:Ver inducciones')->name('inducciones'); //*
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('can: Ver dashboard')->name('dashboard');
+
+    Route::get('/equipo_trabajo', EquipoTrabajo::class)->name('equipo_trabajo');
+    Route::get('/renglones', Renglon::class)->middleware('can: Ver renglones')->name('renglones');
 
     Route::get('/dash', LivewireDashboard::class)->name('dash');
 });

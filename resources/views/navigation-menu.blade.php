@@ -601,6 +601,28 @@
                                     <div
                                         class="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white dark:bg-gray-700 text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                                         <div class="p-4">
+                                            <!-- Item -->
+                                            <div
+                                                class="group relative flex gap-x-6 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                                <div
+                                                    class="mt-1 flex h-11 w-11 flex-none items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-600 group-hover:bg-white dark:group-hover:bg-gray-700">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-6 h-6 text-gray-800 group-hover:text-indigo-600 dark:group-hover:text-[#FF921F]">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <a href="{{ route('renglones') }}"
+                                                        class="font-semibold text-gray-900 dark:text-gray-400">
+                                                        {{ __('Renglones') }}
+                                                        <span class="absolute inset-0"></span>
+                                                    </a>
+                                                    <p class="mt-1 text-gray-600 dark:text-gray-200">Renglones
+                                                        presupuestarios
+                                                </div>
+                                            </div>
 
                                             <!-- Otras opciones de menú -->
                                         </div>
@@ -832,6 +854,15 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <!-- Workgroup -->
+                            <div class="block px-4 py-2 text-xs text-gray-400">
+                                {{ __('Workgroup') }}
+                            </div>
+
+                            <x-dropdown-link href="{{ route('equipo_trabajo') }}">
+                                {{ __('Equipo de trabajo') }}
+                            </x-dropdown-link>
+
                             @hasanyrole('Súper Administrador|Administrador')
                                 <!-- User Management -->
                                 <div class="block px-4 py-2 text-xs text-gray-400">
@@ -969,9 +1000,9 @@
                         </x-responsive-nav-link>
                     </x-slot>
                     <x-slot name="content">
-                        {{-- <x-dropdown-link href="{{ route('candidatos') }}" :active="request()->routeIs('candidatos')">
-                            {{ __('Reclutamiento') }}
-                        </x-dropdown-link> --}}
+                        <x-dropdown-link href="{{ route('vacaciones') }}" :active="request()->routeIs('vacaciones')">
+                            {{ __('Vacaciones') }}
+                        </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
 
@@ -986,13 +1017,16 @@
                         <x-dropdown-link href="{{ route('capacitaciones') }}" :active="request()->routeIs('capacitaciones')">
                             {{ __('Capacitaciones') }}
                         </x-dropdown-link>
-                        <x-dropdown-link {{-- href="{{ route('capacitaciones') }}" :active="request()->routeIs('capacitaciones')" --}}>
+                        <x-dropdown-link href="{{ route('inducciones') }}" :active="request()->routeIs('inducciones')">
+                            {{ __('Inducciones') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link href="{{ route('historial_medico') }}" :active="request()->routeIs('historial_medico')">
                             {{ __('Historial médico') }}
                         </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
 
-                {{-- Dropdown Dotación de personal --}}
+                {{-- Dropdown Nóminas --}}
                 <x-dropdown>
                     <x-slot name="trigger">
                         <x-responsive-nav-link href="#">
@@ -1000,46 +1034,48 @@
                         </x-responsive-nav-link>
                     </x-slot>
                     <x-slot name="content">
-                        {{--  <x-dropdown-link href="{{ route('candidatos') }}" :active="request()->routeIs('candidatos')">
-                            {{ __('Reclutamiento') }}
-                        </x-dropdown-link> --}}
+                        <x-dropdown-link href="{{ route('renglones') }}" :active="request()->routeIs('renglones')">
+                            {{ __('Renglones') }}
+                        </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
             @endif
-            @if (auth()->user()->hasRole('Dirección de Recursos Humanos'))
-                <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
-                    {{ __('Formulario PIR') }}
-                </x-responsive-nav-link>
-                @role('Dirección de Recursos Humanos')
-                    <x-responsive-nav-link href="{{ route('control_pir') }}" :active="request()->routeIs('control_pir')">
-                        {{ __('Control de reportes') }}
+            @unless (auth()->user()->hasRole('Súper Administrador'))
+                @if (auth()->user()->hasRole('Dirección de Recursos Humanos'))
+                    <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
+                        {{ __('Formulario PIR') }}
                     </x-responsive-nav-link>
+                    @role('Dirección de Recursos Humanos')
+                        <x-responsive-nav-link href="{{ route('control_pir') }}" :active="request()->routeIs('control_pir')">
+                            {{ __('Control de reportes') }}
+                        </x-responsive-nav-link>
 
-                    <x-dropdown>
-                        <x-slot name="trigger">
-                            <x-responsive-nav-link href="#">
-                                {{ __('Empleados') }}
-                            </x-responsive-nav-link>
-                        </x-slot>
-                        <x-slot name="content">
-                            <x-dropdown-link href="{{ route('personal_pir') }}" :active="request()->routeIs('personal_pir')">
-                                {{ __('Personal') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('contratistas_pir') }}" :active="request()->routeIs('contratistas_pir')">
-                                {{ __('Contratistas') }}
-                            </x-dropdown-link>
-                        </x-slot>
-                    </x-dropdown>
-                @endrole
-            @elseif(auth()->user()->hasRole('Consultas'))
-                <x-responsive-nav-link href="{{ route('consultas_pir') }}" :active="request()->routeIs('consultas_pir')">
-                    {{ __('Consultas') }}
-                </x-responsive-nav-link>
-            @else
-                <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
-                    {{ __('Formulario PIR') }}
-                </x-responsive-nav-link>
-            @endif
+                        <x-dropdown>
+                            <x-slot name="trigger">
+                                <x-responsive-nav-link href="#">
+                                    {{ __('Empleados') }}
+                                </x-responsive-nav-link>
+                            </x-slot>
+                            <x-slot name="content">
+                                <x-dropdown-link href="{{ route('personal_pir') }}" :active="request()->routeIs('personal_pir')">
+                                    {{ __('Personal') }}
+                                </x-dropdown-link>
+                                <x-dropdown-link href="{{ route('contratistas_pir') }}" :active="request()->routeIs('contratistas_pir')">
+                                    {{ __('Contratistas') }}
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
+                    @endrole
+                @elseif(auth()->user()->hasRole('Consultas'))
+                    <x-responsive-nav-link href="{{ route('consultas_pir') }}" :active="request()->routeIs('consultas_pir')">
+                        {{ __('Consultas') }}
+                    </x-responsive-nav-link>
+                @else
+                    <x-responsive-nav-link href="{{ route('formulario_pir') }}" :active="request()->routeIs('formulario_pir')">
+                        {{ __('Formulario PIR') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endunless
         </div>
 
         <!-- Responsive Settings Options -->

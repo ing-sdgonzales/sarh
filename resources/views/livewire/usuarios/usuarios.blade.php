@@ -29,8 +29,11 @@
                         <thead class="bg-gray-300 dark:bg-gray-800 text-center">
                             <tr class="text-gray-800 dark:text-gray-300">
                                 <th class="w-1/12 py-2 px-4">No.</th>
-                                <th class="w-1/4 py-2 px-4">Usuario</th>
-                                <th class="w-1/4 py-2 px-4">Nombre</th>
+                                <th class="w-1/6 py-2 px-4">Nombre</th>
+                                <th class="w-1/6 py-2 px-4">Usuario</th>
+                                <th class="w-1/12 py-2 px-4">Creado</th>
+                                <th class="w-1/6 py-2 px-4">Ultimó acceso</th>
+                                <th class="w-1/12 py-2 px-4">IP</th>
                                 <th class="w-1/12 py-2 px-4">Acciones</th>
                             </tr>
                         </thead>
@@ -43,10 +46,20 @@
                                         {{ $loop->iteration }}.</td>
                                     <td
                                         class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $user->name }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         {{ $user->email }}</td>
                                     <td
                                         class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
-                                        {{ $user->name }}</td>
+                                        {{ date('d-m-Y', strtotime($user->created_at)) }}</td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $user->last_login_at ? date('d-m-Y H:i:s', strtotime($user->last_login_at)) : 'Nunca' }}
+                                    </td>
+                                    <td
+                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                        {{ $user->last_login_at ? $user->last_login_ip : '0.0.0.0' }}</td>
                                     <td
                                         class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
                                         <div class="relative" data-te-dropdown-position="dropstart">

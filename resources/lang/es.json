@@ -60,6 +60,7 @@
     "Dashboard": "Inicio",
     "Cancel": "Cancelar",
     "Users": "Usuarios",
+    "User": "Usuario",
     "Whoops! Something went wrong.": "¡Vaya! Algo salió mal.",
     "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.": "¿Olvidaste tu contraseña? No hay problema. Simplemente haznos saber tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña que te permitirá elegir una nueva.",
     "Password Reset": "Restablecer contraseña",
@@ -87,5 +88,6 @@
     "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.": "Guarde estos códigos de recuperación en un administrador de contraseñas seguro. Se pueden utilizar para recuperar el acceso a su cuenta si pierde su dispositivo de autenticación de dos factores.",
     "Regenerate Recovery Codes": "Regenerar códigos de recuperación",
     "Setup key": "Clave de configuración",
-    "Show Recovery Codes": "Mostrar códigos de recuperación"
+    "Show Recovery Codes": "Mostrar códigos de recuperación",
+    "Workgroup": "Equipo de trabajo"
 }

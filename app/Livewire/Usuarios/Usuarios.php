@@ -18,12 +18,20 @@ class Usuarios extends Component
     public function render()
     {
         $this->roles = Role::select('id', 'name')->get();
+        $usuarios = DB::table('users')->select(
+            'id',
+            'name',
+            'email',
+            'created_at',
+            'last_login_at',
+            'last_login_ip'
+        );
         activity()
             ->causedBy(auth()->user())
             ->withProperties(['user_id' => auth()->id()])
             ->log("El usuario " . auth()->user()->name .  " visitó la página: " . request()->path());
         return view('livewire.usuarios.usuarios', [
-            'usuarios' => DB::table('users')->paginate(10)
+            'usuarios' => $usuarios->paginate(10)
         ]);
     }
 
