@@ -855,13 +855,13 @@
 
                         <x-slot name="content">
                             <!-- Workgroup -->
-                            <div class="block px-4 py-2 text-xs text-gray-400">
+                            {{-- <div class="block px-4 py-2 text-xs text-gray-400">
                                 {{ __('Workgroup') }}
                             </div>
 
                             <x-dropdown-link href="{{ route('equipo_trabajo') }}">
                                 {{ __('Equipo de trabajo') }}
-                            </x-dropdown-link>
+                            </x-dropdown-link> --}}
 
                             @hasanyrole('Súper Administrador|Administrador')
                                 <!-- User Management -->
