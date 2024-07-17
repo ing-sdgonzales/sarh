@@ -13,7 +13,7 @@ use Spatie\Permission\Models\Role;
 class Usuarios extends Component
 {
     public $roles, $role;
-    public $modal = false, $modo_edicion = false;
+    public $modal = false, $modo_edicion = false, $modal_eliminar = false;
     public $id_user, $nombre, $password, $email, $rol;
     public function render()
     {
@@ -91,6 +91,35 @@ class Usuarios extends Component
         $this->modal = true;
     }
 
+    public function delete($id_user)
+    {
+        $user = User::findOrFail($id_user);
+        $this->id_user = $id_user;
+        $this->nombre = $user->name;
+        $this->modal_eliminar = true;
+    }
+
+    public function deleteUser()
+    {
+        try {
+            DB::transaction(function () {
+                User::where('id', $this->id_user)->delete();
+                activity()
+                    ->causedBy(auth()->user())
+                    ->withProperties(['user_id' => auth()->id()])
+                    ->log("El usuario " . auth()->user()->name .  " eliminó el usuario: " . $this->nombre . ".");
+            });
+            session()->flash('message');
+            $this->cerrarModalEliminar();
+            return redirect()->route('usuarios');
+        } catch (Exception $e) {
+            $errorMessages = "Ocurrió un error: " . $e->getMessage();
+            session()->flash('error', $errorMessages);
+            $this->cerrarModalEliminar();
+            return redirect()->route('usuarios');
+        }
+    }
+
     public function crear()
     {
         $this->modal = true;
@@ -102,5 +131,10 @@ class Usuarios extends Component
         $this->nombre = '';
         $this->password = '';
         $this->email = '';
+    }
+
+    public function cerrarModalEliminar()
+    {
+        $this->reset();
     }
 }
