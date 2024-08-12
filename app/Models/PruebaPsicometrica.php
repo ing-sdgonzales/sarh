@@ -11,5 +11,5 @@ class PruebaPsicometrica extends Model
 
     protected $table = 'pruebas_psicometricas';
     protected $fillable = ['prueba', 'fecha', 'candidatos_id'];
-    protected $casts = ['prueba' => 'datetime:Y-m-d'];
+    protected $casts = ['fecha' => 'datetime:Y-m-d'];
 }

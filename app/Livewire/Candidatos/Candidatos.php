@@ -559,7 +559,7 @@ class Candidatos extends Component
             });
             /**
              * 
-             * AGREGAR METODO PARA NOTIFICACIÓN DE DE FECHA DE INGREOS DE CANDIDATO
+             * AGREGAR METODO PARA NOTIFICACIÓN DE FECHA DE INGREOS DE CANDIDATO
              *  
              **/
             session()->flash('message');
@@ -580,6 +580,8 @@ class Candidatos extends Component
     public function fechaIngreso($id_candidato, $id_puesto)
     {
         $this->id = $id_candidato;
+        $candidato = Candidato::findOrFail($id_candidato);
+        $this->fecha_ingreso = $candidato->fecha_ingreso;
         $this->id_puesto = $id_puesto;
         $this->modal_fecha_ingreso = true;
     }
@@ -743,7 +745,7 @@ class Candidatos extends Component
         $prueba = PruebaPsicometrica::select('id', 'prueba', 'fecha')->where('candidatos_id', $id_candidato)->first();
         if ($prueba) {
             $this->prueba_psicometrica_nombre = $prueba->prueba;
-            $this->prueba_psicometrica_fecha = $prueba->fecha;
+            $this->prueba_psicometrica_fecha = date('Y-m-d', strtotime($prueba->fecha));
         } else {
             $this->prueba_psicometrica_nombre = 'Pruebas psicométricas';
             $this->prueba_psicometrica_fecha = date('Y-m-d');
@@ -766,7 +768,7 @@ class Candidatos extends Component
         if ($prueba) {
             $this->prueba_tecnica_nombre = $prueba->prueba;
             $this->prueba_tecnica_nota = $prueba->nota;
-            $this->prueba_tecnica_fecha = $prueba->fecha;
+            $this->prueba_tecnica_fecha = date('Y-m-d', strtotime($prueba->fecha));
         } else {
             $this->prueba_tecnica_nombre = 'Prueba técnica';
             $this->prueba_tecnica_fecha = date('Y-m-d');
