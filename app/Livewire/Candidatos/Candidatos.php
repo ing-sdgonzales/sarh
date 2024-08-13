@@ -108,12 +108,12 @@ class Candidatos extends Component
             )->groupBy('candidatos.id');
         if (!empty($this->filtro)) {
             $candidatos->where(function ($query) {
-                $query->where('nombre', 'LIKE', '%' . $this->filtro . '%')
-                    ->orWhere('renglon', 'LIKE', '%' . $this->filtro . '%')
-                    ->orWhere('dependencia', 'LIKE', '%' . $this->filtro . '%')
-                    ->orWhere('profesion', 'LIKE', '%' . $this->filtro . '%')
-                    ->orWhere('region', 'LIKE', '%' . $this->filtro . '%')
-                    ->orWhere('tipo_contratacion', 'LIKE', '%' . $this->filtro . '%');
+                $query->where('candidatos.nombre', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('renglones.renglon', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('dependencias_nominales.dependencia', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('registros_academicos_candidatos.profesion', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('regiones.region', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('tipos_contrataciones.tipo', 'LIKE', '%' . $this->filtro . '%');
             });
         }
         $candidatos = $candidatos->paginate(5);
