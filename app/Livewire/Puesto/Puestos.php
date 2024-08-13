@@ -25,6 +25,9 @@ class Puestos extends Component
     public $renglones, $regiones, $especialidades, $fuentes, $plazas, $dependencias, $registros_academicos,
         $catalogo_puestos, $departamentos_region, $municipios, $tipos_servicios, $bonos, $subproductos;
 
+    /* Filtro y busqueda */
+    public $busqueda, $filtro;
+
     /* variables de consulta */
     public $id, $codigo, $renglon = 1, $puesto, $partida, $region, $departamento_region, $municipio = null, $fecha_registro,
         $fuentes_financiamientos, $plaza, $especialidad, $financiado, $tipo_servicio, $bono = [],
@@ -69,6 +72,14 @@ class Puestos extends Component
             );
 
         $requisitos = DB::table('requisitos')->select('id', 'requisito', 'especificacion');
+
+        if (!empty($this->filtro)) {
+            $puestos->where(function ($query) {
+                $query->where('catalogo_puestos.puesto', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('dependencias_nominales.dependencia', 'LIKE', '%' . $this->filtro . '%')
+                    ->orWhere('renglones.renglon', 'LIKE', '%' . $this->filtro . '%');
+            });
+        }
 
         $puestos = $puestos->paginate(5, pageName: 'puestos-page');
         $requisitos =  $requisitos->paginate(5, pageName: 'requisitos-page');
@@ -790,6 +801,11 @@ class Puestos extends Component
     {
         $this->requisitos_modal = false;
         $this->limpiarModalAsignar();
+    }
+
+    public function updatedBusqueda()
+    {
+        $this->filtro = $this->busqueda;
     }
 
     public function limpiarModalAsignar()
