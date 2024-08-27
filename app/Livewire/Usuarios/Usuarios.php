@@ -2,22 +2,35 @@
 
 namespace App\Livewire\Usuarios;
 
-use App\Livewire\Roles\Rol;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
 
 class Usuarios extends Component
 {
-    public $roles, $role;
+
+    use WithPagination;
+
     public $modal = false, $modo_edicion = false, $modal_eliminar = false;
-    public $id_user, $nombre, $password, $email, $rol;
+    public $id_user, $nombre, $password, $email, $rol = [];
     public function render()
     {
-        $this->roles = Role::select('id', 'name')->get();
+        $roles = Role::select('id', 'name')->orderBy('name', 'asc');
+
+        if ($this->modo_edicion && !empty($this->rol)) {
+            $roles = DB::table('roles')
+                ->leftJoin('model_has_roles', function ($join) {
+                    $join->on('roles.id', '=', 'model_has_roles.role_id')
+                        ->where('model_has_roles.model_id', '=', $this->id_user);
+                })
+                ->select('roles.id', 'roles.name')
+                ->orderByRaw('model_has_roles.role_id IS NULL, roles.name ASC');
+        }
+
         $usuarios = DB::table('users')->select(
             'id',
             'name',
@@ -25,13 +38,15 @@ class Usuarios extends Component
             'created_at',
             'last_login_at',
             'last_login_ip'
-        );
+        )->paginate(10, pageName: 'usuarios-page');
+        
         activity()
             ->causedBy(auth()->user())
             ->withProperties(['user_id' => auth()->id()])
             ->log("El usuario " . auth()->user()->name .  " visitó la página: " . request()->path());
         return view('livewire.usuarios.usuarios', [
-            'usuarios' => $usuarios->paginate(10)
+            'usuarios' => $usuarios,
+            'roles' => $roles->paginate(5, pageName: 'roles-page')
         ]);
     }
 
@@ -42,18 +57,18 @@ class Usuarios extends Component
             $validated = $this->validate([
                 'nombre' => 'required|string|regex:/^[A-Za-záàéèíìóòúùÁÀÉÈÍÌÓÒÚÙüÜñÑ\s.]+$/|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $this->id_user,
-                'password' => 'required|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/',
-                'rol' => 'required|integer|min:1'
+                'password' => [$this->id_user ? 'nullable' : 'required', 'string', 'min:8', 'regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/'],
+                'rol' => 'required|array'
             ]);
             DB::transaction(function () use ($validated) {
 
-                $this->role = Role::select('name')->where('id', $this->rol)->first();
-
-                User::updateOrCreate(['id' => $this->id_user], [
+                $user = User::updateOrCreate(['id' => $this->id_user], [
                     'name' => ucwords(mb_strtolower($validated['nombre'])),
                     'email' => $validated['email'],
                     'password' => Hash::make($validated['password'])
-                ])->syncRoles($this->role->name);
+                ]);
+
+                $user->syncRoles($this->rol);
             });
             if ($this->modo_edicion) {
                 $accion = 'actualizó';
@@ -62,7 +77,7 @@ class Usuarios extends Component
             activity()
                 ->causedBy(auth()->user())
                 ->withProperties(['user_id' => auth()->id()])
-                ->log("El usuario " . auth()->user()->name .  " " . $accion . " el usuario: " . $this->nombre . " con el rol: " . $this->role->name);
+                ->log("El usuario " . auth()->user()->name .  " " . $accion . " el usuario: " . $this->nombre . ".");
             session()->flash('message');
             $this->cerrarModal();
             $this->modo_edicion = false;
@@ -82,12 +97,9 @@ class Usuarios extends Component
         $this->id_user = $id_user;
         $this->nombre = $user->name;
         $this->email = $user->email;
+        $this->rol = DB::table('model_has_roles')->select('role_id')->where('model_id', $id_user)->pluck('role_id')->toArray();
 
-        $role = DB::table('model_has_roles')->select('role_id')->where('model_id', $id_user)->first();
-
-        $this->rol = $role->role_id;
         $this->modo_edicion = true;
-
         $this->modal = true;
     }
 
@@ -127,10 +139,8 @@ class Usuarios extends Component
 
     public function cerrarModal()
     {
-        $this->modal = false;
-        $this->nombre = '';
-        $this->password = '';
-        $this->email = '';
+        $this->reset();
+        $this->resetPage('roles-page');
     }
 
     public function cerrarModalEliminar()

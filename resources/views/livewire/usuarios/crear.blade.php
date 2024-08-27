@@ -52,31 +52,44 @@
                                     <x-label for="password" value="{{ __('Password') }}" />
                                     <div class="mt-2">
                                         <x-input wire:model='password' type="password" name="password" id="password"
-                                            required class="block w-full" />
+                                            class="block w-full" :required="!$modo_edicion" />
                                     </div>
                                 </div>
-
-                                <div class="sm:col-span-full">
-                                    <x-label for="rol" value="{{ __('Rol') }}" />
-                                    <div class="mt-2">
-                                        <x-select wire:model='rol' id="rol" name="rol" required
-                                            class="block w-full">
-                                            <option value="">Seleccionar...</option>
-                                            @foreach ($roles ?? [] as $rol)
-                                                <option value="{{ $rol->id }}">
-                                                    {{ $rol->name }}
-                                                </option>
+                                <div class="sm:col-span-6">
+                                    <table
+                                        class="min-w-full border-2 border-separate border-spacing-0 text-center shadow-lg rounded-md border-solid border-gray-300 dark:border-gray-600">
+                                        <thead class="bg-gray-300 dark:bg-gray-800 text-center">
+                                            <tr class="text-gray-800 dark:text-gray-300">
+                                                <th class="w-1/12 py-2 px-4"></th>
+                                                <th class="w-1/3 py-2 px-4">Rol</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white dark:bg-gray-600">
+                                            @foreach ($roles as $rol)
+                                                <tr class="text-gray-800 dark:text-gray-200">
+                                                    <td
+                                                        class="py-2 px-4 items-center {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                                        <div class="relative flex gap-x-2">
+                                                            <div class="flex h-6 items-center">
+                                                                <x-checkbox wire:model='rol' type="checkbox"
+                                                                    id="rol-{{ $rol->id }}"
+                                                                    value="{{ $rol->id }}" class="h-4 w-4" />
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        class="py-2 px-4 {{ $loop->last ? 'border-none' : 'border-b border-gray-200 dark:border-gray-700' }}">
+                                                        <label for="rol-{{ $rol->id }}">
+                                                            {{ $rol->name }}</label>
+                                                    </td>
+                                                </tr>
                                             @endforeach
-                                        </x-select>
-                                    </div>
-                                    <div>
-                                        <span class="text-red-600 text-sm">
-                                            @error('rol')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
+                                        </tbody>
+                                    </table>
                                 </div>
+                            </div>
+                            <div class="mt-2">
+                                {{ $roles->links() }}
                             </div>
                         </div>
                     </div>

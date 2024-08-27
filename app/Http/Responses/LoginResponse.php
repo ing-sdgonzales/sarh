@@ -27,11 +27,7 @@ class LoginResponse implements LoginResponseContract
         } else {
             if (auth()->user()->hasRole('Empleado')) {
                 return redirect()->route('dashboard-empleados');
-            } elseif (auth()->user()->hasRole('Súper Administrador')) {
-                return redirect()->route('dashboard');
-            } elseif (auth()->user()->hasRole('Administrador')) {
-                return redirect()->route('dashboard');
-            } elseif (auth()->user()->hasRole('Operativo')) {
+            } elseif (auth()->user()->hasAnyRole(['Súper Administrador', 'Administrador', 'Operativo'])) {
                 return redirect()->route('dashboard');
             } elseif (auth()->user()->hasRole('Consultas')) {
                 return redirect()->route('consultas_pir');
